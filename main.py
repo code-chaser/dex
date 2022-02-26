@@ -30,6 +30,7 @@ def get_quote():
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
     await client.get_channel(int(os.environ['CONSOLE_CHANNEL_ID'])).send(".\nLogged in!\nOnline Now!")
+    await client.change_presence(activity=discord.Game(name="with your life ;)"))
 
 
 @client.event
