@@ -10,3 +10,12 @@
 
 ## DESCRIPTION
 a multi-purpose discord bot
+___
+## FEATURES
+- [x] Inspiring Quotes
+- [ ] Plays Music
+- [x] Gives options to change command settings
+___
+___
+> ***Beep boop. Boop beep!***
+___
