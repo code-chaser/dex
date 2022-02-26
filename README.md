@@ -12,9 +12,11 @@
 a multi-purpose discord bot
 ___
 ## FEATURES
-- [x] Inspiring Quotes
+- [x] Inspirational Quotes
+- [ ] Gives options to change command settings
+- [ ] Shows User Information
+- [ ] Shows Server Information
 - [ ] Plays Music
-- [x] Gives options to change command settings
 ___
 ___
 > ***Beep boop. Boop beep!***
