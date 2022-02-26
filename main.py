@@ -19,8 +19,6 @@ VARIABLES
 
 client = discord.Client()
 
-
-
 def get_quote():
     response = requests.get("https://zenquotes.io/api//random")
     quote_json = json.loads(response.text)
@@ -30,7 +28,8 @@ def get_quote():
 
 @client.event
 async def on_ready():
-    print('We\'ve logged in as {0.user}'.format(client))
+    print('Logged in as {0.user}'.format(client))
+    await client.get_channel(int(os.environ['CONSOLE_CHANNEL_ID'])).send(".\nLogged in!\nOnline Now!")
 
 
 @client.event
@@ -51,7 +50,7 @@ async def on_message(message):
             db["command_key"] = message.content.split(command_key + " devsets 0 ",1)[1]
             command_key = db["command_key"]
             await message.channel.send(".\nCommand Key changed successfully!\nNew Command Key: " + command_key)
-            print("\n\nCommand Key changed successfully!\nNew Command Key: " + command_key + "\n\n")
+            await client.get_channel(int(os.environ['CONSOLE_CHANNEL_ID'])).send("\n\nCommand Key changed successfully!\nNew Command Key: " + command_key + "\n\n")
         elif message.content.startswith(command_key + " devsets"):
             await message.channel.send(".\nOriginal message sent: \"" + message.content + "\"\n\n")
             await message.channel.send(".\n" + developer_settings_menu)
