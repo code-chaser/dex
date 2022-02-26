@@ -4,7 +4,7 @@
   
   dex-discord-bot
   
-  [![Invite: Bot](https://img.shields.io/badge/Add%20to-your%20server-red.svg)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=534760651840&scope=bot) [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/badge/Made%20in-Python-yellow.svg)](https://github.com/code-chaser/dex/) 
+  [![Invite: Bot](https://img.shields.io/badge/Add%20to-your%20server-green.svg)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=534760651840&scope=bot) [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/badge/Made%20in-Python-yellow.svg)](https://github.com/code-chaser/dex/) 
 
 </h1>
 
