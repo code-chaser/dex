@@ -15,7 +15,7 @@ ___
 - [x] Inspirational Quotes
 - [x] Server custom prefixes
 - [x] Shows User Information
-- [ ] Shows Server Information
+- [x] Shows Server Information
 - [ ] Plays Music
 ___
 ## COMMANDS
