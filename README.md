@@ -13,8 +13,8 @@ a multi-purpose discord bot
 ___
 ## FEATURES
 - [x] Inspirational Quotes
-- [ ] Gives options to change command settings
-- [ ] Shows User Information
+- [x] Server custom prefixes
+- [x] Shows User Information
 - [ ] Shows Server Information
 - [ ] Plays Music
 ___
