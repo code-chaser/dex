@@ -5,29 +5,29 @@ import requests
 import json
 from replit import db
 
-"""
-
-VARIABLES
-    
-    command_key : stores the string for the bot to acknowldge
-        every message that starts with that string;
-
-    client : stores the bot's client address;
-
-"""
-
 def get_prefix(client, message):
     with open('./data/prefixes.json', 'r') as pref:
         prefixes = json.load(pref)
-    return prefixes[str(message.guild.id)]
+    return prefixes[str(message.guild.id)] + ' '
     
 client = commands.Bot(command_prefix = get_prefix)
 
 @client.event
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
-    await client.get_channel(int(os.environ['CONSOLE_CHANNEL_ID'])).send(".\nLogged in!\nOnline Now!")
-    await client.change_presence(activity=discord.Activity(type = discord.ActivityType.listening, name = db["command_key"]))
+    member_count = 0
+    bot_count = 0
+    for g in client.guilds:
+        member_count += len(g.members)
+        for m in g.members:
+            print(m)
+            print("\n")
+            if m.bot:
+                bot_count += 1
+    
+    channel = client.get_channel(int(os.environ['CONSOLE_CHANNEL_ID']))
+    await channel.send("Logged in!\nOnline Now!\n\nWatching " + str(len(client.guilds)) + " servers\nwith " + str(member_count) + " members including " + str(bot_count) + " bots\n")
+    await client.change_presence(activity = discord.Activity(type = discord.ActivityType.listening, name = 'Stop WW3!'))
     
 @client.event
 async def on_guild_join(guild):
@@ -52,11 +52,12 @@ def get_quote():
     quote = "\"" + quote_json[0]['q'] + "\" -" + quote_json[0]['a']
     return (quote)
 
-@client.command
-async def change_prefix(ctx, prefix):
+@client.command()
+async def changeprefix(ctx, prefix):
     with open('./data/prefixes.json', 'r') as pref:
         prefixes = json.load(pref)
     prefixes[str(ctx.guild.id)] = prefix
+    await ctx.send("Prefix changed!\nNew Prefix is " + prefix)
     with open('./data/prefixes.json', 'w') as pref:
         json.dump(prefixes, pref, indent = 4)
 
