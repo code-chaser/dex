@@ -1,16 +1,20 @@
 import discord
-from discord.ext import commands
 import os
 import requests
 import json
+from typing import Optional
+from discord import Embed, Member
+from discord.ext import commands
 from replit import db
+from cogs.info import Info
 
 def get_prefix(client, message):
     with open('./data/prefixes.json', 'r') as pref:
         prefixes = json.load(pref)
     return prefixes[str(message.guild.id)] + ' '
     
-client = commands.Bot(command_prefix = get_prefix)
+client = discord.ext.commands.Bot(command_prefix = get_prefix)
+client.add_cog(Info(client))
 
 @client.event
 async def on_ready():
@@ -52,6 +56,7 @@ def get_quote():
     quote = "\"" + quote_json[0]['q'] + "\" -" + quote_json[0]['a']
     return (quote)
 
+
 @client.command()
 async def changeprefix(ctx, prefix):
     with open('./data/prefixes.json', 'r') as pref:
@@ -61,7 +66,17 @@ async def changeprefix(ctx, prefix):
     with open('./data/prefixes.json', 'w') as pref:
         json.dump(prefixes, pref, indent = 4)
 
-"""
+
+"""    
+@client.command(name = "userinfo", aliases = ["ui","memberinfo","mi"])
+async def user_info(ctx, target: Optional[Member]):
+        target = target or ctx.author
+        embed = Embed(title = "User Information",
+                     colour = target.colour,
+                     timestamp = datetime.utcnow())
+        embed.set_thumbnail(url = target.avatar_url)
+        await ctx.send(embed=embed)
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -70,7 +85,7 @@ async def on_message(message):
     
     if message.content.startswith("$dex"):
         if message.content.startswith("$dex inspire"):
-            await message.channel.send("\nReplying to: \"" + message.content + "\" -" + message.author.mention + "\n\n")
+            
             await message.channel.send("\n" + get_quote())
         else:
             await message.channel.send("\nReplying to: \"" + message.content + "\" -" + message.author.mention + "\n\n")
