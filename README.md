@@ -18,7 +18,15 @@ ___
 - [ ] Shows Server Information
 - [ ] Plays Music
 ___
+## COMMANDS
+```
+$dex          - default set prefix;
+<prefix> help - shows the list of all commands;
+```
+- Try it on your own server: [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=534760651840&scope=bot)
+- Try it in our public Bot server: [Join Here](https://discord.gg/d8Jq64huq2)
 ___
 > ***Beep boop. Boop beep!***
 
+> ***Hope you, like it! 😛***
 ___
