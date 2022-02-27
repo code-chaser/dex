@@ -57,14 +57,20 @@ def get_quote():
     return (quote)
 
 
-@client.command()
-async def changeprefix(ctx, prefix):
-    with open('./data/prefixes.json', 'r') as pref:
-        prefixes = json.load(pref)
-    prefixes[str(ctx.guild.id)] = prefix
-    await ctx.send("Prefix changed!\nNew Prefix is " + prefix)
-    with open('./data/prefixes.json', 'w') as pref:
-        json.dump(prefixes, pref, indent = 4)
+@client.command(name = "changeprefix", aliases = ["chngpref"])
+async def change_prefix(ctx, prefix: Optional[str]):
+    if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
+        await ctx.send("Prefix changes are not allowed on this server.\n")
+    else:
+        if prefix:
+            with open('./data/prefixes.json', 'r') as pref:
+                prefixes = json.load(pref)
+            prefixes[str(ctx.guild.id)] = prefix
+            await ctx.send("Prefix changed!\nNew Prefix is " + prefix)
+            with open('./data/prefixes.json', 'w') as pref:
+                json.dump(prefixes, pref, indent = 4)
+        else:
+            await ctx.send("Blank prefix not allowed!\nPlease append a valid prefix string.")
 
 
 """    
