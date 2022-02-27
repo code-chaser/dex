@@ -2,10 +2,16 @@
 
 <h1 align="center"> 
   
+  <br>
+  
   dex-discord-bot
   
-  [![Invite: Bot](https://img.shields.io/badge/Add%20to-your%20server-purple.svg)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/badge/Made%20in-Python-yellow.svg)](https://github.com/code-chaser/dex/) [![Fork: Count](https://img.shields.io/github/forks/code-chaser/dex?color=blue&label=Forks)](https://github.com/code-chaser/dex/) [![Star: Count](https://img.shields.io/github/stars/code-chaser/dex?color=brightgreen&label=Stars)](https://github.com/code-chaser/dex/) [![Follower: Count](https://img.shields.io/github/followers/code-chaser?color=cb5786&label=Followers)](https://github.com/code-chaser/)
+  <br>
+  
+  [![Invite: Bot](https://img.shields.io/static/v1?label=Add%20to&message=your%20server&color=purple&style=for-the-badge)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot) [![License: MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=red&style=for-the-badge)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/static/v1?label=Made%20in&message=Python&color=yellow&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Fork: Count](https://img.shields.io/github/forks/code-chaser/-hex?color=blue&label=Forks&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Star: Count](https://img.shields.io/github/stars/code-chaser/-hex?color=brightgreen&label=Stars&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Follower: Count](https://img.shields.io/github/followers/code-chaser?color=cb5786&label=Followers&style=for-the-badge)](https://github.com/code-chaser/)
 
+  <br>
+  
 </h1>
 
 ## DESCRIPTION
