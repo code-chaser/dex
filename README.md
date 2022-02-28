@@ -8,9 +8,9 @@
   
   <br>
   
-  [![Invite: Bot](https://img.shields.io/static/v1?label=Add%20to&message=your%20server&color=purple&style=for-the-badge)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot)
+  [![Invite: Bot](https://img.shields.io/static/v1?label=%20Invite&message=dex&color=5865F2&style=for-the-badge&logo=discord)](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot)
   
-  [![License: MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=red&style=for-the-badge)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/static/v1?label=Made%20in&message=Python&color=yellow&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Fork: Count](https://img.shields.io/github/forks/code-chaser/-hex?color=blue&label=Forks&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Star: Count](https://img.shields.io/github/stars/code-chaser/-hex?color=brightgreen&label=Stars&style=for-the-badge)](https://github.com/code-chaser/dex/) [![Follower: Count](https://img.shields.io/github/followers/code-chaser?color=cb5786&label=Followers&style=for-the-badge)](https://github.com/code-chaser/)
+  [![License: MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=red&style=for-the-badge&logo=giphy)](https://github.com/code-chaser/dex/blob/main/LICENSE) [![Made in: Python](https://img.shields.io/static/v1?label=Made%20in&message=Python&color=yellow&style=for-the-badge&logo=hyper)](https://github.com/code-chaser/dex/) [![Fork: Count](https://img.shields.io/github/forks/code-chaser/-hex?color=blue&label=Forks&style=for-the-badge&logo=gitextensions)](https://github.com/code-chaser/dex/network/members) [![Star: Count](https://img.shields.io/github/stars/code-chaser/-hex?color=brightgreen&label=Stars&style=for-the-badge&logo=icinga)](https://github.com/code-chaser/dex/stargazers) [![Follower: Count](https://img.shields.io/github/followers/code-chaser?color=cb5786&label=Followers&style=for-the-badge&logo=github)](https://github.com/code-chaser/)
   
 </h1>
 
