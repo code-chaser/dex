@@ -4,7 +4,7 @@
   
   <br>
   
-  dex-discord-bot
+  <a href="https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot"><i>dex</i></a> <small>discord bot</small>
   
   <br>
   
@@ -18,9 +18,14 @@
 
 <br>
 
-## DESCRIPTION
+<h2 align="center"> DESCRIPTION </h2>
 It's DEX, a multi-purpose discord bot that can be used to get user information, server (guild) information, get a random inspirational quote and much more, with options to set a custom prefix for each server.
 
+<br>
+<br>
+  
+- Try it on your own server: [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot)
+- Try it in our public Bot server: [Join Here](https://discord.gg/FUqqEyBBA3)
 
 ___
 
@@ -108,17 +113,13 @@ $dex                     - default set prefix;
 <prefix> serverinfo      - shows server (guild) info;
 ```
 -->
-<br>
-  
-- Try it on your own server: [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot)
-- Try it in our public Bot server: [Join Here](https://discord.gg/FUqqEyBBA3)
 
 
 ___
 
 <br>
 
-<h2 align="center">FEATURES</h2>
+<h2 align="center"> FEATURES </h2>
 <!--|Check|Feature|
 |:-:|:-|
 | ✔️ | Inspirational Quotes |
