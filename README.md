@@ -17,7 +17,7 @@
 <br>
 
 <h2 align="center"> DESCRIPTION </h2>
-It's DEX, a multi-purpose discord bot that can be used to get user information, server (guild) information, get a random inspirational quote and much more, with options to set a custom prefix for each server.
+It's DEX, a multi-purpose discord bot that can be used to get user information, server (guild) information, get a random inspirational quote, random meme, covid-19 stats and much more, with options to set a custom prefix for each server.
 
 <br>
 <br>
