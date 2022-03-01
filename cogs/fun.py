@@ -108,7 +108,7 @@ class Fun(Cog):
             embed.add_field(name="Given Country Name", value=country, inline=True)
             await ctx.send(embed=embed)
 
-    @command(name = "meme", aliases = ["hehe"])
+    @command(name = "meme", aliases = ["hehe"], help = "sends a random meme")
     async def send_meme(self, ctx):
         embed = Embed(title = "MEME",
                      colour = 0xffee00,

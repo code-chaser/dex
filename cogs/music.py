@@ -1,5 +1,6 @@
 import discord
 import youtube_dl
+import ffmpeg
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
@@ -12,10 +13,24 @@ class Music(Cog):
         self.bot = bot
         self.is_playing = False
         self.music_queue=[]
-        self.ydl_options={'format':'bestaudio', 'noplaylist':'True'}
+        self.ydl_options={
+            'format':'bestaudio',
+            'noplaylist':True,
+            'extractaudio': True,
+            'audioformat': 'mp3',
+            'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+            'restrictfilenames': True,
+            'nocheckcertificate': True,
+            'ignoreerrors': False,
+            'logtostderr': False,
+            'quiet': True,
+            'no_warnings': True,
+            'default_search': 'auto',
+            'source_address': '0.0.0.0'
+        }
         self.ffmpeg_options={'before_options':'-reconnect 1 -reconnect_streamed 1 - reconnect_delay_max 5', 'options':'-vn'}
 
-    @command(name="join", aliases=["connect"])
+    @command(name="join", aliases=["connect"], help = "joins the vc of the command author")
     async def join_vc(self, ctx):
         if ctx.author.voice is None:
             embed=Embed(
@@ -33,7 +48,7 @@ class Music(Cog):
                 await ctx.voice_client.move_to(voice_channel)
             return True
 
-    @command(name="leave", aliases=["disconnect"])
+    @command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
     async def leave_vc(self, ctx):
         if ctx.guild.voice_client is None:
             embed=Embed(
@@ -79,9 +94,18 @@ class Music(Cog):
         else:
             self.is_playing = False
 
-    @command(name="play", aliases=["p"])
+    @command(name="play", aliases=["p"], help = "apparently, replit won't let it play!")
     async def play(self, ctx, keyword):
-        if not self.join_vc(ctx):
+        embed = Embed(
+                title="Status",
+                colour=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+        embed.add_field(name="Error",value="Replit's not letting me play! T_T",inline=False)
+        await self.join_vc(ctx)
+        await ctx.send(embed=embed)
+        return
+        if ctx.author.voice is None:
             return
         song = self.search_yt(keyword)
         if type(song) == type(False):
