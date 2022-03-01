@@ -22,6 +22,10 @@ class Fun(Cog):
         response = requests.get("https://api.covid19api.com/summary")
         response_json = json.loads(response.text)
         return response_json
+    def get_meme(self):
+        response = requests.get("https://meme-api.herokuapp.com/gimme")
+        response_json = json.loads(response.text)
+        return response_json
         
     @command(name = "inspire", aliases = ["iquote"])
     async def send_iquote(self, ctx):
@@ -103,6 +107,19 @@ class Fun(Cog):
             )
             embed.add_field(name="Given Country Name", value=country, inline=True)
             await ctx.send(embed=embed)
+
+    @command(name = "meme", aliases = ["hehe"])
+    async def send_meme(self, ctx):
+        embed = Embed(title = "MEME",
+                     colour = 0xffee00,
+                     timestamp = datetime.utcnow())
+        meme = self.get_meme()
+        embed.add_field(name="Post Link", value=meme["postLink"], inline=True)
+        embed.add_field(name="Author", value=meme["author"] , inline=True)
+        embed.add_field(name="Header", value=meme["title"] , inline=False)
+        embed.set_image(url=meme["url"])
+        embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156142184-0675cfee-2863-41d7-bef8-87f600a713b0.png")
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
