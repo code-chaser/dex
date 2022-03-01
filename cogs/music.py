@@ -35,7 +35,7 @@ class Music(Cog):
 
     @command(name="leave", aliases=["disconnect"])
     async def leave_vc(self, ctx):
-        if self.bot.user.voice is None:
+        if ctx.guild.voice_client is None:
             embed=Embed(
                 title="Error",
                 description="Dex is not in any voice channel",
@@ -43,7 +43,7 @@ class Music(Cog):
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
         else:
-            await self.bot.user.voice.channel.disconnect()
+            await ctx.guild.voice_client.disconnect()
 
     def search_yt(self, item):
         with YoutubeDL(self.ydl_options) as ydl:
@@ -53,28 +53,28 @@ class Music(Cog):
                 return False
         return {'source':info['formats'][0]['url'], 'title':info['title']}
         
-    def play_next(self):
+    def play_next(self,ctx):
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]['source']
             voice_channel = self.music_queue[0][1]
             self.music_queue.pop(0)
-            source = await discord.FFmpegPCMAudio(m_url,**self.FFMPEG_OPTIONS)
+            source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
             voice_channel.play(source, after=lambda e: self.play_next())
         else:
             self.is_playing = False
 
-    async def play_music(self):
+    async def play_music(self,ctx):
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]['source']
-            if self.bot.user.voice is None:
+            if ctx.guild.voice_client is None:
                 await self.music_queue[0][1].connect()
-            elif self.bot.user.voice.channel != self.music_queue[0][1]
+            elif ctx.guild.voice_client.channel != self.music_queue[0][1]:
                 ctx.voice_client.move_to(self.music_queue[0][1])
             voice_channel = self.music_queue[0][1]
             self.music_queue.pop(0)
-            source = await discord.FFmpegPCMAudio.from_probe(m_url,**self.FFMPEG_OPTIONS)
+            source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
             voice_channel.play(source, after=lambda e: self.play_next())
         else:
             self.is_playing = False
@@ -100,11 +100,11 @@ class Music(Cog):
                 timestamp=datetime.utcnow()
             )
             embed.add_field(name="Done",value="Song added to the queue",inline=False)
-            self.music_queue.append([song,ctx.author.voice_channel])
+            self.music_queue.append([song,ctx.author.voice.channel,ctx.author])
             await ctx.send(embed=embed)
             if not self.is_playing:
-                await self.play_music()
+                await self.play_music(ctx)
         
 
 def setup(bot):
-    bot.add_cog(Info(bot))
+    bot.add_cog(Music(bot))

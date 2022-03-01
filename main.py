@@ -7,6 +7,7 @@ import cogs.report as report
 import cogs.fun as fun
 import cogs.music as music
 from datetime import datetime
+from ffmpeg import video
 from typing import Optional
 
 cogs_list = [info,modset,report,fun,music]
