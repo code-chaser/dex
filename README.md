@@ -156,7 +156,7 @@ ___
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
-<td align="left">Astronomy Pic of the day (NASA Api)</td>
+<td align="left">Astronomy Pic of the day (NASA API)</td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
