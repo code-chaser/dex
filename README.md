@@ -56,13 +56,13 @@ ___
 <td align="center">3</td>
 <td align="center"><code>&lt;prefix&gt; changepref &lt;p&gt;</code></td>
 <td align="left">sets the prefix for the server as <code>&lt;p&gt;</code></td>
-<td align="center"><code>chngpref</code></td>
+<td align="center"><code>changeprefix</code></td>
 </tr>
 <tr>
 <td align="center">4</td>
 <td align="center"><code>&lt;prefix&gt; inspire</code></td>
 <td align="left">sends a random inspirational quote</td>
-<td align="center">N/A</td>
+<td align="center"><code>iquote</code></td>
 </tr>
 <tr>
 <td align="center">5</td>
