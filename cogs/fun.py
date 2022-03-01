@@ -18,6 +18,11 @@ class Fun(Cog):
         response = requests.get("https://api.nasa.gov/planetary/apod?api_key=KljLJ0j9I3khrq8LbWjYsHncz680WFJabuRLkhIv")
         response_json = json.loads(response.text)
         return response_json
+    def get_covid19_details(self):
+        response = requests.get("https://api.covid19api.com/summary")
+        response_json = json.loads(response.text)
+        return response_json
+        
     @command(name = "inspire", aliases = ["iquote"])
     async def send_iquote(self, ctx):
         embed = Embed(title = "Inspirational Quote",
@@ -28,7 +33,7 @@ class Fun(Cog):
         embed.add_field(name="Author", value=iquote[0]['a'] , inline=False)
         await ctx.send(embed=embed)
 
-    @command(name = "nasapic", aliases = ["nasapicotd","astropic","astropicotd"])
+    @command(name = "astropic", aliases = ["astropicotd","nasapic","nasapicotd"])
     async def send_nasa_pic_otd(self, ctx):
         embed = Embed(title = "NASA",
                      description = "Picture of the day",
@@ -39,6 +44,65 @@ class Fun(Cog):
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
         embed.add_field(name="Image Title", value=nasa_api["title"] , inline=False)
         await ctx.send(embed=embed)
-        
+
+    @command(name="covid19")
+    async def covid19_data(self, ctx, country: Optional[str]):
+        found = False
+        stats = self.get_covid19_details()
+        if country:
+            for k in stats["Countries"]:
+                if (k["CountryCode"] == country) or (k["Country"] == country):
+                    embed = Embed(
+                        title = k["Country"],
+                        description = "COVID-19 Statistics",
+                        colour = 0xff0000,
+                        timestamp = datetime.utcnow()
+                    )
+                    flag_url="https://flagcdn.com/w640/" + str(k["CountryCode"]).lower() + ".jpg"
+                    embed.set_thumbnail(url=flag_url)
+                    fields = [
+                        ("New Confirmed Cases", k["NewConfirmed"], True),
+                        ("Total Confirmed Cases", k["TotalConfirmed"], True),
+                        ("Country Code", k["CountryCode"], True),
+                        ("New Deaths", k["NewDeaths"], True),
+                        ("Total Deaths", k["TotalDeaths"], True),
+                        ("Report Time (UTC)", "Date: " + k["Date"][0:10] + " & Time: " + k["Date"][11:19], True),
+                        ("New Recovered", k["NewRecovered"], True),
+                        ("Total Recovered", k["TotalRecovered"], True)
+                    ]
+                    for n,v,i in fields:
+                        embed.add_field(name=n,value=v,inline=i)
+                    await ctx.send(embed=embed)
+                    found = True
+        else:
+            k = stats["Global"]
+            embed = Embed(
+                title = Global,
+                description = "COVID-19 Statistics",
+                colour = 0xff0000,
+                timestamp = datetime.utcnow()
+            )
+            embed.set_thumbnail(url=flag_url)
+            fields = [
+                ("New Confirmed Cases", k["NewConfirmed"], True),
+                ("Total Confirmed Cases", k["TotalConfirmed"], True),
+                ("New Deaths", k["NewDeaths"], True),
+                ("Total Deaths", k["TotalDeaths"], True),
+                ("New Recovered", k["NewRecovered"], True),
+                ("Total Recovered", k["TotalRecovered"], True)
+            ]
+            for n,v,i in fields:
+                embed.add_field(name=n,value=v,inline=i)
+            await ctx.send(embed=embed)
+            found = True
+        if not found:
+            embed = Embed(
+                title = "Error",
+                description = "Country Not Found",
+                colour = 0xff0000
+            )
+            embed.add_field(name="Given Country Name", value=country, inline=True)
+            await ctx.send(embed=embed)
+
 def setup(bot):
     bot.add_cog(Fun(bot))
