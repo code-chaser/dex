@@ -10,15 +10,15 @@ class Info(Cog):
         self.bot = bot
 
     @Cog.listener()
-    async def on_guild_join(guild):
+    async def on_guild_join(self, guild):
         with open('./data/tag_messages.json', 'r') as tag_:
-            tag_messages = json.tag_messages(tag_)
-        tag_messages[str(guild.id)] = True
+            tag_messages = json.load(tag_)
+        tag_messages[str(guild.id)] = "on"
         with open('./data/tag_messages.json', 'w') as tag_:
             json.dump(tag_messages, tag_, indent = 4)
 
     @Cog.listener()
-    async def on_guild_remove(guild):
+    async def on_guild_remove(self, guild):
         with open('./data/tag_messages.json', 'r') as tag_:
             tag_messages = json.load(tag_)
         if str(guild.id) in tag_messages.keys():
