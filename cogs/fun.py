@@ -81,12 +81,12 @@ class Fun(Cog):
         else:
             k = stats["Global"]
             embed = Embed(
-                title = Global,
+                title = "Global",
                 description = "COVID-19 Statistics",
                 colour = 0xff0000,
                 timestamp = datetime.utcnow()
             )
-            embed.set_thumbnail(url=flag_url)
+            embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156144079-6f90504d-ad48-4f2e-bec5-bae31cebd858.png")
             fields = [
                 ("New Confirmed Cases", k["NewConfirmed"], True),
                 ("Total Confirmed Cases", k["TotalConfirmed"], True),
