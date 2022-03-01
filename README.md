@@ -60,36 +60,48 @@ ___
 </tr>
 <tr>
 <td align="center">4</td>
+<td align="center"><code>&lt;prefix&gt; tags &lt;on/off&gt;</code></td>
+<td align="left">toggles message tags (on/off)</td>
+  <td align="center"><code>msgtag</code>,<code>tagging</code></td>
+</tr>
+<tr>
+<td align="center">5</td>
 <td align="center"><code>&lt;prefix&gt; inspire</code></td>
 <td align="left">sends a random inspirational quote</td>
 <td align="center"><code>iquote</code></td>
 </tr>
 <tr>
-<td align="center">5</td>
+<td align="center">6</td>
 <td align="center"><code>&lt;prefix&gt; astropic</code></td>
 <td align="left">sends NASA's astronomy pic of the day</td>
 <td align="center"><code>astropicotd</code>, <code>nasapic</code>, <code>nasapicotd</code></td>
 </tr>
 <tr>
-<td align="center">6</td>
+<td align="center">7</td>
 <td align="center"><code>&lt;prefix&gt; covid19 &lt;country&gt;</code></td>
 <td align="left">sends COVID-19 stats of the given country (global stats if country == <code>null</code>)</td>
 <td align="center">N/A</td>
 </tr>
 <tr>
-<td align="center">7</td>
+<td align="center">8</td>
+<td align="center"><code>&lt;prefix&gt; meme</code></td>
+<td align="left">sends a random meme</td>
+<td align="center">N/A</td>
+</tr>
+<tr>
+<td align="center">9</td>
 <td align="center"><code>&lt;prefix&gt; userinfo</code></td>
 <td align="left">shows user info of the message author</td>
 <td align="center"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
 </tr>
 <tr>
-<td align="center">8</td>
+<td align="center">10</td>
 <td align="center"><code>&lt;prefix&gt; userinfo &lt;uID&gt;</code></td>
 <td align="left">shows user info of <code>&lt;uID&gt;</code> if it's valid else the message author</td>
 <td align="center"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
 </tr>
 <tr>
-<td align="center">9</td>
+<td align="center">11</td>
 <td align="center"><code>&lt;prefix&gt; serverinfo</code></td>
 <td align="left">shows server (guild) info</td>
 <td align="center"><code>si</code>, <code>guildinfo</code>, <code>gi</code></td>
@@ -127,8 +139,12 @@ ___
 <h2 align="center"> FEATURES </h2>
 <!--|Check|Feature|
 |:-:|:-|
-| ✔️ | Inspirational Quotes |
 | ✔️ | Server custom prefixes |
+| ✔️ | Message Tags |
+| ✔️ | Inspirational Quotes |
+| ✔️ | Astronomy Pic OTD by NASA |
+| ✔️ | COVID 19 statistics |
+| ✔️ | Memes |
 | ✔️ | Shows User Information |
 | ✔️ | Shows Server Information |
 |    | Plays Music | -->
@@ -144,11 +160,11 @@ ___
 <tbody>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
-<td align="left">Inspirational Quotes</td>
+<td align="left">Server custom prefixes</td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
-<td align="left">Server custom prefixes</td>
+<td align="left">Message Tags</td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
@@ -161,6 +177,10 @@ ___
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">COVID-19 Stats</td>
+</tr>
+<tr>
+<td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
+<td align="left">Memes</td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
