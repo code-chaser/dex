@@ -73,7 +73,7 @@ ___
 <tr>
 <td align="center">6</td>
 <td align="center"><code>&lt;prefix&gt; covid19 &lt;country&gt;</code></td>
-<td align="left">sends COVID-19 stats of the given country</td>
+<td align="left">sends COVID-19 stats of the given country (global stats if country == <code>null</code>)</td>
 <td align="center">N/A</td>
 </tr>
 <tr>
