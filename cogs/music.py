@@ -90,7 +90,7 @@ class Music(Cog):
                 colour=0xff0000,
                 timestamp=datetime.utcnow()
             )
-            embed.add_field(name="Error",value="Failed to query YouTube for the song",inline=False)
+            embed.add_field(name="Error",value="Failed to query YouTube for the music",inline=False)
             embed.set_footer(text="Might be due to a livestream or a playlist")
             await ctx.send(embed=embed)
         else:

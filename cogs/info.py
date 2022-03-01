@@ -48,7 +48,7 @@ class Info(Cog):
         embed.set_thumbnail(url=target.avatar_url)
         await message.channel.send(embed=embed)
     
-    @command(name = "userinfo", aliases = ["ui","memberinfo","mi"])
+    @command(name = "userinfo", aliases = ["ui","memberinfo","mi"], help="shows user info")
     async def user_info(self, ctx, target: Optional[Member]):
         target = target or ctx.author
         embed = Embed(title = "User Information",
@@ -70,7 +70,7 @@ class Info(Cog):
             embed.add_field(name=n,value=v,inline=i)
         await ctx.send(embed=embed)
 
-    @command(name = "serverinfo", aliases = ["si","guildinfo","gi"])
+    @command(name = "serverinfo", aliases = ["si","guildinfo","gi"], help = "shows server information")
     async def server_info(self, ctx, target: Optional[Guild]):
         flag = True
         if(target):

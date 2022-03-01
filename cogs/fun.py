@@ -27,7 +27,7 @@ class Fun(Cog):
         response_json = json.loads(response.text)
         return response_json
         
-    @command(name = "inspire", aliases = ["iquote"])
+    @command(name = "inspire", aliases = ["iquote"], help="sends a random inspirational quote")
     async def send_iquote(self, ctx):
         embed = Embed(title = "Inspirational Quote",
                      colour = ctx.author.colour,
@@ -37,7 +37,7 @@ class Fun(Cog):
         embed.add_field(name="Author", value=iquote[0]['a'] , inline=False)
         await ctx.send(embed=embed)
 
-    @command(name = "astropic", aliases = ["astropicotd","nasapic","nasapicotd"])
+    @command(name = "astropic", aliases = ["astropicotd","nasapic","nasapicotd"], help = "sends astronomy pic of the day from NASA")
     async def send_nasa_pic_otd(self, ctx):
         embed = Embed(title = "NASA",
                      description = "Picture of the day",
@@ -49,7 +49,7 @@ class Fun(Cog):
         embed.add_field(name="Image Title", value=nasa_api["title"] , inline=False)
         await ctx.send(embed=embed)
 
-    @command(name="covid19")
+    @command(name="covid19", help = "sends COVID-19 stats of the given country (global stats if country == null)")
     async def covid19_data(self, ctx, country: Optional[str]):
         found = False
         stats = self.get_covid19_details()

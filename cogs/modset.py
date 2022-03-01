@@ -13,7 +13,7 @@ class ModSet(Cog):
     @command(name = "modset", aliases = ["mset","modsettings"])
     async def modset (self, ctx, target: Optional[Member]):
         pass
-    @command(name = "tags", aliases = ["tagging","msgtag"])
+    @command(name = "tags", aliases = ["tagging","msgtag"], help = "toggles message tags")
     async def message_tags(self, ctx, switch: Optional[str]):
         with open('./data/tag_messages.json', 'r') as tag_:
             tag_messages=json.load(tag_)
@@ -42,7 +42,7 @@ class ModSet(Cog):
         embed.add_field(name="Done", value="Message Tags are now " + tag_messages[str(ctx.guild.id)], inline=True)
         await ctx.send(embed=embed)
 
-    @command(name = "changepref", aliases = ["changeprefix"])
+    @command(name = "changepref", aliases = ["changeprefix"], help="changes the prefix to the appended string")
     async def change_prefix(self, ctx, prefix: Optional[str]):
         if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
             embed = Embed(title = "Status",
