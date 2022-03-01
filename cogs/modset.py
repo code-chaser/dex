@@ -10,9 +10,38 @@ class ModSet(Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @command(name = "modset", aliases = ["mset","modsettings"], attr = [])
+    @command(name = "modset", aliases = ["mset","modsettings"])
     async def modset (self, ctx, target: Optional[Member]):
         pass
+    @command(name = "tags", aliases = ["tagging","msgtag"])
+    async def message_tags(self, ctx, switch: Optional[str]):
+        with open('./data/tag_messages.json', 'r') as tag_:
+            tag_messages=json.load(tag_)
+        if switch is None:
+            if tag_messages[str(ctx.guild.id)] == "off":
+                tag_messages[str(ctx.guild.id)] = "on"
+            else:
+                tag_messages[str(ctx.guild.id)] = "off"
+        elif switch.lower() == "off" or switch == "0":
+            tag_messages[str(ctx.guild.id)] = "off"
+        elif switch.lower() == "on" or switch == "1":
+            tag_messages[str(ctx.guild.id)] = "on"
+        
+        else:
+            embed=Embed(title="Status",colour=0xff0000,timestamp = datetime.utcnow())
+            embed.add_field(name="Error", value="Invalid value provided", inline=True)
+            await ctx.send(embed=embed)
+            return
+        
+        embed = Embed(title = "Status",
+                 colour = 0x00ff00,
+                 timestamp = datetime.utcnow())
+        
+        with open('./data/tag_messages.json', 'w') as tag_:
+            json.dump(tag_messages, tag_, indent = 4)
+        embed.add_field(name="Done", value="Message Tags are now " + tag_messages[str(ctx.guild.id)], inline=True)
+        await ctx.send(embed=embed)
+
     @command(name = "changepref", aliases = ["changeprefix"])
     async def change_prefix(self, ctx, prefix: Optional[str]):
         if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
@@ -22,6 +51,13 @@ class ModSet(Cog):
             embed.add_field(name="Error", value="Prefix changes are not allowed on this server!", inline=True)
             await ctx.send(embed=embed)
         else:
+            if ctx.author != ctx.guild.owner:
+                embed = Embed(title = "Status",
+                         colour = 0xff0000,
+                         timestamp = datetime.utcnow())
+                embed.add_field(name="Error", value="Only server owner can change the prefix!", inline=True)
+                await ctx.send(embed=embed)
+                return
             if prefix:
                 with open('./data/prefixes.json', 'r') as pref:
                     prefixes = json.load(pref)

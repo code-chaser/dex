@@ -1,12 +1,15 @@
 import discord
 import json
 import os
+import cogs.info as info
+import cogs.modset as modset
+import cogs.report as report
+import cogs.fun as fun
+import cogs.music as music
 from datetime import datetime
 from typing import Optional
-from cogs.info import Info
-from cogs.modset import ModSet
-from cogs.report import Report
-from cogs.fun import Fun
+
+cogs_list = [info,modset,report,fun,music]
 
 def get_prefix(client, message):
     with open('./data/prefixes.json', 'r') as pref:
@@ -16,10 +19,9 @@ def get_prefix(client, message):
 intents = discord.Intents.all()
 
 client = discord.ext.commands.Bot(command_prefix = get_prefix, intents = intents)
-client.add_cog(Info(client))
-client.add_cog(ModSet(client))
-client.add_cog(Report(client))
-client.add_cog(Fun(client))
+
+for cog in cogs_list:
+    cog.setup(client)
 
 @client.event
 async def on_ready():

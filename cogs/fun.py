@@ -2,7 +2,7 @@ import requests
 import json
 from typing import Optional
 from datetime import datetime
-from discord import Embed, Member
+from discord import Embed
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 

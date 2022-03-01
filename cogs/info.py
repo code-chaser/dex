@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
@@ -8,6 +9,45 @@ class Info(Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @Cog.listener()
+    async def on_guild_join(guild):
+        with open('./data/tag_messages.json', 'r') as tag_:
+            tag_messages = json.tag_messages(tag_)
+        tag_messages[str(guild.id)] = True
+        with open('./data/tag_messages.json', 'w') as tag_:
+            json.dump(tag_messages, tag_, indent = 4)
+
+    @Cog.listener()
+    async def on_guild_remove(guild):
+        with open('./data/tag_messages.json', 'r') as tag_:
+            tag_messages = json.load(tag_)
+        if str(guild.id) in tag_messages.keys():
+            tag_messages.pop(str(guild.id))
+        with open('./data/tag_messages.json', 'w') as tag_:
+            json.dump(tag_messages, tag_, indent = 4)
+
+    @Cog.listener()
+    async def on_message(self, message):
+        with open('./data/tag_messages.json', 'r') as tag_:
+            tag_messages=json.load(tag_)
+        if tag_messages[str(message.guild.id)] == "off":
+            return
+        target = message.author
+        if target == self.bot.user:
+            return
+        embed=Embed(
+            title="Message Tagged",
+            colour=target.colour,
+            timestamp=datetime.utcnow()
+        )
+        embed.set_footer(
+            text="<prefix> tags off -to turn this off"
+        )
+        embed.add_field(name="Message", value=message.content, inline=False)
+        embed.add_field(name="Author", value=target.mention, inline=True)
+        embed.set_thumbnail(url=target.avatar_url)
+        await message.channel.send(embed=embed)
+    
     @command(name = "userinfo", aliases = ["ui","memberinfo","mi"])
     async def user_info(self, ctx, target: Optional[Member]):
         target = target or ctx.author
