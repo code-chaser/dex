@@ -97,7 +97,7 @@ ___
 <tr>
 <td align="center">10</td>
 <td align="center"><code>&lt;prefix&gt; userinfo &lt;uID&gt;</code></td>
-<td align="left">shows user info of <code>&lt;uID&gt;</code> if it's valid else the message author</td>
+<td align="left">shows user info of <code>&lt;uID&gt;</code>, if it's valid, else the message author</td>
 <td align="center"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
 </tr>
 <tr>
