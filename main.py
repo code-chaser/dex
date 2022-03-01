@@ -1,12 +1,12 @@
 import discord
-import os
-import requests
 import json
+import os
 from datetime import datetime
 from typing import Optional
 from cogs.info import Info
 from cogs.modset import ModSet
 from cogs.report import Report
+from cogs.fun import Fun
 
 def get_prefix(client, message):
     with open('./data/prefixes.json', 'r') as pref:
@@ -19,6 +19,7 @@ client = discord.ext.commands.Bot(command_prefix = get_prefix, intents = intents
 client.add_cog(Info(client))
 client.add_cog(ModSet(client))
 client.add_cog(Report(client))
+client.add_cog(Fun(client))
 
 @client.event
 async def on_ready():

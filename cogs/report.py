@@ -73,10 +73,19 @@ class Report(Cog):
             return
         embed = Embed(title = "Message Information",
                  colour = target.colour,
-                 timestamp = datetime.utcnow())
+                 timestamp = message.created_at)
         embed.set_thumbnail(url = target.avatar_url)
+        embed.set_author(name=str(target), icon_url=target.avatar_url)
+        embed.add_field(name="Message", value=message.content, inline=False)
+        channel = self.bot.get_channel(int(os.environ['USAGE_HISTORY_CHANNEL_ID']))
+        await channel.send(embed=embed)
+
+        embed = Embed(title = "Message Information",
+                 colour = target.colour,
+                 timestamp = message.created_at)
+        embed.set_thumbnail(url = message.guild.icon_url)
         fields = [
-            ("Message", message.content, True),
+            ("Sent Time", message.created_at, True),
             ("Message ID", message.id, True),
             ("Channel", message.channel.name, True),
             ("Channel ID", message.channel.id, True),
@@ -94,7 +103,6 @@ class Report(Cog):
         ]
         for n, v, i in fields:
             embed.add_field(name=n,value=v,inline=i)
-        channel = self.bot.get_channel(int(os.environ['USAGE_HISTORY_CHANNEL_ID']))
         await channel.send(embed=embed)
 
 def setup(bot):
