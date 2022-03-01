@@ -66,18 +66,30 @@ ___
 </tr>
 <tr>
 <td align="center">5</td>
+<td align="center"><code>&lt;prefix&gt; astropic</code></td>
+<td align="left">sends NASA's astronomy pic of the day</td>
+<td align="center"><code>astropicotd</code>, <code>nasapic</code>, <code>nasapicotd</code></td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center"><code>&lt;prefix&gt; covid19 &lt;country&gt;</code></td>
+<td align="left">sends COVID-19 stats of the given country</td>
+<td align="center">N/A</td>
+</tr>
+<tr>
+<td align="center">7</td>
 <td align="center"><code>&lt;prefix&gt; userinfo</code></td>
 <td align="left">shows user info of the message author</td>
 <td align="center"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
 </tr>
 <tr>
-<td align="center">6</td>
+<td align="center">8</td>
 <td align="center"><code>&lt;prefix&gt; userinfo &lt;uID&gt;</code></td>
 <td align="left">shows user info of <code>&lt;uID&gt;</code> if it's valid else the message author</td>
 <td align="center"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
 </tr>
 <tr>
-<td align="center">7</td>
+<td align="center">9</td>
 <td align="center"><code>&lt;prefix&gt; serverinfo</code></td>
 <td align="left">shows server (guild) info</td>
 <td align="center"><code>si</code>, <code>guildinfo</code>, <code>gi</code></td>
@@ -137,6 +149,18 @@ ___
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Server custom prefixes</td>
+</tr>
+<tr>
+<td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
+<td align="left">Inspirational Quotes</td>
+</tr>
+<tr>
+<td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
+<td align="left">Astronomy Pic of the day (NASA Api)</td>
+</tr>
+<tr>
+<td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
+<td align="left">COVID-19 Stats</td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
