@@ -167,61 +167,61 @@ ___
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Server custom prefixes</td>
 <td align="left"><i><b>N/A</b></i></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Message Tags</td>
 <td align="left"><i><b>N/A</b></i></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Inspirational Quotes</td>
 <td align="left"><a href="https://premium.zenquotes.io/zenquotes-documentation/"><b>ZenQuotes API</b></a></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Astronomy Pic of the day by NASA</td>
 <td align="left"><a href="https://api.nasa.gov/"><b>NASA APOD API</b></a></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">COVID-19 Stats</td>
 <td align="left"><a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc"><b>Coronavirus COVID-19 API v1</b></a></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Memes</td>
 <td align="left"><a href="https://github.com/D3vd/Meme_Api"><b>D3vd/Meme_Api</b></a></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">SubReddits</td>
 <td align="left"><a href="https://www.reddit.com/dev/api/"><b>Reddit API</b></a></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Shows User Information</td>
 <td align="left"><i><b>N/A</b></i></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages</i></td>
 </tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Shows Server Information</td>
 <td align="left"><i><b>N/A</b></i></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages, Ban Members, Manage Server</i></td>
 </tr>
 <tr>
 <td align="center"></td>
 <td align="left">Plays Music</td>
 <td align="left"><i><b>N/A</b></i></td>
-<td align="left"><i>Embeds</i></td>
+<td align="left"><i><a href="">Basic Permissions</a>, Embed Messages, Connect to Voice Channels, Use Voice Activity, Speak, Unmute</i></td>
 </tr>
 </tbody>
 </table>
