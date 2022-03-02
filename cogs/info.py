@@ -1,9 +1,11 @@
 import json
+import discord
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
 from discord.ext.commands import Cog
 from discord.ext.commands import command
+from discord.ext import commands
 
 class Info(Cog):
     def __init__(self, bot):
@@ -47,6 +49,41 @@ class Info(Cog):
         embed.add_field(name="Author", value=target.mention, inline=True)
         embed.set_thumbnail(url=target.avatar_url)
         await message.channel.send(embed=embed)
+
+    @Cog.listener()
+    async def  on_command_error(self,ctx, error):
+        flag=False
+        embed = Embed(
+            title="Status",
+            colour=0xff0000,
+            timestamp=datetime.utcnow()
+        )
+        if isinstance(error, commands.MissingPermissions):
+            flag=True
+            await ctx.send("Missing Permissions!")
+            return
+        elif isinstance(error, commands.MissingRequiredArgument):
+            flag=True
+            n="Error"
+            v="Missing required arguements"
+        elif isinstance(error, commands.MemberNotFound):
+            flag=True
+            n="Error"
+            v="Requested member not found or Dex doesn't have access to them"
+        elif isinstance(error, commands.BotMissingPermissions):
+            flag=True
+            await ctx.send("Missing Permissions!")
+            return
+        elif isinstance(error, commands.CommandNotFound):
+            flag=True
+            n="Error"
+            v="Invalid Command"
+        if flag:
+            embed.add_field(name=n,value=v,inline=False)
+            await ctx.send(embed=embed)
+            return
+        else:
+            raise error
     
     @command(name = "userinfo", aliases = ["ui","memberinfo","mi"], help="shows user info")
     async def user_info(self, ctx, target: Optional[Member]):

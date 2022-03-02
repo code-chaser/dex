@@ -45,4 +45,6 @@ async def on_guild_remove(guild):
     with open('./data/prefixes.json', 'w') as pref:
         json.dump(prefixes, pref, indent = 4)
 
+
+
 client.run(os.getenv('BOT_TOKEN'))

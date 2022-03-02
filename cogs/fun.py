@@ -43,6 +43,8 @@ class Fun(Cog):
                      description = "Picture of the day",
                      colour = ctx.author.colour,
                      timestamp = datetime.utcnow())
+        embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156291255-4af80382-836c-4801-8b4f-47da33ea36c5.png")
+        embed.set_footer(text="updated daily at 05:00:00 UTC [00:00:00 ET]")
         nasa_api = self.get_nasa()
         embed.set_image(url=nasa_api["url"])
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
