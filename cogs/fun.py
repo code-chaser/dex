@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from typing import Optional
 from datetime import datetime
 from discord import Embed
@@ -29,7 +30,7 @@ class Fun(Cog):
 
     
     def get_nasa(self):
-        response = requests.get("https://api.nasa.gov/planetary/apod?api_key=KljLJ0j9I3khrq8LbWjYsHncz680WFJabuRLkhIv")
+        response = requests.get("https://api.nasa.gov/planetary/apod?api_key="+str(os.getenv('NASA_API_KEY')))
         response_json = json.loads(response.text)
         return response_json
 
