@@ -165,15 +165,13 @@ class Fun(Cog):
                     colour=0xff0000,
                     timestamp=datetime.utcnow()
                 )
-            msg=""
-            err=0
-            new_key=""
             for key_i in data.keys():
                 if key_i != 'message' and key_i != 'error':
                     new_key=key_i
             embed.add_field(name='Error Code', value=str(data['error']), inline=True)
             embed.add_field(name='Error Message', value=str(data['message']), inline=True)
-            embed.add_field(name=new_key.title(), value=str(data[new_key]), inline=True)
+            if new_key is not None:
+                embed.add_field(name=new_key.title(), value=str(data[new_key]), inline=True)
             embed.set_footer(text="given subreddit: "+subreddit)
             await ctx.send(embed=embed)
         else:

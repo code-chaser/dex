@@ -1,5 +1,7 @@
 import json
 import discord
+import string
+import os
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
@@ -18,6 +20,21 @@ class Info(Cog):
         tag_messages[str(guild.id)] = "on"
         with open('./data/tag_messages.json', 'w') as tag_:
             json.dump(tag_messages, tag_, indent = 4)
+        for channel in guild.text_channels:
+            if channel.permissions_for(guild.me).send_messages:
+                general=channel
+        if general:
+            embed=discord.Embed(title="**GREETINGS!**", description=f"""
+            Thanks for adding me to {guild.name}!
+            Use `$dex help` to get started!
+            Visit: https://github.com/code-chaser/dex/
+            
+            """, color=0xd89522, timestamp=datetime.utcnow())
+            embed.set_image(url="https://user-images.githubusercontent.com/63065397/156466208-ffb6db84-f0c0-4860-ab6d-48ad0f2cd5f7.png")
+            embed.set_author(name="dex", url="https://github.com/code-chaser/dex", icon_url=self.bot.user.avatar_url)
+            embed.set_footer(text="made by codechaser", icon_url="https://avatars.githubusercontent.com/u/63065397?v=4")
+            embed.set_thumbnail(url=guild.icon_url)
+            await general.send(embed=embed)
 
     @Cog.listener()
     async def on_guild_remove(self, guild):
