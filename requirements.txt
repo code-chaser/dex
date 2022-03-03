@@ -1,5 +1,4 @@
-discord.py
-discord.py[voice]
+discord
 PyNaCl==1.5.0
 ffmpeg>=1.4
 youtube_dl>=2021.12.17
