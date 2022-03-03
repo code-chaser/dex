@@ -31,7 +31,7 @@ ___
 <table align="center">
 <thead>
 <tr>
-<th align="center">S. No.</th>
+<th align="center">#</th>
 <th align="left">COMMAND</th>
 <th align="left">FUNCTION</th>
 <th align="center">ALIASES</th>
