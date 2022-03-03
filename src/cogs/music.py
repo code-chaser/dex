@@ -1,44 +1,51 @@
 import discord
 import youtube_dl
 import ffmpeg
+import wavelink
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
+from discord.ext import commands
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 from youtube_dl import YoutubeDL
 
-class Music(Cog):
-    def __init__(self,bot):
-        self.bot = bot
+class Music(commands.Cog):
+    """Music cog to hold Wavelink related commands and listeners."""
     
-    @command(name="join", aliases=["connect"], help = "joins the vc of the command author")
-    async def join_vc(self, ctx):
-        if ctx.author.voice is None:
-            await ctx.send("User is not in a voice channel")
-            return False
-        voice_channel = ctx.author.voice.channel
-        if ctx.voice_client is None:
-            await voice_channel.connect()
-        else:
-            await ctx.voice_client.move_to(voice_channel)
-        return True
+    # copied from: https://github.com/PythonistaGuild/Wavelink#getting-started
 
-    @command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
-    async def leave_vc(self, ctx):
-        await ctx.voice.disconnect()
-        
-    @command(name="play", aliases=["p"], help="plays a song from youtube")
-    async def play(self,ctx,url):
-        ctx.voice_client.stop()
-        FFMPEG_OPTIONS = {'before_options':'-reconnect 1 -reconnect_streamed 1 - reconnect_delay_max 5', 'options':'-vn'}
-        YDL_OPTIONS = {'format':'bestaudio'}
-        vc = ctx.voice_client
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(url, download=False)
-            url2 =  info['formats'][0]['url']
-            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
-            vc.play(source)
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+        bot.loop.create_task(self.connect_nodes())
+
+    async def connect_nodes(self):
+        """Connect to our Lavalink nodes."""
+        await self.bot.wait_until_ready()
+
+        await wavelink.NodePool.create_node(bot=bot,
+                                            host='0.0.0.0',
+                                            port=2333,
+                                            password='YOUR_LAVALINK_PASSWORD')
+
+    @commands.Cog.listener()
+    async def on_wavelink_node_ready(self, node: wavelink.Node):
+        """Event fired when a node has finished connecting."""
+        print(f'Node: <{node.identifier}> is ready!')
+
+    @commands.command()
+    async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
+        """Play a song with the given search query.
+
+        If not connected, connect to our voice channel.
+        """
+        if not ctx.voice_client:
+            vc: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+        else:
+            vc: wavelink.Player = ctx.voice_client
+
+        await vc.play(search)
 
 def setup(bot):
     bot.add_cog(Music(bot))
