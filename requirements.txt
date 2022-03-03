@@ -1,0 +1,10 @@
+git+https://github.com/Rapptz/discord.py@rewrite
+PyNaCl==1.5.0
+ffmpeg>=1.4
+youtube_dl>=2021.12.17
+requests
+aiohttp
+numpy>=1.22.2
+discord
+typing
+async-timeout==3.0.1
