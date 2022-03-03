@@ -78,7 +78,7 @@ class Music(Cog):
             m_url = self.music_queue[0][0]['source']
             self.bot_voice_client = ctx.voice_client
             self.music_queue.pop(0)
-            source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
+            source = discord.FFmpegOpusAudio(m_url,**self.ffmpeg_options)
             ctx.voice_client.play(source, after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
@@ -93,7 +93,7 @@ class Music(Cog):
                 ctx.voice_client.move_to(self.music_queue[0][1])
             self.bot_voice_client = ctx.voice_client
             self.music_queue.pop(0)
-            source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
+            source = discord.FFmpegOpusAudio(m_url,**self.ffmpeg_options)
             ctx.voice_client.play(source, after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
