@@ -6,4 +6,5 @@ requests
 aiohttp>=3.7.3
 numpy>=1.22.2
 typing
+wavelink
 async-timeout==3.0.1
