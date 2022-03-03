@@ -72,14 +72,10 @@ class Music(Cog):
                 return False
         return {'source':info['formats'][0]['url'], 'title':info['title']}
         
-    async def play_next(self,ctx):
+    def play_next(self,ctx):
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]['source']
-            if ctx.guild.voice_client is None:
-                await self.music_queue[0][1].connect()
-            elif ctx.guild.voice_client.channel != self.music_queue[0][1]:
-                ctx.voice_client.move_to(self.music_queue[0][1])
             self.bot_voice_client = ctx.voice_client
             self.music_queue.pop(0)
             source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
