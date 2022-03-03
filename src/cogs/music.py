@@ -96,15 +96,15 @@ class Music(Cog):
 
     @command(name="play", aliases=["p"], help = "apparently, replit won't let it play!")
     async def play(self, ctx, keyword):
-        embed = Embed(
-                title="Status",
-                colour=0xff0000,
-                timestamp=datetime.utcnow()
-            )
-        embed.add_field(name="Error",value="Replit's not letting me play! T_T",inline=False)
-        await self.join_vc(ctx)
-        await ctx.send(embed=embed)
-        return
+        # embed = Embed(
+        #         title="Status",
+        #         colour=0xff0000,
+        #         timestamp=datetime.utcnow()
+        #     )
+        # embed.add_field(name="Error",value="Replit's not letting me play! T_T",inline=False)
+        # await self.join_vc(ctx)
+        # await ctx.send(embed=embed)
+        # return
         if ctx.author.voice is None:
             return
         song = self.search_yt(keyword)
