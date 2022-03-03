@@ -13,6 +13,7 @@ class Music(Cog):
         self.bot = bot
         self.is_playing = False
         self.music_queue=[]
+        self.bot_voice_client = None
         self.ydl_options={
             'format':'bestaudio',
             'noplaylist':True,
@@ -44,8 +45,10 @@ class Music(Cog):
             voice_channel = ctx.author.voice.channel
             if ctx.voice_client is None:
                 await voice_channel.connect()
+                self.bot_voice_client = ctx.voice_client
             else:
                 await ctx.voice_client.move_to(voice_channel)
+                self.bot_voice_client = ctx.voice_client
             return True
 
     @command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
@@ -59,6 +62,7 @@ class Music(Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.guild.voice_client.disconnect()
+            self.bot_voice_client = None
 
     def search_yt(self, item):
         with YoutubeDL(self.ydl_options) as ydl:
@@ -87,10 +91,11 @@ class Music(Cog):
                 await self.music_queue[0][1].connect()
             elif ctx.guild.voice_client.channel != self.music_queue[0][1]:
                 ctx.voice_client.move_to(self.music_queue[0][1])
+            self.bot_voice_client = ctx.voice_client
             voice_channel = self.music_queue[0][1]
             self.music_queue.pop(0)
             source = discord.FFmpegPCMAudio(m_url,**self.ffmpeg_options)
-            voice_channel.play(source, after=lambda e: self.play_next())
+            ctx.voice_client.play(source, after=lambda e: self.play_next())
         else:
             self.is_playing = False
 
@@ -102,9 +107,10 @@ class Music(Cog):
         #         timestamp=datetime.utcnow()
         #     )
         # embed.add_field(name="Error",value="Replit's not letting me play! T_T",inline=False)
-        # await self.join_vc(ctx)
+        # 
         # await ctx.send(embed=embed)
         # return
+        await self.join_vc(ctx)
         if ctx.author.voice is None:
             return
         song = self.search_yt(keyword)
