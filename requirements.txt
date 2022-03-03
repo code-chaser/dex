@@ -1,5 +1,4 @@
 discord.py
--U git+https://github.com/Rapptz/discord.py@rewrite
 discord.py[voice]
 PyNaCl==1.5.0
 ffmpeg>=1.4
