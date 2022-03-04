@@ -66,7 +66,7 @@ class Music(commands.Cog):
         self.is_playing = False
         self.music_queue = []
 
-    @commands.command(name="join", aliases="connect")
+    @commands.command(name="join", aliases=["connect"])
     async def join(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice:
