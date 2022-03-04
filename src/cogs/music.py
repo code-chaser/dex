@@ -65,6 +65,17 @@ class Music(commands.Cog):
     currently_playing_music = ()
     currently_playing_player = None
     is_playing = False
+        
+    
+    bad_request_error_message = '';
+    bad_request_error_message.append(''.join("Bad response while searching for the music\n\n"))
+    bad_request_error_message.append(''.join("**Possible causes include:**\n"))
+    bad_request_error_message.append(''.join("*1. bad network on the bot's end;\n"))
+    bad_request_error_message.append(''.join("2. the given search query couldn't find matching results;*\n"))
+    bad_request_error_message.append(''.join("***3. too many queuing requests made, without letting the bot to respond to them;***\n"))
+    bad_request_error_message.append(''.join("\n**To avoid any further unexpected errors, make the bot rejoin the voice channel using `<prefix> leave` and then `<prefix> join`**\n"))
+    bad_request_error_message.append(''.join("**SORRY FOR THE INCONVENIENCE!**"))
+    
     
     def __init__(self, bot):
         self.bot = bot
@@ -136,6 +147,8 @@ class Music(commands.Cog):
                 await ctx.voice_client.move_to(ctx.author.voice.channel)
         
     async def play_music_from_player(self, ctx, *, player):
+        if player is None:
+            return
         self.currently_playing_player = player
         embed = Embed(
             title = "Now Playing",
@@ -185,6 +198,16 @@ class Music(commands.Cog):
             if ctx.voice_client is None:
                 return
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            if player is None:
+                with ctx.typing():
+                    embed=Embed(
+                        title="Error",
+                        description=''.join(self.bad_request_error_message),
+                        colour=0xff0000,
+                        timestamp=datetime.utcnow()
+                    )
+                await ctx.send(embed=embed)
+                return
             self.music_queue.append([player, ctx])
             embed = Embed(
                 title = "Added to queue",
@@ -200,7 +223,7 @@ class Music(commands.Cog):
             
         if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
             await self.keep_playing(ctx)
-    
+
     @commands.command(name = 'dplay', help="downloads a song and then plays it to reduce any possible lags")
     async def add_to_queue_1(self, ctx, *, url):
         async with ctx.typing():
@@ -208,6 +231,16 @@ class Music(commands.Cog):
             if ctx.voice_client is None:
                 return
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            if player is None:
+                with ctx.typing():
+                    embed=Embed(
+                        title="Error",
+                        description=''.join(self.bad_request_error_message),
+                        colour=0xff0000,
+                        timestamp=datetime.utcnow()
+                    )
+                await ctx.send(embed=embed)
+                return
             self.music_queue.append([player, ctx])
             embed = Embed(
                 title = "Downloaded & Added to queue",
