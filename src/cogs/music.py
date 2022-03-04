@@ -155,11 +155,17 @@ class Music(commands.Cog):
                 self.is_playing = True
                 await self.play_music_from_player(self.music_queue[0][1], player=self.music_queue[0][0])
                 self.music_queue.pop(0)
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)
     
     @commands.command(name="play", aliases=["stream"],help = "streams a song directly from youtube")
     async def add_to_queue_0(self, ctx, *, url: Optional[str]):
         if url is None:
+            if ctx.voice_client is None:
+                await self.make_join(ctx)
+            if ctx.voice_client is None:
+                return
+            if ctx.voice_client.is_playing():
+                return
             if ctx.voice_client.is_paused():
                 ctx.voice_client.resume()
             elif len(self.music_queue) > 0:
@@ -168,7 +174,7 @@ class Music(commands.Cog):
             else:
                 embed=Embed(
                     title="Error",
-                    description="Queue is empty",
+                    description=''.join("Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
                     colour = 0xff0000,
                     timestamp=datetime.utcnow()
                 )
@@ -219,10 +225,8 @@ class Music(commands.Cog):
             await self.keep_playing(ctx)
     
 
-    @commands.command()
+    @commands.command(name="volume", aliases=["vol"], help="changes the volume of the music player")
     async def volume(self, ctx, volume: int):
-        """Changes the player's volume"""
-
         if ctx.voice_client is None:
             return await ctx.send("Not connected to a voice channel.")
 
@@ -305,6 +309,9 @@ class Music(commands.Cog):
                     await self.keep_playing(ctx)
                 else:
                     ctx.voice_client.stop()
+                    await self.keep_playing(ctx)
+                    ctx.voice_client.pause()
+                    
 
 def setup(bot):
     bot.add_cog(Music(bot))
