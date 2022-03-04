@@ -84,7 +84,7 @@ class Music(commands.Cog):
         self.currently_playing_player = None
         self.music_queue = []
 
-    @commands.command(name="join", aliases=["connect"])
+    @commands.command(name="join", aliases=["connect"], help="joins the voice channel of the author")
     async def join_vc(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice is not None:
@@ -266,31 +266,31 @@ class Music(commands.Cog):
         ctx.voice_client.source.volume = volume / 100
         await ctx.send(f"Changed volume to {volume}%")
 
-    @commands.command(name="stop", aliases=["stfu","shut"])
+    @commands.command(name="stop", aliases=["stfu","shut"], help="stops the music player and clears the queue")
     async def stop_music(self, ctx):
         if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
             self.music_queue.clear()
             ctx.voice_client.stop()
         return
     
-    @commands.command(name="pause")
+    @commands.command(name="pause", help="pauses the music player")
     async def pause(self,ctx):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
+                description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
         elif ctx.voice_client.is_playing():
             ctx.voice_client.pause()
     
-    @commands.command(name="resume")
+    @commands.command(name="resume", help="resumes the music player")
     async def resume(self,ctx):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
+                description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
@@ -300,25 +300,25 @@ class Music(commands.Cog):
             if not ctx.voice_client.is_playing():
                 await self.keep_playing(ctx)
 
-    @commands.command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
+    @commands.command(name="leave", aliases=["disconnect"], help="leaves if connected to any voice channel")
     async def leave_vc(self, ctx):
         self.music_queue.clear()
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
+                description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
         else:
             await ctx.voice_client.disconnect()
     
-    @commands.command(name="skip")
+    @commands.command(name="skip", aliases=["next"], help="skips the currently playing song")
     async def skip_song(self, ctx):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
+                description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
