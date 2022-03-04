@@ -1,142 +1,134 @@
 import discord
 import youtube_dl
+import asyncio
 import ffmpeg
 from typing import Optional
 from datetime import datetime
-from discord import Embed, Member, Guild
+from discord import Embed, Member, Guild, commands
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 from youtube_dl import YoutubeDL
 
-class Music(Cog):
+# Suppress noise about console usage from errors
+youtube_dl.utils.bug_reports_message = lambda: ''
+
+
+ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+    'restrictfilenames': True,
+    'noplaylist': True,
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'default_search': 'auto',
+    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
+}
+
+ffmpeg_options = {
+    'options': '-vn'
+}
+
+ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
+
+class YTDLSource(discord.PCMVolumeTransformer):
+    def __init__(self, source, *, data, volume=0.5):
+        super().__init__(source, volume)
+
+        self.data = data
+
+        self.title = data.get('title')
+        self.url = data.get('url')
+
+    @classmethod
+    async def from_url(cls, url, *, loop=None, stream=False):
+        loop = loop or asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+
+        if 'entries' in data:
+            # take first item from a playlist
+            data = data['entries'][0]
+
+        filename = data['url'] if stream else ytdl.prepare_filename(data)
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+
+
+class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.is_playing = False
-        self.music_queue=[]
-        self.bot_voice_client = None
-        self.players = {}
-        self.ydl_options={
-            'format':'bestaudio',
-            'noplaylist':True,
-            'extractaudio': True,
-            'audioformat': 'mp3',
-            'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
-            'restrictfilenames': True,
-            'nocheckcertificate': True,
-            'ignoreerrors': False,
-            'logtostderr': False,
-            'quiet': True,
-            'no_warnings': True,
-            'default_search': 'auto',
-            'source_address': '0.0.0.0'
-        }
-        self.ffmpeg_options={'before_options':'-reconnect 1 -reconnect_streamed 1 - reconnect_delay_max 5', 'options':'-vn'}
 
-    @command(name="join", aliases=["connect"], help = "joins the vc of the command author")
-    async def join_vc(self, ctx):
-        if ctx.author.voice is None:
-            embed=Embed(
-                title="Error",
-                description="User is not in a voice channel",
-                colour=0xff0000,
-                timestamp=datetime.utcnow())
-            await ctx.send(embed=embed)
-            return False
-        else:
-            voice_channel = ctx.author.voice.channel
-            if ctx.voice_client is None:
-                await voice_channel.connect()
-                self.bot_voice_client = ctx.voice_client
+    @commands.command()
+    async def join(self, ctx, *, channel: discord.VoiceChannel):
+        """Joins a voice channel"""
+
+        if ctx.voice_client is not None:
+            return await ctx.voice_client.move_to(channel)
+
+        await channel.connect()
+
+    @commands.command()
+    async def play(self, ctx, *, query):
+        """Plays a file from the local filesystem"""
+
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+
+        await ctx.send(f'Now playing: {query}')
+
+    @commands.command()
+    async def yt(self, ctx, *, url):
+        """Plays from a url (almost anything youtube_dl supports)"""
+
+        async with ctx.typing():
+            player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+
+        await ctx.send(f'Now playing: {player.title}')
+
+    @commands.command()
+    async def stream(self, ctx, *, url):
+        """Streams from a url (same as yt, but doesn't predownload)"""
+
+        async with ctx.typing():
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+
+        await ctx.send(f'Now playing: {player.title}')
+
+    @commands.command()
+    async def volume(self, ctx, volume: int):
+        """Changes the player's volume"""
+
+        if ctx.voice_client is None:
+            return await ctx.send("Not connected to a voice channel.")
+
+        ctx.voice_client.source.volume = volume / 100
+        await ctx.send(f"Changed volume to {volume}%")
+
+    @commands.command()
+    async def stop(self, ctx):
+        """Stops and disconnects the bot from voice"""
+
+        await ctx.voice_client.disconnect()
+
+    @play.before_invoke
+    @yt.before_invoke
+    @stream.before_invoke
+    async def ensure_voice(self, ctx):
+        if ctx.voice_client is None:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
             else:
-                await ctx.voice_client.move_to(voice_channel)
-                self.bot_voice_client = ctx.voice_client
-            return True
+                await ctx.send("You are not connected to a voice channel.")
+                raise commands.CommandError("Author not connected to a voice channel.")
+        elif ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
 
-    @command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
-    async def leave_vc(self, ctx):
-        if ctx.guild.voice_client is None:
-            embed=Embed(
-                title="Error",
-                description="Dex is not in any voice channel",
-                colour=0xff0000,
-                timestamp=datetime.utcnow())
-            await ctx.send(embed=embed)
-        else:
-            await ctx.guild.voice_client.disconnect()
-            self.bot_voice_client = None
-
-    def search_yt(self, item):
-        with YoutubeDL(self.ydl_options) as ydl:
-            try:
-                info = ydl.extract_info("ytsearch:%s" % item,download = False)['entries'][0]
-            except Exception:
-                return False
-        return {'source':info['formats'][0]['url'], 'title':info['title']}
-        
-    def play_next(self,ctx):
-        if len(self.music_queue) > 0:
-            self.is_playing = True
-            m_url = self.music_queue[0][0]['source']
-            self.bot_voice_client = ctx.voice_client
-            self.music_queue.pop(0)
-            source = discord.FFmpegOpusAudio(m_url,**self.ffmpeg_options)
-            ctx.voice_client.play(source, after=lambda e: self.play_next(ctx))
-        else:
-            self.is_playing = False
-
-    async def play_music(self,ctx):
-        if len(self.music_queue) > 0:
-            self.is_playing = True
-            m_url = self.music_queue[0][0]['source']
-            if ctx.guild.voice_client is None:
-                await self.music_queue[0][1].connect()
-            elif ctx.guild.voice_client.channel != self.music_queue[0][1]:
-                ctx.voice_client.move_to(self.music_queue[0][1])
-            self.bot_voice_client = ctx.voice_client
-            self.music_queue.pop(0)
-            source = discord.FFmpegOpusAudio(m_url,**self.ffmpeg_options)
-            ctx.voice_client.play(source, after=lambda e: self.play_next(ctx))
-        else:
-            self.is_playing = False
-
-    @command(name="play", aliases=["p"], help = "apparently, replit won't let it play!")
-    async def play(self, ctx, keyword):
-        # embed = Embed(
-        #         title="Status",
-        #         colour=0xff0000,
-        #         timestamp=datetime.utcnow()
-        #     )
-        # embed.add_field(name="Error",value="Replit's not letting me play! T_T",inline=False)
-        # 
-        # await ctx.send(embed=embed)
-        # return
-        await self.join_vc(ctx)
-        if ctx.author.voice is None:
-            return
-        song = self.search_yt(keyword)
-        if type(song) == type(False):
-            embed = Embed(
-                title="Status",
-                colour=0xff0000,
-                timestamp=datetime.utcnow()
-            )
-            embed.add_field(name="Error",value="Failed to query YouTube for the music",inline=False)
-            embed.set_footer(text="Might be due to a livestream or a playlist")
-            await ctx.send(embed=embed)
-        else:
-            embed = Embed(
-                title="Status",
-                colour=0x00ff00,
-                timestamp=datetime.utcnow()
-            )
-            embed.add_field(name="Done",value="Song added to the queue",inline=False)
-            self.music_queue.append([song,ctx.author.voice.channel,ctx.author])
-            await ctx.send(embed=embed)
-            player = await ctx.voice_client.create_ytdl_player(song['source'])
-            self.players[ctx.guild.id] = player
-            player.start()
-            # if not self.is_playing:
-            #     await self.play_music(ctx)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"),
+                   description='Relatively simple music bot example')
         
 
 def setup(bot):
