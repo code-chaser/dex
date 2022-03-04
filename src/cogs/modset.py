@@ -43,7 +43,8 @@ class ModSet(Cog):
         await ctx.send(embed=embed)
 
     @command(name = "changepref", aliases = ["changeprefix"], help="changes the prefix to the appended string")
-    async def change_prefix(self, ctx, prefix: Optional[str]):
+    async def change_prefix(self, ctx, *args):
+        prefix = "".join(args)
         if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
             embed = Embed(title = "Status",
                      colour = 0xff0000,
@@ -58,7 +59,7 @@ class ModSet(Cog):
                 embed.add_field(name="Error", value="Only server owner can change the prefix!", inline=True)
                 await ctx.send(embed=embed)
                 return
-            if prefix:
+            if (prefix != ""):
                 with open('./data/prefixes.json', 'r') as pref:
                     prefixes = json.load(pref)
                 prefixes[str(ctx.guild.id)] = prefix
