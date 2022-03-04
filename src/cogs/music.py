@@ -186,8 +186,10 @@ class Music(commands.Cog):
     async def add_to_queue_0(self, ctx, *, url: Optional[str]):
         if url is None:
             await ctx.voice_client.resume()
-        while ctx.typing():
+        async with ctx.typing():
             self.make_join(ctx)
+            if ctx.voice_client is None:
+                return
             self.music_queue.append([url, False, ctx])
             embed = Embed(
                 title="Added to queue",
@@ -204,7 +206,7 @@ class Music(commands.Cog):
     
     @commands.command(name = 'dplay', help="downloads a song and then plays it to reduce any possible lags")
     async def add_to_queue_1(self, ctx, *, url):
-        while ctx.typing():
+        async with ctx.typing():
             self.make_join(ctx)
             self.music_queue.append([url, True, ctx])
             embed = Embed(
