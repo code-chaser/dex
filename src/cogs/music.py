@@ -235,6 +235,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx):
+        self.music_queue.clear()
         await ctx.voice_client.stop()
     
     @commands.command(name="pause")
@@ -247,6 +248,7 @@ class Music(commands.Cog):
 
     @commands.command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
     async def leave_vc(self, ctx):
+        self.music_queue.clear()
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
