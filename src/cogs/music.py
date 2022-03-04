@@ -245,7 +245,7 @@ class Music(commands.Cog):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description="Dex is not in any voice channel",
+                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
@@ -257,7 +257,7 @@ class Music(commands.Cog):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description="Dex is not in any voice channel",
+                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
@@ -273,7 +273,7 @@ class Music(commands.Cog):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description="Dex is not in any voice channel",
+                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
@@ -285,7 +285,7 @@ class Music(commands.Cog):
         if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
-                description="Dex is not in any voice channel",
+                description=''.join("Dex is not in any voice channel\nUse `<prefix> join` to make it connect to one"),
                 colour=0xff0000,
                 timestamp=datetime.utcnow())
             await ctx.send(embed=embed)
