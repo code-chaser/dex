@@ -1,4 +1,5 @@
 discord.py==1.7.3
+asyncio
 PyNaCl==1.5.0
 ffmpeg>=1.4
 youtube_dl>=2021.12.17
