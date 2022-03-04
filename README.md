@@ -218,7 +218,7 @@ ___
 <td align="left"><i><a href="">Basic Permissions</a>, Embed Messages, Ban Members, Manage Server</i></td>
 </tr>
 <tr>
-<td align="center"></td>
+<td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Plays Music</td>
 <td align="left"><i><b>N/A</b></i></td>
 <td align="left"><i><a href="">Basic Permissions</a>, Embed Messages, Connect to Voice Channels, Use Voice Activity, Speak, Unmute</i></td>
