@@ -68,13 +68,13 @@ class Music(commands.Cog):
         
     
     bad_request_error_message = '';
-    bad_request_error_message.append(''.join("Bad response while searching for the music\n\n"))
-    bad_request_error_message.append(''.join("**Possible causes include:**\n"))
-    bad_request_error_message.append(''.join("*1. bad network on the bot's end;\n"))
-    bad_request_error_message.append(''.join("2. the given search query couldn't find matching results;*\n"))
-    bad_request_error_message.append(''.join("***3. too many queuing requests made, without letting the bot to respond to them;***\n"))
-    bad_request_error_message.append(''.join("\n**To avoid any further unexpected errors, make the bot rejoin the voice channel using `<prefix> leave` and then `<prefix> join`**\n"))
-    bad_request_error_message.append(''.join("**SORRY FOR THE INCONVENIENCE!**"))
+    bad_request_error_message+=(''.join("Bad response while searching for the music\n\n"))
+    bad_request_error_message+=(''.join("**Possible causes include:**\n"))
+    bad_request_error_message+=(''.join("*1. bad network on the bot's end;\n"))
+    bad_request_error_message+=(''.join("2. the given search query couldn't find matching results;*\n"))
+    bad_request_error_message+=(''.join("***3. too many queuing requests made, without letting the bot to respond to them;***\n"))
+    bad_request_error_message+=(''.join("\n**To avoid any further unexpected errors, make the bot rejoin the voice channel using `<prefix> leave` and then `<prefix> join`**\n"))
+    bad_request_error_message+=(''.join("**SORRY FOR THE INCONVENIENCE!**"))
     
     
     def __init__(self, bot):
