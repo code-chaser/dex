@@ -54,7 +54,7 @@ class Music(Cog):
 
     @command(name="leave", aliases=["disconnect"], help="leaves if connected to any vc")
     async def leave_vc(self, ctx):
-        if ctx.guild.voice_client is None:
+        if ctx.voice_client is None:
             embed=Embed(
                 title="Error",
                 description="Dex is not in any voice channel",
