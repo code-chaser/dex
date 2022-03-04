@@ -159,8 +159,8 @@ class Music(commands.Cog):
                 colour = 0x00ff00,
                 timestamp=datetime.utcnow()
             )
-            embed.set_thumbnail(url=player.thumbnail)
-            embed.set_author(name=player.title, url=player.url, icon_url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+            embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline = False)
             embed.add_field(name="Duration", value=player.duration, inline = False)
             embed.add_field(name="Requested by", value=ctx.author.mention, inline = False)
@@ -193,7 +193,7 @@ class Music(commands.Cog):
             self.music_queue.append([url, False, ctx])
             embed = Embed(
                 title="Added to queue",
-                description=url + " requested by " + ctx.author.mention,
+                description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour = 0x00ff00,
                 timestamp=datetime.utcnow()
             )
