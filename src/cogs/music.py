@@ -66,8 +66,8 @@ class Music(commands.Cog):
         self.is_playing = False
         self.music_queue = []
 
-    @commands.command()
-    async def join(self, ctx, *, channel: discord.VoiceChannel):
+    @commands.command(name="join", aliases="connect")
+    async def join(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice:
                 await ctx.author.voice.channel.connect()
@@ -141,8 +141,9 @@ class Music(commands.Cog):
                 colour = 0x00ff00,
                 timestamp=datetime.utcnow()
             )
+            embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline = False)
-            embed.add_field(name="Duration", value=player.duration, inline = True)
             embed.add_field(name="Requested by", value=ctx.author.mention, inline = True)
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 
@@ -162,7 +163,6 @@ class Music(commands.Cog):
             embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
             embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline = False)
-            embed.add_field(name="Duration", value=player.duration, inline = False)
             embed.add_field(name="Requested by", value=ctx.author.mention, inline = False)
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 
