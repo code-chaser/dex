@@ -134,68 +134,26 @@ class Music(commands.Cog):
                 pass
             else:
                 await ctx.voice_client.move_to(ctx.author.voice.channel)
-
-    async def download_play(self, ctx, *, url):
-        """Downloads and plays, from a url (almost anything youtube_dl supports)"""
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            embed = Embed(
-                title = "Downloading",
-                description = str(player.url),
-                colour = 0x0000ff,
-                timestamp=datetime.utcnow()
-            )
-            embed.add_field(name="Title", value=player.title, inline = False)
-            embed.add_field(name="Duration", value=player.duration, inline = True)
-            embed.add_field(name="Requested by", value=ctx.author.mention, inline = True)
-            
-        await ctx.send(embed=embed)
         
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            self.currently_playing_player = player
-            embed = Embed(
-                title = "Now Playing",
-                description = str(player.url),
-                colour = 0x00ff00,
-                timestamp=datetime.utcnow()
-            )
-            embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
-            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
-            embed.add_field(name="Title", value=player.title, inline = False)
-            embed.add_field(name="Requested by", value=ctx.author.mention, inline = True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
-
-        await ctx.send(embed=embed)
-        
-    async def stream_play(self, ctx, *, url):
-        """Streams from a url (same as yt, but doesn't predownload)"""
-
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            self.currently_playing_player = player
-            embed = Embed(
-                title = "Now Playing",
-                colour = 0x00ff00,
-                timestamp=datetime.utcnow()
-            )
-            embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
-            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
-            embed.add_field(name="Title", value=player.title, inline = False)
-            embed.add_field(name="Requested by", value=ctx.author.mention, inline = False)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
-
+    async def play_music_from_player(self, ctx, *, player):
+        self.currently_playing_player = player
+        embed = Embed(
+            title = "Now Playing",
+            colour = 0x00ff00,
+            timestamp=datetime.utcnow()
+        )
+        embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+        embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
+        embed.add_field(name="Title", value=player.title, inline = False)
+        embed.add_field(name="Requested by", value=ctx.author.mention, inline = False)
+        ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
         await ctx.send(embed=embed)
     
     async def keep_playing(self, ctx):
         while len(self.music_queue) > 0:
             if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
                 self.is_playing = True
-                if self.music_queue[0][1]:
-                    await self.download_play(self.music_queue[0][2], url=self.music_queue[0][0])
-                else:
-                    await self.stream_play(self.music_queue[0][2], url=self.music_queue[0][0])
-                self.currently_playing_music=self.music_queue[0]
+                await self.play_music_from_player(self.music_queue[0][1], player=self.music_queue[0][0])
                 self.music_queue.pop(0)
             await asyncio.sleep(1)
     
@@ -220,14 +178,17 @@ class Music(commands.Cog):
             await self.make_join(ctx)
             if ctx.voice_client is None:
                 return
-            self.music_queue.append([url, False, ctx])
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            self.music_queue.append([player, ctx])
             embed = Embed(
-                title="Added to queue",
+                title = "Added to queue",
                 description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour = 0x00ff00,
                 timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
+            embed.add_field(name="Title", value=player.title, inline = False)
             embed.add_field(name="Queue Position", value=len(self.music_queue), inline = True)
         await ctx.send(embed=embed)
             
@@ -240,14 +201,17 @@ class Music(commands.Cog):
             await self.make_join(ctx)
             if ctx.voice_client is None:
                 return
-            self.music_queue.append([url, True, ctx])
+            player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            self.music_queue.append([player, ctx])
             embed = Embed(
-                title="Added to queue",
-                description=url + " requested by " + ctx.author.mention,
+                title = "Downloaded & Added to queue",
+                description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour = 0x00ff00,
                 timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
+            embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
+            embed.add_field(name="Title", value=player.title, inline = False)
             embed.add_field(name="Queue Position", value=len(self.music_queue), inline = True)
         await ctx.send(embed=embed)
             
