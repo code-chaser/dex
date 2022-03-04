@@ -65,7 +65,6 @@ class Music(commands.Cog):
     currently_playing_music = ()
     currently_playing_player = None
     is_playing = False
-        
     
     bad_request_error_message = '';
     bad_request_error_message+=(''.join("Bad response while searching for the music\n\n"))
@@ -152,16 +151,18 @@ class Music(commands.Cog):
         self.currently_playing_player = player
         embed = Embed(
             title = "Now Playing",
+            description="- requested by " + self.music_queue[0][1].author.mention,
             colour = 0x00ff00,
             timestamp=datetime.utcnow()
         )
         embed.set_thumbnail(url="https://user-images.githubusercontent.com/63065397/156735015-d12baec8-3ea9-4d23-a577-ebdcb3909566.png")
         embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
         embed.add_field(name="Title", value=player.title, inline = False)
-        embed.add_field(name="Requested by", value=ctx.author.mention, inline = False)
+        embed.add_field(name="Remaining in queue", value=len(self.music_queue), inline = False)
         ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
         await ctx.send(embed=embed)
     
+    _random_int = 0
     async def keep_playing(self, ctx):
         while len(self.music_queue) > 0:
             if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
@@ -170,7 +171,7 @@ class Music(commands.Cog):
                 self.music_queue.pop(0)
             await asyncio.sleep(0.5)
     
-    @commands.command(name="play", aliases=["stream"],help = "streams a song directly from youtube")
+    @commands.command(name="play", aliases=["stream","p"],help = "streams a song directly from youtube")
     async def add_to_queue_0(self, ctx, *, url: Optional[str]):
         if url is None:
             if ctx.voice_client is None:
@@ -219,11 +220,9 @@ class Music(commands.Cog):
             embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline = False)
             embed.add_field(name="Queue Position", value=len(self.music_queue), inline = True)
-        await ctx.send(embed=embed)
-            
-        if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
-            await self.keep_playing(ctx)
-
+        await ctx.send(embed=embed)    
+        await self.keep_playing(ctx)
+    
     @commands.command(name = 'dplay', help="downloads a song and then plays it to reduce any possible lags")
     async def add_to_queue_1(self, ctx, *, url):
         async with ctx.typing():
@@ -252,10 +251,34 @@ class Music(commands.Cog):
             embed.set_author(name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline = False)
             embed.add_field(name="Queue Position", value=len(self.music_queue), inline = True)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed)            
+        await self.keep_playing(ctx)
+    
+    # @commands.command(name="loop", help="loops the currently playing song")
+    # async def loop(self, ctx):
+    #     if ctx.voice_client is None:
+    #         with ctx.typing():
+    #             embed=Embed(
+    #                 title="Error",
+    #                 description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
+    #                 colour=0xff0000,
+    #                 timestamp=datetime.utcnow()
+    #             )
+    #         await ctx.send(embed=embed)
+    #         return
+    #     if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
+    #         with ctx.typing():
+    #             embed=Embed(
+    #                 title="Error",
+    #                 description=''.join("Queue is empty, nothing to loop through\nUse `<prefix> play <query/url>` to add to queue"),
+    #                 colour=0xff0000,
+    #                 timestamp=datetime.utcnow()
+    #             )
+    #         await ctx.send(embed=embed)
+    #         return
+    #     while True:
             
-        if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
-            await self.keep_playing(ctx)
+        
     
 
     @commands.command(name="volume", aliases=["vol"], help="changes the volume of the music player")
@@ -342,9 +365,9 @@ class Music(commands.Cog):
                     await self.keep_playing(ctx)
                 else:
                     ctx.voice_client.stop()
-                    await self.keep_playing(ctx)
+                    await asyncio.sleep(1)
                     ctx.voice_client.pause()
-                    
+    
 
 def setup(bot):
     bot.add_cog(Music(bot))
