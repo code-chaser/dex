@@ -4,7 +4,8 @@ import asyncio
 import ffmpeg
 from typing import Optional
 from datetime import datetime
-from discord import Embed, Member, Guild, commands
+from discord import Embed, Member, Guild
+from discord.ext import commands
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 from youtube_dl import YoutubeDL
