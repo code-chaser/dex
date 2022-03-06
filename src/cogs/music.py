@@ -169,7 +169,7 @@ class Music(commands.Cog):
                          icon_url=ctx.author.avatar_url)
         embed.add_field(name="Title", value=player.title, inline=False)
         embed.add_field(name="Remaining in queue",
-                        value=len(self.music_queue), inline=False)
+                        value=len(self.music_queue)-1, inline=False)
         ctx.voice_client.play(player, after=lambda e: print(
             f'Player error: {e}') if e else None)
         await ctx.send(embed=embed)
@@ -565,9 +565,21 @@ class Music(commands.Cog):
     @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
     async def ping(self, ctx):
         with ctx.typing():
+            ping=round(self.bot.latency * 1000, 1)
+            high=400
+            low=30
+            red=min((ping)/high,1)
+            green=1-red
+            if ping>=high:
+                red=1
+                green=0
+            if ping<=low:
+                red=0
+                green=1
             embed = Embed(
-                title="Ping: " + str(round(self.bot.latency * 1000, 1)) + "ms",
-                colour=0x00ff00,
+                title="Ping",
+                description="**"+str(ping)+"ms**",
+                colour=discord.Color.from_rgb(int(red*255),int(green*255),0),
                 timestamp=datetime.utcnow()
             )
         await ctx.send(embed=embed)

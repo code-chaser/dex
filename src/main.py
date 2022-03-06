@@ -25,11 +25,13 @@ client = discord.ext.commands.Bot(command_prefix=get_prefix, intents=intents)
 for cog in cogs_list:
     cog.setup(client)
 
+exhausted_face='https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
+
 
 @client.event
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='Stop WW3!'))
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='Stop WW3!', large_image_url=exhausted_face, small_image_url=exhausted_face, start=datetime(2022,2,24)))
 
 
 @client.event
