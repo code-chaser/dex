@@ -2,18 +2,23 @@
 
 ___
 
-<h2 align="center"> COMMANDS </h2>
 
 <table align="center">
 <thead>
 <tr>
-<th align="center">#</th>
-<th align="left">COMMAND</th>
-<th align="left">FUNCTION</th>
-<th align="center">ALIASES</th>
+  <th colspan=4 align="center"><h3>- - - - - - -  C O M M A N D S  - - - - - - -</h3></th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td align="center">#</td>
+<td align="left">COMMAND</td>
+<td align="left">FUNCTION</td>
+<td align="center">ALIASES</td>
+</tr>
+<tr>
+  <td colspan=4 align="center"><h4>- - BASIC 🤷‍♂️ CATEGORY - -</h4></td>
+</tr>
 <tr>
 <td align="center">1</td>
 <td align="left"><code>$dex</code></td>
@@ -27,6 +32,9 @@ ___
 <td align="left"><i><b>N/A</b></i></td>
 </tr>
 <tr>
+  <td colspan=4 align="center"><h4>- - SETTINGS 🛠️ CATEGORY - -</h4></td>
+</tr>
+<tr>
 <td align="center">3</td>
 <td align="left"><code>&lt;prefix&gt; changepref &lt;p&gt;</code></td>
 <td align="left">sets the prefix for the server as <code>&lt;p&gt;</code></td>
@@ -37,6 +45,9 @@ ___
 <td align="left"><code>&lt;prefix&gt; tags &lt;on/off&gt;</code></td>
 <td align="left">toggles message tags (on/off)</td>
   <td align="left"><code>msgtag</code>,<code>tagging</code></td>
+</tr>
+<tr>
+  <td colspan=4 align="center"><h4>- - FUN 🤾‍♂️ CATEGORY - -</h4></td>
 </tr>
 <tr>
 <td align="center">5</td>
@@ -69,10 +80,7 @@ ___
 <td align="left"><code>reddit</code></td>
 </tr>
 <tr>
-<td align="center">10</td>
-<td align="left"><code>&lt;prefix&gt; userinfo</code></td>
-<td align="left">shows user info of the message author</td>
-<td align="left"><code>ui</code>, <code>memberinfo</code>, <code>mi</code></td>
+  <td colspan=4 align="center"><h4>- - INFO ℹ️ CATEGORY - -</h4></td>
 </tr>
 <tr>
 <td align="center">11</td>
@@ -85,6 +93,81 @@ ___
 <td align="left"><code>&lt;prefix&gt; serverinfo</code></td>
 <td align="left">shows server (guild) info</td>
 <td align="left"><code>si</code>, <code>guildinfo</code>, <code>gi</code></td>
+</tr>
+<tr>
+  <td colspan=4 align="center"><h4>- - MUSIC 🎵 CATEGORY - -</h4></td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="left"><code>&lt;prefix&gt; join</code>, <code>&lt;prefix&gt; leave</code></td>
+<td align="left">joins and leaves the voice channel respectively</td>
+<td align="left"><code>connect</code>, <code>disconnect</code></td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="left"><code>&lt;prefix&gt; play &lt;query&gt;</code></td>
+<td align="left">joins the voice channel of the author and starts playing the first track (or queues it if already playing) from the search results (from YT) of the given <code>query</code></td>
+<td align="left"><code>p</code>, <code>stream</code>, <code>add</code>, <code>queue</code></td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td align="left"><code>&lt;prefix&gt; dplay &lt;query&gt;</code></td>
+<td align="left">same as <code>play</code> except that it first <b>downloads</b> the given track then plays to reduce any possible lags<br><i>NOTE: there might still be some lag due to the latency between the bot's hosting server (EU) and the user side</i></td>
+<td align="left"><i><b>N/A</b></i></td>
+</tr>
+<tr>
+<td align="center">16</td>
+<td align="left"><code>&lt;prefix&gt; pause</code><br><code>&lt;prefix&gt; resume</code></td>
+<td align="left">pauses, resumes the currently playing track, respectively</td>
+<td align="left">(for <b>resume</b>):- <code>play</code> <i>(without any query)</i></td>
+</tr>
+<tr>
+<td align="center">17</td>
+<td align="left"><code>&lt;prefix&gt; stop</code></td>
+<td align="left">stops currently playing track and clears the queue</td>
+<td align="left"><code>shut</code></td>
+</tr>
+<tr>
+<td align="center">18</td>
+  <td align="left"><code>&lt;prefix&gt; queue <b><strike>&lt;query&gt;</strike></b></code></td>
+<td align="left">shows the complete queue</td>
+<td align="left"><code>view</code></td>
+</tr>
+<tr>
+<td align="center">19</td>
+<td align="left">
+  <ul>
+    <li><code>&lt;prefix&gt; skip </code></li>
+    <li><code>&lt;prefix&gt; jump &lt;#track&gt;</code></li>
+    <li><code>&lt;prefix&gt; remove &lt;#track&gt;</code></li>
+  </ul>
+</td>
+<td align="left">
+  <ul>
+    <li>skips the current track</li>
+    <li>jumps to the given track number</li>
+    <li>removes the given track number from the queue</li>
+  </ul>
+</td>
+<td align="left">
+  <ul>
+    <li><code>next</code></li>
+    <li><b><i>N/A</i></b></li>
+    <li><b><i>N/A</i></b></li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td align="center">20</td>
+<td align="left"><code>&lt;prefix&gt; volume &lt;vol_in_%&gt;</code></td>
+<td align="left">sets the volume of the bot to given value</td>
+<td align="left"><b><i>N/A</i></b></td>
+</tr>
+<tr>
+<td align="center">21</td>
+<td align="left"><code>&lt;prefix&gt; ping</code></td>
+<td align="left">shows the latency of the bot</td>
+<td align="left"><code>latency</code></td>
 </tr>
 </tbody>
 </table>
@@ -115,7 +198,6 @@ $dex                     - default set prefix;
 
 ___
 
-<h2 align="center"> FEATURES </h2>
 <!--|Check|Feature|
 |:-:|:-|
 | ✔️ | Server custom prefixes |
@@ -132,13 +214,16 @@ ___
 <table align = "center">
 <thead>
 <tr>
-<th align="center">Check</th>
-<th align="left">Feature</th>
-<th align="left">API Used</th>
-<th align="left">Permissions Required by the BOT</th>
+  <th colspan=4 align="center"><h3>- - - - - - -  F E A T U R E S  - - - - - - -</h3></th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td align="center">Check</td>
+<td align="left">Feature</td>
+<td align="left">API Used</td>
+<td align="left">Permissions Required by the BOT</td>
+</tr>
 <tr>
 <td align="center"><g-emoji class="g-emoji" alias="heavy_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png">✔️</g-emoji></td>
 <td align="left">Server custom prefixes</td>
