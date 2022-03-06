@@ -562,6 +562,15 @@ class Music(commands.Cog):
                 await ctx.send(embed=embed)
                 ctx.voice_client.stop()
 
+    @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
+    async def ping(self, ctx):
+        with ctx.typing():
+            embed = Embed(
+                title="Ping: " + str(round(self.bot.latency * 1000, 1)) + "ms",
+                colour=0x00ff00,
+                timestamp=datetime.utcnow()
+            )
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Music(bot))
