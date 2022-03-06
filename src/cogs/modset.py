@@ -1,4 +1,3 @@
-from turtle import color
 import discord
 from typing import Optional
 from datetime import datetime
