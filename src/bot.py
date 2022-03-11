@@ -1,8 +1,8 @@
 import discord
 import json
 import os
-from discord.ext import commands
 import datetime
+from discord.ext import commands
 
 
 class Bot(commands.Bot):
@@ -15,7 +15,7 @@ class Bot(commands.Bot):
 
     def __init__(self, *args, **kwargs):
         super().__init__(
-            command_prefix=get_prefix,
+            command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
@@ -25,22 +25,22 @@ class Bot(commands.Bot):
                 start=datetime.datetime(2022, 2, 24),
             ),
         )
+        
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
-    async def get_prefix(self, bot, message):
+    async def get_prefix(self, message):
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
         print(prefixes[str(message.guild.id)]+"\n\n")
         return prefixes[str(message.guild.id)] + ' '
 
-    def run(self):
+    def run(self) -> None:
         super().run(os.getenv('BOT_TOKEN'))
 
     async def on_ready(self) -> None:
         print('Logged in as {0.user}'.format(self))
-        await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='Stop WW3!', start=datetime.datetime(2022, 2, 24)))
 
     async def on_guild_join(self, guild) -> None:
         with open('./data/prefixes.json', 'r') as pref:
@@ -117,7 +117,6 @@ class Bot(commands.Bot):
             v = 'Invalid Command'
         else:
             raise error
-            return
         embed.add_field(name=n, value=v, inline=False)
         await ctx.send(embed=embed)
 
