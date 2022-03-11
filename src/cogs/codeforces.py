@@ -1,17 +1,17 @@
 import requests
 import json
 import os
-import datetime
 from typing import Optional
+from datetime import datetime
 from discord import Embed
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 
 
-class Fun(Cog):
+class Codeforces(Cog):
     def __init__(self, bot):
         self.bot = bot
-
+    """
     def get_iquote(self):
         response = requests.get("https://zenquotes.io/api//random")
         quote_json = json.loads(response.text)
@@ -22,7 +22,7 @@ class Fun(Cog):
     async def send_iquote(self, ctx):
         embed = Embed(title="Inspirational Quote",
                       colour=ctx.author.colour,
-                      timestamp=datetime.datetime.utcnow())
+                      timestamp=datetime.utcnow())
         iquote = self.get_iquote()
         embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
         embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
@@ -39,7 +39,7 @@ class Fun(Cog):
         embed = Embed(title="NASA",
                       description="Picture of the day",
                       colour=0x0B3D91,
-                      timestamp=datetime.datetime.utcnow())
+                      timestamp=datetime.utcnow())
         embed.set_thumbnail(
             url="https://user-images.githubusercontent.com/63065397/156291255-4af80382-836c-4801-8b4f-47da33ea36c5.png")
         embed.set_footer(text="updated daily at 05:00:00 UTC [00:00:00 ET]")
@@ -72,7 +72,7 @@ class Fun(Cog):
                         title=(k["Country"]).title(),
                         description="COVID-19 Statistics",
                         colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
+                        timestamp=datetime.utcnow()
                     )
                     flag_url = "https://flagcdn.com/w640/" + \
                         str(k["CountryCode"]).lower() + ".jpg"
@@ -98,11 +98,10 @@ class Fun(Cog):
                 title="Global",
                 description="COVID-19 Statistics",
                 colour=0xff0000,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(
-                url="https://user-images.githubusercontent.com/63065397/156144079-6f90504d-ad48-4f2e-bec5-bae31cebd858.png"
-            )
+                url="https://user-images.githubusercontent.com/63065397/156144079-6f90504d-ad48-4f2e-bec5-bae31cebd858.png")
             fields = [
                 ("New Confirmed Cases", k["NewConfirmed"], True),
                 ("Total Confirmed Cases", k["TotalConfirmed"], True),
@@ -134,7 +133,7 @@ class Fun(Cog):
     async def send_meme(self, ctx):
         embed = Embed(title="MEME",
                       colour=0xffee00,
-                      timestamp=datetime.datetime.utcnow())
+                      timestamp=datetime.utcnow())
         meme = self.get_meme()
         embed.add_field(name="Post Link", value=meme["postLink"], inline=True)
         embed.add_field(name="Author", value=meme["author"], inline=True)
@@ -161,7 +160,7 @@ class Fun(Cog):
                 embed = Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 embed.add_field(name="Error", value="Not Found", inline=True)
                 embed.set_footer(text="given subreddit: "+subreddit)
@@ -171,7 +170,7 @@ class Fun(Cog):
                 title="Error",
                 description="API Request Fail",
                 colour=0xff0000,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             for key_i in data.keys():
                 if key_i != 'message' and key_i != 'error':
@@ -187,7 +186,7 @@ class Fun(Cog):
             await ctx.send(embed=embed)
         else:
             embed = Embed(title=str("/r/"+subreddit),
-                          colour=0xff5700, timestamp=datetime.datetime.utcnow())
+                          colour=0xff5700, timestamp=datetime.utcnow())
             embed.set_thumbnail(
                 url="https://user-images.githubusercontent.com/63065397/156344382-821872f3-b6e3-46e7-b925-b5f1a0821da8.png")
             i = 1
@@ -211,7 +210,7 @@ class Fun(Cog):
             if number > 0:
                 await ctx.send(embed=embed)
             return
-
+    """
 
 def setup(bot):
-    bot.add_cog(Fun(bot))
+    bot.add_cog(Codeforces(bot))
