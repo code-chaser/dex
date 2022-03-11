@@ -25,7 +25,7 @@ It's DEX, a multi-purpose discord bot that can be used to play music, get user i
   
 - Try it on your own server: [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot)
 - Try it in our public Bot server: [Join Here](https://discord.gg/FUqqEyBBA3)
-- See commands & features: [here](https://github.com/code-chaser/dex/tree/main/docs/commandsAndFeatures.md)
+- See commands & features: [Here](https://github.com/code-chaser/dex/tree/main/docs/commandsAndFeatures.md)
 
 ___
 
