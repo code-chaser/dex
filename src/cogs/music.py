@@ -1,3 +1,4 @@
+from turtle import color
 import discord
 import requests
 import json
@@ -586,12 +587,13 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
     
     def get_lyrics(self, song_title):
-        LYRICS_API_URL = "https://some-random-api.ml/lyrics?title="
+        LYRICS_API_URL = 'https://some-random-api.ml/lyrics?title='
+        print('REQUESTING AT: ' + LYRICS_API_URL + song_title)
         response = requests.get(LYRICS_API_URL + song_title)
         response_json = json.loads(response.text)
         return response_json
     
-    @commands.command(name="lyrics", help="sends the lyrics of the song")
+    @commands.command(name='lyrics', help='sends the lyrics of the song')
     async def lyrics_command(self, ctx, *args) -> None:
         song_title=''
         for arg in args:
@@ -599,9 +601,44 @@ class Music(commands.Cog):
         if len(song_title)>0:
             song_title=song_title[:-3]
         else:
-            song_title=self.currently_playing_player.title
+            args=self.currently_playing_player.title.split()
+            for arg in args:
+                song_title+=arg+'%20'
+            song_title=song_title[:-3]
+        
         data = self.get_lyrics(song_title)
-        if len()
+        if not 'lyrics' in data.keys():
+            print('title: '+song_title)
+            with ctx.typing():
+                embed = discord.Embed(
+                    title="Error",
+                    description=data['error'].join('\n'+'[try on Google](https://www.google.com/search?q='+song_title+'+lyrics)'),
+                    colour=0xff0000,
+                    timestamp=datetime.datetime.utcnow(),
+                )
+            await ctx.send(embed=embed)
+        else:
+            with ctx.typing():
+                lyrics=data['lyrics']
+                extend_text='\n[see on Google](https://www.google.com/search?q='+song_title+'+lyrics)'
+                if len(lyrics)>3500:
+                    lyrics=lyrics[:3500]+'... '
+                    extend_text='[read more](https://www.google.com/search?q='+song_title+'+lyrics)'
+                    
+                embed=discord.Embed(
+                    title=data['title'],
+                    description=lyrics+extend_text,
+                    color=ctx.author.color,
+                    timestamp=datetime.datetime.utcnow(),
+                )
+                embed.set_author(
+                    name=data['author'],
+                )
+                embed.set_thumbnail(url=data['thumbnail']['genius'])
+                embed.set_footer(
+                    icon_url=ctx.author.avatar_url,
+                )
+            await ctx.send(embed=embed)
 
 
 def setup(bot):
