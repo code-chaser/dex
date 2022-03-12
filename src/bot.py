@@ -74,6 +74,7 @@ class Bot(commands.Bot):
             json.dump(tag_messages, tag_, indent=4)
 
     async def on_message(self, message) -> None:
+        await self.process_commands(message)
         with open('./data/tag_messages.json', 'r') as tag_:
             tag_messages = json.load(tag_)
         if tag_messages[str(message.guild.id)] == 'off':
@@ -130,7 +131,7 @@ class Bot(commands.Bot):
         embed = discord.Embed(
             title='**GREETINGS!**',
             description=description,
-            color=0x8e38ce,
+            color=self.DEX_YELLOW,
             timestamp=datetime.datetime.utcnow(),
         )
         embed.set_image(url=self.INTRO_IMG_URL)

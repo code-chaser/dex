@@ -34,7 +34,7 @@ class Fun(Cog):
         response_json = json.loads(response.text)
         return response_json
 
-    @command(name="astropic", aliases=["astropicotd", "nasapic", "nasapicotd"], help="sends astronomy pic of the day from NASA")
+    @command(name="apod", aliases=["napod", "astropic", "astropicotd"], help="sends astronomy pic of the day from NASA")
     async def send_nasa_pic_otd(self, ctx):
         embed = Embed(title="NASA",
                       description="Picture of the day",

@@ -11,6 +11,13 @@ from discord.ext.commands import command
 class Codeforces(Cog):
     def __init__(self, bot):
         self.bot = bot
+    def get_user_details(self, *username):
+        for i in username:
+            usernames += (i+';')
+        url = str("https://codeforces.com/api/user.info?handles=" + username)
+        response = requests.get(url)
+        response_json = json.loads(response.text)
+        return response_json
     """
     def get_iquote(self):
         response = requests.get("https://zenquotes.io/api//random")

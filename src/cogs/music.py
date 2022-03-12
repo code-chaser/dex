@@ -518,7 +518,7 @@ class Music(commands.Cog):
             if not ctx.voice_client.is_playing():
                 await self.keep_playing(ctx)
 
-    @commands.command(name="leave", aliases=["disconnect"], help="leaves if connected to any voice channel")
+    @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
     async def leave_vc(self, ctx):
         self.music_queue.clear()
         if ctx.voice_client is None:
