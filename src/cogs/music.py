@@ -537,6 +537,8 @@ class Music(commands.Cog):
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
     async def leave_command(self, ctx):
         self.music_queue.clear()
+        self.currently_playing_music = None
+        self.currently_playing_player = None
         if ctx.voice_client is None:
             embed = discord.Embed(
                 title="Error",
@@ -617,6 +619,16 @@ class Music(commands.Cog):
         if len(song_title)>0:
             song_title=song_title[:-3]
         else:
+            if self.currently_playing_player is None:
+                async with ctx.typing():
+                    embed=discord.Embed(
+                        title="Error",
+                        description="No song is currently playing",
+                        color=0xff0000,
+                        timestamp=datetime.datetime.utcnow(),
+                    )
+                await ctx.send(embed=embed)
+                return
             args=self.currently_playing_player.title.split()
             for arg in args:
                 song_title+=arg+'%20'
