@@ -1,4 +1,3 @@
-from turtle import color
 import discord
 import requests
 import json
@@ -152,7 +151,7 @@ class Music(commands.Cog):
                             timestamp=datetime.datetime.utcnow()
                         )
                         embed.set_footer(text="play request from " + ctx.author.name)
-                    await ctx.send(mssg_)
+                    await ctx.send(embed=embed)
                     return True
                 else:
                     await ctx.voice_client.move_to(ctx.author.voice.channel)
@@ -165,6 +164,7 @@ class Music(commands.Cog):
                     colour=0xFF0000,
                     timestamp=datetime.datetime.utcnow()
                 )
+                embed.set_footer(text="play request from " + ctx.author.name)
             await ctx.send(embed=embed)
             return False
 
