@@ -93,7 +93,7 @@ class Music(commands.Cog):
         self.music_queue = []
 
     @commands.command(name="join", aliases=["connect"], help="joins the voice channel of the author")
-    async def join_vc(self, ctx):
+    async def join_command(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice is not None:
                 await ctx.author.voice.channel.connect()
@@ -137,23 +137,36 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
 
     async def make_join(self, ctx):
-        if ctx.voice_client is None:
-            if ctx.author.voice:
+        if ctx.author.voice:
+            if ctx.voice_client is None:
                 await ctx.author.voice.channel.connect()
+                return True
             else:
+                if (ctx.voice_client.is_playing() or ctx.voice_client.is_paused()) and (ctx.voice_client.channel != ctx.author.voice.channel):
+                    async with ctx.typing():
+                        mssg_="Can't move b/w channels while playing music!\n**NOTE: **You can still add music to the queue!"
+                        embed=discord.Embed(
+                            title="Error",
+                            description=mssg_,
+                            colour=0xff0000,
+                            timestamp=datetime.datetime.utcnow()
+                        )
+                        embed.set_footer(text="play request from " + ctx.author.name)
+                    await ctx.send(mssg_)
+                    return True
+                else:
+                    await ctx.voice_client.move_to(ctx.author.voice.channel)
+                    return True
+        else:
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=ctx.author.mention + ", you are not connected to a voice channel",
                     colour=0xFF0000,
                     timestamp=datetime.datetime.utcnow()
                 )
-                await ctx.send(embed=embed)
-                return
-        else:
-            if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                pass
-            else:
-                await ctx.voice_client.move_to(ctx.author.voice.channel)
+            await ctx.send(embed=embed)
+            return False
 
     async def play_music_from_player(self, ctx, *, player):
         if player is None:
@@ -187,7 +200,7 @@ class Music(commands.Cog):
             await asyncio.sleep(0.5)
 
     @commands.command(name="play", aliases=["stream", "p", "add"], help="streams a song directly from youtube")
-    async def add_to_queue_0(self, ctx, *, url: typing.Optional[str]):
+    async def play_command(self, ctx, *, url: typing.Optional[str]):
         if (url is None) and (ctx.message.content[(len(ctx.message.content)-3):(len(ctx.message.content))] != "add"):
             if ctx.voice_client is None:
                 await self.make_join(ctx)
@@ -211,41 +224,42 @@ class Music(commands.Cog):
                 await ctx.send(embed=embed)
             return
         elif url is None:
-            embed = discord.Embed(
-                title="Status",
-                colour=0xff0000,
-                timestamp=datetime.datetime.utcnow()
-            )
-            n = "Error"
-            v = "Missing required arguements"
-            embed.add_field(name=n, value=v, inline=False)
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Status",
+                    colour=0xff0000,
+                    timestamp=datetime.datetime.utcnow()
+                )
+                n = "Error"
+                v = "Missing required arguements"
+                embed.add_field(name=n, value=v, inline=False)
             await ctx.send(embed=embed)
-
+            
+        joined = await self.make_join(ctx)
+        if joined == False:
+            return
+        player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+        if player is None:
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Error",
+                    description=''.join(self.bad_request_error_message),
+                    colour=0xff0000,
+                    timestamp=datetime.datetime.utcnow(),
+                )
+            await ctx.send(embed=embed)
+            return
+        self.music_queue.append([player, ctx])
         async with ctx.typing():
-            await self.make_join(ctx)
-            if ctx.voice_client is None:
-                return
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            if player is None:
-                with ctx.typing():
-                    embed = discord.Embed(
-                        title="Error",
-                        description=''.join(self.bad_request_error_message),
-                        colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
-                    )
-                await ctx.send(embed=embed)
-                return
-            self.music_queue.append([player, ctx])
             embed = discord.Embed(
                 title="Added to queue",
                 description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
-                             icon_url=ctx.author.avatar_url)
+                                icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue), inline=True)
@@ -253,28 +267,28 @@ class Music(commands.Cog):
         await self.keep_playing(ctx)
 
     @commands.command(name='dplay', help="downloads a song and then plays it to reduce any possible lags")
-    async def add_to_queue_1(self, ctx, *, url):
+    async def dplay_command(self, ctx, *, url):
+        await self.make_join(ctx)
+        if ctx.voice_client is None:
+            return
+        player = await YTDLSource.from_url(url, loop=self.bot.loop)
+        if player is None:
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Error",
+                    description=''.join(self.bad_request_error_message),
+                    colour=0xff0000,
+                    timestamp=datetime.datetime.utcnow()
+                )
+            await ctx.send(embed=embed)
+            return
+        self.music_queue.append([player, ctx])
         async with ctx.typing():
-            await self.make_join(ctx)
-            if ctx.voice_client is None:
-                return
-            player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            if player is None:
-                with ctx.typing():
-                    embed = discord.Embed(
-                        title="Error",
-                        description=''.join(self.bad_request_error_message),
-                        colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
-                    )
-                await ctx.send(embed=embed)
-                return
-            self.music_queue.append([player, ctx])
             embed = discord.Embed(
                 title="Downloaded & Added to queue",
                 description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
@@ -288,7 +302,7 @@ class Music(commands.Cog):
     # @commands.command(name="loop", help="loops the currently playing song")
     # async def loop(self, ctx):
     #     if ctx.voice_client is None:
-    #         with ctx.typing():
+    #         async with ctx.typing():
     #             embed=discord.Embed(
     #                 title="Error",
     #                 description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
@@ -298,7 +312,7 @@ class Music(commands.Cog):
     #         await ctx.send(embed=embed)
     #         return
     #     if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
-    #         with ctx.typing():
+    #         async with ctx.typing():
     #             embed=discord.Embed(
     #                 title="Error",
     #                 description=''.join("Queue is empty, nothing to loop through\nUse `<prefix> play <query/url>` to add to queue"),
@@ -310,14 +324,14 @@ class Music(commands.Cog):
     #     while True:
 
     @commands.command(name="queue", aliases=["view"], help="displays the current queue")
-    async def view_queue(self, ctx, *args):
+    async def queue_command(self, ctx, *args):
         if (ctx.message.content[(len(ctx.message.content)-5):(len(ctx.message.content))] == "queue"):
             url = "".join(args)
             if url != "":
-                await self.add_to_queue_0(ctx, url)
+                await self.play_command(ctx, url)
                 return
         if ctx.voice_client is None:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join(
@@ -328,7 +342,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) == 0:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Queue",
                     description=''.join(
@@ -338,33 +352,33 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        with ctx.typing():
-            embed = discord.Embed(
-                title="Queue",
-                colour=0x0000ff,
-                timestamp=datetime.datetime.utcnow()
-            )
-            embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
-            size = len(self.music_queue)
-            for i in range(0, size, 25):
-                if i + 25 > size:
-                    for j in range(i, size):
-                        embed.add_field(
-                            name=str(j + 1), value=self.music_queue[j][0].title, inline=False)
-                else:
-                    for j in range(i, i + 25):
-                        embed.add_field(
-                            name=str(j + 1), value=self.music_queue[j][0].title, inline=False)
+        embed = discord.Embed(
+            title="Queue",
+            colour=0x0000ff,
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_thumbnail(url=self.MUSIC_ICON)
+        embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
+        size = len(self.music_queue)
+        for i in range(0, size, 25):
+            if i + 25 > size:
+                for j in range(i, size):
+                    embed.add_field(
+                        name=str(j + 1), value=self.music_queue[j][0].title, inline=False)
+            else:
+                for j in range(i, i + 25):
+                    embed.add_field(
+                        name=str(j + 1), value=self.music_queue[j][0].title, inline=False)
+            async with ctx.typing():
                 embed.set_footer(
                     text="Page " + str(int(i / 25) + 1) + " of " + str(int(size / 25) + 1))
-                await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
 
     @commands.command(name="remove", help="removes a song from the queue, takes song position as argument")
-    async def remove_from_queue(self, ctx, pos):
+    async def remove_command(self, ctx, pos):
         pos = int(pos)
         if ctx.voice_client is None:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join(
@@ -375,7 +389,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) < int(pos):
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join("There are only " + str(len(self.music_queue)) +
@@ -385,7 +399,7 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        with ctx.typing():
+        async with ctx.typing():
             embed = discord.Embed(
                 title="Removed from queue",
                 description="track requested by " +
@@ -404,10 +418,10 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="jump", help="jumps to a song in the queue, takes song position as argument")
-    async def jump_to(self, ctx, pos):
+    async def jump_command(self, ctx, pos):
         pos = int(pos)
         if ctx.voice_client is None:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join(
@@ -418,7 +432,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) < int(pos):
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join("There are only " + str(len(self.music_queue)) +
@@ -428,7 +442,7 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        with ctx.typing():
+        async with ctx.typing():
             embed = discord.Embed(
                 title="Jumping to " + str(pos),
                 description="- requested by " + ctx.author.mention,
@@ -450,9 +464,9 @@ class Music(commands.Cog):
         await self.skip_song(ctx)
 
     @commands.command(name="volume", aliases=["vol"], help="changes the volume of the music player")
-    async def volume(self, ctx, volume: int):
+    async def volume_command(self, ctx, volume: int):
         if ctx.voice_client is None:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join(
@@ -463,7 +477,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         ctx.voice_client.source.volume = volume / 100
-        with ctx.typing():
+        async with ctx.typing():
             embed = discord.Embed(
                 title=str(volume) + "%",
                 colour=0x00ff00,
@@ -474,9 +488,9 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="stop", aliases=["stfu", "shut"], help="stops the music player and clears the queue")
-    async def stop_music(self, ctx):
+    async def stop_command(self, ctx):
         if ctx.voice_client is None:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=''.join(
@@ -492,7 +506,7 @@ class Music(commands.Cog):
         return
 
     @commands.command(name="pause", help="pauses the music player")
-    async def pause(self, ctx):
+    async def pause_command(self, ctx):
         if ctx.voice_client is None:
             embed = discord.Embed(
                 title="Error",
@@ -505,7 +519,7 @@ class Music(commands.Cog):
             ctx.voice_client.pause()
 
     @commands.command(name="resume", help="resumes the music player")
-    async def resume(self, ctx):
+    async def resume_command(self, ctx):
         if ctx.voice_client is None:
             embed = discord.Embed(
                 title="Error",
@@ -521,7 +535,7 @@ class Music(commands.Cog):
                 await self.keep_playing(ctx)
 
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
-    async def leave_vc(self, ctx):
+    async def leave_command(self, ctx):
         self.music_queue.clear()
         if ctx.voice_client is None:
             embed = discord.Embed(
@@ -535,14 +549,16 @@ class Music(commands.Cog):
             await ctx.voice_client.disconnect()
 
     @commands.command(name="skip", aliases=["next"], help="skips the currently playing song")
-    async def skip_song(self, ctx):
+    async def skip_command(self, ctx):
         if ctx.voice_client is None:
-            embed = discord.Embed(
-                title="Error",
-                description=''.join(
-                    "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
-                colour=0xff0000,
-                timestamp=datetime.datetime.utcnow())
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Error",
+                    description=''.join(
+                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
+                    colour=0xff0000,
+                    timestamp=datetime.datetime.utcnow(),
+                )
             await ctx.send(embed=embed)
         else:
             if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
@@ -565,8 +581,8 @@ class Music(commands.Cog):
                 ctx.voice_client.stop()
 
     @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
-    async def ping(self, ctx):
-        with ctx.typing():
+    async def ping_command(self, ctx):
+        async with ctx.typing():
             ping = round(self.bot.latency * 1000, 1)
             high = 400
             low = 30
@@ -609,18 +625,18 @@ class Music(commands.Cog):
         data = self.get_lyrics(song_title)
         if not 'lyrics' in data.keys():
             print('title: '+song_title)
-            with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=data['error'].join('\n'+'[try on Google](https://www.google.com/search?q='+song_title+'+lyrics)'),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow(),
-                )
+            err_mssg=data['error']
+            embed = discord.Embed(
+                title="Error",
+                description=err_mssg+('\n'+'[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'),
+                colour=0xff0000,
+                timestamp=datetime.datetime.utcnow(),
+            )
             await ctx.send(embed=embed)
         else:
-            with ctx.typing():
+            async with ctx.typing():
                 lyrics=data['lyrics']
-                extend_text='\n[see on Google](https://www.google.com/search?q='+song_title+'+lyrics)'
+                extend_text='\n[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'
                 if len(lyrics)>3500:
                     lyrics=lyrics[:3500]+'... '
                     extend_text='[read more](https://www.google.com/search?q='+song_title+'+lyrics)'
@@ -628,7 +644,7 @@ class Music(commands.Cog):
                 embed=discord.Embed(
                     title=data['title'],
                     description=lyrics+extend_text,
-                    color=ctx.author.color,
+                    color=0x00ff00,
                     timestamp=datetime.datetime.utcnow(),
                 )
                 embed.set_author(
