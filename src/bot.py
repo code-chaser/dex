@@ -33,7 +33,6 @@ class Bot(commands.Bot):
     async def get_prefix(self, message):
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
-        print(prefixes[str(message.guild.id)]+"\n\n")
         return prefixes[str(message.guild.id)] + ' '
 
     def run(self) -> None:

@@ -606,7 +606,6 @@ class Music(commands.Cog):
     
     def get_lyrics(self, song_title):
         LYRICS_API_URL = 'https://some-random-api.ml/lyrics?title='
-        print('REQUESTING AT: ' + LYRICS_API_URL + song_title)
         response = requests.get(LYRICS_API_URL + song_title)
         response_json = json.loads(response.text)
         return response_json
