@@ -99,7 +99,7 @@ class ModSet(Cog):
             await ctx.send(embed=embed)
             return
         else:
-            with ctx.typing():
+            async with ctx.typing():
                 embed = discord.Embed(title="**GOOD BYE!**", description=f"""
                 Had a great time in {ctx.guild.name}!
                 Now it's time, I guess!
@@ -112,7 +112,7 @@ class ModSet(Cog):
                 embed.set_footer(text="made by codechaser",
                                 icon_url="https://avatars.githubusercontent.com/u/63065397?v=4")
                 embed.set_thumbnail(url=ctx.guild.icon_url)
-                await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
             guild=ctx.guild
             await ctx.guild.leave()
             with open('./data/tag_messages.json', 'r') as tag_:
@@ -130,7 +130,7 @@ class ModSet(Cog):
             
     @command(name="madeby?", help="shows the creator of the bot")
     async def madeby(self, ctx):
-        with ctx.typing():
+        async with ctx.typing():
             embed = discord.Embed(title="Made by", description="""
             **codechaser#0647**
             **[GitHub](https://github.com/code-chaser)**
