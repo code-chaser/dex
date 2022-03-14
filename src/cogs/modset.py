@@ -86,8 +86,7 @@ class ModSet(Cog):
                 embed.add_field(
                     name="Error", value="Blank prefixes not allowed!", inline=True)
                 await ctx.send(embed=embed)
-                
-        
+
     @command(name="goodbyeForever!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
     async def leave_this_server(self, ctx):
         if ctx.author != ctx.guild.owner:
@@ -110,10 +109,10 @@ class ModSet(Cog):
                 embed.set_author(
                     name="dex", url="https://github.com/code-chaser/dex/issues/new", icon_url=self.bot.user.avatar_url)
                 embed.set_footer(text="made by codechaser",
-                                icon_url="https://avatars.githubusercontent.com/u/63065397?v=4")
+                                 icon_url="https://avatars.githubusercontent.com/u/63065397?v=4")
                 embed.set_thumbnail(url=ctx.guild.icon_url)
             await ctx.send(embed=embed)
-            guild=ctx.guild
+            guild = ctx.guild
             await ctx.guild.leave()
             with open('./data/tag_messages.json', 'r') as tag_:
                 tag_messages = json.load(tag_)
@@ -127,7 +126,7 @@ class ModSet(Cog):
                 prefixes.pop(str(guild.id))
             with open('./data/prefixes.json', 'w') as pref:
                 json.dump(prefixes, pref, indent=4)
-            
+
     @command(name="madeby?", help="shows the creator of the bot")
     async def madeby(self, ctx):
         async with ctx.typing():
@@ -135,12 +134,14 @@ class ModSet(Cog):
             **codechaser#0647**
             **[GitHub](https://github.com/code-chaser)**
             """,
-            color=0x8e38ce, timestamp=datetime.utcnow())
+                                  color=0x8e38ce, timestamp=datetime.utcnow())
             embed.set_author(name="dex",
-                            url="https://github.com/code-chaser/dex/", icon_url=self.bot.user.avatar_url)
-            
-            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/63065397?v=4")
+                             url="https://github.com/code-chaser/dex/", icon_url=self.bot.user.avatar_url)
+
+            embed.set_thumbnail(
+                url="https://avatars.githubusercontent.com/u/63065397?v=4")
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(ModSet(bot))

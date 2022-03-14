@@ -143,14 +143,15 @@ class Music(commands.Cog):
             else:
                 if (ctx.voice_client.is_playing() or ctx.voice_client.is_paused()) and (ctx.voice_client.channel != ctx.author.voice.channel):
                     async with ctx.typing():
-                        mssg_="Can't move b/w channels while playing music!\n**NOTE: **You can still add music to the queue!"
-                        embed=discord.Embed(
+                        mssg_ = "Can't move b/w channels while playing music!\n**NOTE: **You can still add music to the queue!"
+                        embed = discord.Embed(
                             title="Error",
                             description=mssg_,
                             colour=0xff0000,
                             timestamp=datetime.datetime.utcnow()
                         )
-                        embed.set_footer(text="play request from " + ctx.author.name)
+                        embed.set_footer(
+                            text="play request from " + ctx.author.name)
                     await ctx.send(embed=embed)
                     return True
                 else:
@@ -234,7 +235,7 @@ class Music(commands.Cog):
                 v = "Missing required arguements"
                 embed.add_field(name=n, value=v, inline=False)
             await ctx.send(embed=embed)
-            
+
         joined = await self.make_join(ctx)
         if joined == False:
             return
@@ -259,7 +260,7 @@ class Music(commands.Cog):
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
-                                icon_url=ctx.author.avatar_url)
+                             icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue), inline=True)
@@ -603,25 +604,25 @@ class Music(commands.Cog):
                 timestamp=datetime.datetime.utcnow()
             )
         await ctx.send(embed=embed)
-    
+
     async def get_lyrics(self, song_title):
         API_URL = "https://some-random-api.ml/lyrics?title=" + song_title
         async with aiohttp.ClientSession() as session:
             async with session.get(API_URL) as response:
                 data_json = await response.json()
                 return data_json
-    
+
     @commands.command(name='lyrics', help='sends the lyrics of the song')
     async def lyrics_command(self, ctx, *args) -> None:
-        song_title=''
+        song_title = ''
         for arg in args:
-            song_title+=arg+'%20'
-        if len(song_title)>0:
-            song_title=song_title[:-3]
+            song_title += arg+'%20'
+        if len(song_title) > 0:
+            song_title = song_title[:-3]
         else:
             if self.currently_playing_player is None:
                 async with ctx.typing():
-                    embed=discord.Embed(
+                    embed = discord.Embed(
                         title="Error",
                         description="No song is currently playing",
                         color=0xff0000,
@@ -629,30 +630,33 @@ class Music(commands.Cog):
                     )
                 await ctx.send(embed=embed)
                 return
-            args=self.currently_playing_player.title.split()
+            args = self.currently_playing_player.title.split()
             for arg in args:
-                song_title+=arg+'%20'
-            song_title=song_title[:-3]
-        
+                song_title += arg+'%20'
+            song_title = song_title[:-3]
+
         data = await self.get_lyrics(song_title)
         if not 'lyrics' in data.keys():
-            err_mssg=data['error']
+            err_mssg = data['error']
             embed = discord.Embed(
                 title="Error",
-                description=err_mssg+('\n'+'[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'),
+                description=err_mssg +
+                ('\n'+'[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'),
                 colour=0xff0000,
                 timestamp=datetime.datetime.utcnow(),
             )
             await ctx.send(embed=embed)
         else:
             async with ctx.typing():
-                lyrics=data['lyrics']
-                extend_text='\n[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'
-                if len(lyrics)>3500:
-                    lyrics=lyrics[:3500]+'... '
-                    extend_text='[read more](https://www.google.com/search?q='+song_title+'+lyrics)'
-                    
-                embed=discord.Embed(
+                lyrics = data['lyrics']
+                extend_text = '\n[see results from GoogleSearch](https://www.google.com/search?q=' + \
+                    song_title+'+lyrics)'
+                if len(lyrics) > 3500:
+                    lyrics = lyrics[:3500]+'... '
+                    extend_text = '[read more](https://www.google.com/search?q=' + \
+                        song_title+'+lyrics)'
+
+                embed = discord.Embed(
                     title=data['title'],
                     description=lyrics+extend_text,
                     color=0x00ff00,
