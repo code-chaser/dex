@@ -92,16 +92,6 @@ ___
     ```python
     import asyncio
     ```
-- **requests**:
-  - version = `2.27.1`
-  - installation:
-    ```bash
-    pip install requests==2.27.1
-    ```
-  - import:
-    ```python
-    import requests
-    ```
 ___
 
 <br>
