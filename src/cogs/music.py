@@ -1,5 +1,5 @@
 import discord
-import requests
+import aiohttp
 import json
 import youtube_dl
 import asyncio
@@ -604,10 +604,11 @@ class Music(commands.Cog):
             )
         await ctx.send(embed=embed)
     
-    def get_lyrics(self, song_title):
+    async def get_lyrics(self, song_title):
         LYRICS_API_URL = 'https://some-random-api.ml/lyrics?title='
-        response = requests.get(LYRICS_API_URL + song_title)
-        response_json = json.loads(response.text)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(LYRICS_API_URL + song_title) as response:
+                response_json = await response.json()
         return response_json
     
     @commands.command(name='lyrics', help='sends the lyrics of the song')
@@ -633,7 +634,7 @@ class Music(commands.Cog):
                 song_title+=arg+'%20'
             song_title=song_title[:-3]
         
-        data = self.get_lyrics(song_title)
+        data = await self.get_lyrics(song_title)
         if not 'lyrics' in data.keys():
             print('title: '+song_title)
             err_mssg=data['error']
