@@ -605,11 +605,11 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
     
     async def get_lyrics(self, song_title):
-        LYRICS_API_URL = 'https://some-random-api.ml/lyrics?title='
+        API_URL = "https://some-random-api.ml/lyrics?title=" + song_title
         async with aiohttp.ClientSession() as session:
-            async with session.get(LYRICS_API_URL + song_title) as response:
-                response_json = await response.json()
-        return response_json
+            async with session.get(API_URL) as response:
+                data_json = await response.json()
+                return data_json
     
     @commands.command(name='lyrics', help='sends the lyrics of the song')
     async def lyrics_command(self, ctx, *args) -> None:

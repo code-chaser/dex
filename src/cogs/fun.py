@@ -217,7 +217,22 @@ class Fun(commands.Cog):
                 await ctx.send(embed=embed)
             return
     # ----------------------------------------------------------------------------------------------------------------------
-
+    
+    async def get_lyrics(self, song_title):
+        API_URL = "https://some-random-api.ml/lyrics?title=" + song_title
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as response:
+                data_json = await response.json()
+                return data_json
+    @commands.command(name="lyr", aliases=["lyrr"], help="sends lyrics of the given song")
+    async def lyrr_command(self, ctx, *args):
+        song=''
+        for arg in args:
+            song+=arg
+        song = song.replace(" ", "+")
+        await ctx.send("Searching for lyrics of "+song)
+        data=await self.get_lyrics(song)
+        await ctx.send(data['lyrics'])
 
 def setup(bot):
     bot.add_cog(Fun(bot))
