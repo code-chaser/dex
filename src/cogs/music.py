@@ -636,7 +636,6 @@ class Music(commands.Cog):
         
         data = await self.get_lyrics(song_title)
         if not 'lyrics' in data.keys():
-            print('title: '+song_title)
             err_mssg=data['error']
             embed = discord.Embed(
                 title="Error",
