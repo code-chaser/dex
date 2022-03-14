@@ -6,7 +6,7 @@ from discord.ext import commands
 
 
 class Bot(commands.Bot):
-    
+
     CC_LOGO_URL = 'https://avatars.githubusercontent.com/u/63065397?v=4'
     INTRO_IMG_URL = 'https://user-images.githubusercontent.com/63065397/156466208-ffb6db84-f0c0-4860-ab6d-48ad0f2cd5f7.png'
     EXHAUSTED_FACE = 'https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
@@ -25,7 +25,7 @@ class Bot(commands.Bot):
                 start=datetime.datetime(2022, 2, 24),
             ),
         )
-        
+
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
@@ -93,7 +93,7 @@ class Bot(commands.Bot):
         embed.add_field(name='Author', value=target.mention, inline=True)
         embed.set_thumbnail(url=target.avatar_url)
         await message.channel.send(embed=embed)
-        
+
     async def on_command_error(self, ctx, error) -> None:
         embed = discord.Embed(
             title='Status',
