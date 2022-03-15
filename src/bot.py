@@ -2,6 +2,9 @@ import discord
 import json
 import os
 import datetime
+import psycopg2
+from config import config
+import configparser
 from discord.ext import commands
 
 
@@ -12,8 +15,10 @@ class Bot(commands.Bot):
     EXHAUSTED_FACE = 'https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
     DEX_YELLOW = 0x8e38ce
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
+    DB_CONNECTION = None
 
     def __init__(self, *args, **kwargs):
+        self.connect_to_db()
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -30,7 +35,23 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
+    async def connect_to_db(self) -> None:
+        
+        self.DB_CONNECTION = psycopg2.connect(
+            host=os.getenv('DEX_DB_HOST'),
+            database=os.getenv('DEX_DB_NAME'),
+            user=os.getenv('DEX_DB_USER'),
+            password=os.getenv('DEX_DB_PASSWORD'),
+        )
+    
     async def get_prefix(self, message):
+        cur = self.DB_CONNECTION.cursor()
+        cur.execute('SELECT prefix FROM guilds WHERE guild_id = %s;', (message.guild.id,))
+        prefix = cur.fetchone()
+        print("ID: " + str(message.guild.id) + " prefix: " + prefix)
+        return prefix
+    
+    async def get_prefix_json(self, message):
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
         return prefixes[str(message.guild.id)] + ' '
@@ -38,10 +59,17 @@ class Bot(commands.Bot):
     def run(self) -> None:
         super().run(os.getenv('BOT_TOKEN'))
 
-    async def on_ready(self) -> None:
+    async def on_ready(self):
         print('Logged in as {0.user}'.format(self))
+        cur = self.DB_CONNECTION.cursor()
+        cur.execute('CREATE TYPE IF NOT EXISTS SWITCH AS ENUM (\'on\', \'off\');')
+        cur.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
 
     async def on_guild_join(self, guild) -> None:
+        cur = self.DB_CONNECTION.cursor()
+        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (%s, %s, %s);', (str(guild.id), '$dex ', 'on'))
+        cur.close()
+        return
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
         prefixes[str(guild.id)] = '$dex'
@@ -59,6 +87,10 @@ class Bot(commands.Bot):
             await general.send(embed=self.intro_msg_embed(guild))
 
     async def on_guild_remove(self, guild) -> None:
+        cur = self.DB_CONNECTION.cursor()
+        cur.execute('DELETE FROM guilds WHERE guild_id = %s;', (guild.id))
+        cur.close()
+        return
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
         if str(guild.id) in prefixes.keys():
@@ -74,9 +106,11 @@ class Bot(commands.Bot):
 
     async def on_message(self, message) -> None:
         await self.process_commands(message)
-        with open('./data/tag_messages.json', 'r') as tag_:
-            tag_messages = json.load(tag_)
-        if tag_messages[str(message.guild.id)] == 'off':
+        cur = self.DB_CONNECTION.cursor()
+        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = %s', (message.guild.id,))
+        tag_switch = cur.fetchone()
+        cur.close()
+        if tag_switch == 'off':
             return
         target = message.author
         if target == self.user or target.bot:

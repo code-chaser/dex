@@ -1,4 +1,5 @@
 import discord
+import psycopg2
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member
@@ -67,7 +68,10 @@ class ModSet(Cog):
                     name="Error", value="Only server owner can change the prefix!", inline=True)
                 await ctx.send(embed=embed)
                 return
-            if (prefix != ""):
+            if (prefix != "") and (len(prefix) <= 27):
+                cur = self.bot.DB_CONNECTION.cursor()
+                cur.execute("UPDATE guilds SET prefix = %s WHERE id = %s;",(prefix, str(ctx.guild.id)))
+                cur.close()
                 with open('./data/prefixes.json', 'r') as pref:
                     prefixes = json.load(pref)
                 prefixes[str(ctx.guild.id)] = prefix
@@ -84,7 +88,7 @@ class ModSet(Cog):
                               colour=0xff0000,
                               timestamp=datetime.utcnow())
                 embed.add_field(
-                    name="Error", value="Blank prefixes not allowed!", inline=True)
+                    name="Error", value="prefix length must be strictly between (0 - 28)", inline=True)
                 await ctx.send(embed=embed)
 
     @command(name="goodbyeForever!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
