@@ -77,11 +77,11 @@ ___
   - version = `3.7.4.3`
   - installation:
     ```bash
-    pip install aiohttp==3.7.4.3
+    pip install typing==3.7.4.3
     ```
   - import:
     ```python
-    import aiohttp
+    import typing
     ```
 - **asyncio**:
   - version = `3.4.3`
