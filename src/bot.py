@@ -70,16 +70,6 @@ class Bot(commands.Bot):
         if general is not None:
             await general.send(embed=self.intro_msg_embed(guild))
         return
-        with open('./data/prefixes.json', 'r') as pref:
-            prefixes = json.load(pref)
-        prefixes[str(guild.id)] = '$dex'
-        with open('./data/prefixes.json', 'w') as pref:
-            json.dump(prefixes, pref, indent=4)
-        with open('./data/tag_messages.json', 'r') as tag_:
-            tag_messages = json.load(tag_)
-        tag_messages[str(guild.id)] = 'on'
-        with open('./data/tag_messages.json', 'w') as tag_:
-            json.dump(tag_messages, tag_, indent=4)
 
     async def on_guild_remove(self, guild) -> None:
         cur = self.DB_CONNECTION.cursor()
@@ -87,18 +77,6 @@ class Bot(commands.Bot):
         self.DB_CONNECTION.commit()
         cur.close()
         return
-        with open('./data/prefixes.json', 'r') as pref:
-            prefixes = json.load(pref)
-        if str(guild.id) in prefixes.keys():
-            prefixes.pop(str(guild.id))
-        with open('./data/prefixes.json', 'w') as pref:
-            json.dump(prefixes, pref, indent=4)
-        with open('./data/tag_messages.json', 'r') as tag_:
-            tag_messages = json.load(tag_)
-        if str(guild.id) in tag_messages.keys():
-            tag_messages.pop(str(guild.id))
-        with open('./data/tag_messages.json', 'w') as tag_:
-            json.dump(tag_messages, tag_, indent=4)
 
     async def on_message(self, message) -> None:
         await self.process_commands(message)
