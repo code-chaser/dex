@@ -93,6 +93,16 @@ ___
     ```python
     import asyncio
     ```
+- **psycopg2**:
+  - version = `2.9.3`
+  - installation:
+    ```bash
+    pip install psycopg2==2.9.3
+    ```
+  - import:
+    ```python
+    import psycopg2
+    ```
 ___
 
 <br>
