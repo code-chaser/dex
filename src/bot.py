@@ -84,7 +84,6 @@ class Bot(commands.Bot):
         cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(message.guild.id) + '\';')
         tag_switch = cur.fetchone()
         cur.close()
-        print(tag_switch[0])
         if tag_switch[0] == 'off':
             return
         target = message.author
