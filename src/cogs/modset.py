@@ -19,17 +19,19 @@ class ModSet(Cog):
 
     @command(name="tags", aliases=["tagging", "msgtag"], help="toggles message tags")
     async def message_tags(self, ctx, switch: Optional[str]):
-        with open('./data/tag_messages.json', 'r') as tag_:
-            tag_messages = json.load(tag_)
+        cur = self.bot.DB_CONNECTION.cursor()
+        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
+        tag_messages = cur.fetchone()
+        tag_switch = tag_messages[0]
         if switch is None:
-            if tag_messages[str(ctx.guild.id)] == "off":
-                tag_messages[str(ctx.guild.id)] = "on"
+            if tag_switch == "off":
+                tag_switch = "on"
             else:
-                tag_messages[str(ctx.guild.id)] = "off"
+                tag_switch = "off"
         elif switch.lower() == "off" or switch == "0":
-            tag_messages[str(ctx.guild.id)] = "off"
+            tag_switch = "off"
         elif switch.lower() == "on" or switch == "1":
-            tag_messages[str(ctx.guild.id)] = "on"
+            tag_switch = "on"
 
         else:
             embed = Embed(title="Status", colour=0xff0000,
@@ -39,19 +41,21 @@ class ModSet(Cog):
             await ctx.send(embed=embed)
             return
 
+        cur = self.bot.DB_CONNECTION.cursor()
+        cur.execute('UPDATE guilds SET tag_messages = \'' + tag_switch + '\' WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
+        self.bot.DB_CONNECTION.commit()
+        cur.close()
         embed = Embed(title="Status",
                       colour=0x00ff00,
                       timestamp=datetime.utcnow())
-
-        with open('./data/tag_messages.json', 'w') as tag_:
-            json.dump(tag_messages, tag_, indent=4)
         embed.add_field(name="Done", value="Message Tags are now " +
-                        tag_messages[str(ctx.guild.id)], inline=True)
+                        tag_switch, inline=True)
         await ctx.send(embed=embed)
 
     @command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
     async def change_prefix(self, ctx, *args):
         prefix = "".join(args)
+        prefix += ' '
         if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
             embed = Embed(title="Status",
                           colour=0xff0000,
@@ -70,19 +74,15 @@ class ModSet(Cog):
                 return
             if (prefix != "") and (len(prefix) <= 27):
                 cur = self.bot.DB_CONNECTION.cursor()
-                cur.execute("UPDATE guilds SET prefix = %s WHERE id = %s;",(prefix, str(ctx.guild.id)))
+                cur.execute("UPDATE guilds SET prefix = \'"+prefix+"\' WHERE guild_id = \'"+str(ctx.guild.id)+"\';")
+                self.bot.DB_CONNECTION.commit()
                 cur.close()
-                with open('./data/prefixes.json', 'r') as pref:
-                    prefixes = json.load(pref)
-                prefixes[str(ctx.guild.id)] = prefix
                 embed = Embed(title="Status",
                               colour=0x00ff00,
                               timestamp=datetime.utcnow())
                 embed.add_field(
                     name="Done", value="New Prefix is " + prefix, inline=True)
                 await ctx.send(embed=embed)
-                with open('./data/prefixes.json', 'w') as pref:
-                    json.dump(prefixes, pref, indent=4)
             else:
                 embed = Embed(title="Status",
                               colour=0xff0000,
@@ -91,7 +91,7 @@ class ModSet(Cog):
                     name="Error", value="prefix length must be strictly between (0 - 28)", inline=True)
                 await ctx.send(embed=embed)
 
-    @command(name="goodbyeForever!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
+    @command(name="goodbye!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
     async def leave_this_server(self, ctx):
         if ctx.author != ctx.guild.owner:
             embed = Embed(title="Status",
@@ -100,7 +100,6 @@ class ModSet(Cog):
             embed.add_field(
                 name="Error", value="Only server owner can use this command!", inline=True)
             await ctx.send(embed=embed)
-            return
         else:
             async with ctx.typing():
                 embed = discord.Embed(title="**GOOD BYE!**", description=f"""
@@ -118,18 +117,11 @@ class ModSet(Cog):
             await ctx.send(embed=embed)
             guild = ctx.guild
             await ctx.guild.leave()
-            with open('./data/tag_messages.json', 'r') as tag_:
-                tag_messages = json.load(tag_)
-            if str(guild.id) in tag_messages.keys():
-                tag_messages.pop(str(guild.id))
-            with open('./data/tag_messages.json', 'w') as tag_:
-                json.dump(tag_messages, tag_, indent=4)
-            with open('./data/prefixes.json', 'r') as pref:
-                prefixes = json.load(pref)
-            if str(guild.id) in prefixes.keys():
-                prefixes.pop(str(guild.id))
-            with open('./data/prefixes.json', 'w') as pref:
-                json.dump(prefixes, pref, indent=4)
+            cur=self.bot.DB_CONNECTION.cursor()
+            cur.execute("DELETE FROM guilds WHERE guild_id = \'"+str(guild.id)+"\';")
+            self.bot.DB_CONNECTION.commit()
+            cur.close()
+        return
 
     @command(name="madeby?", help="shows the creator of the bot")
     async def madeby(self, ctx):

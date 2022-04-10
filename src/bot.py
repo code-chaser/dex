@@ -3,7 +3,6 @@ import json
 import os
 import datetime
 import psycopg2
-from config import config
 import configparser
 from discord.ext import commands
 
@@ -35,26 +34,21 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
-    async def connect_to_db(self) -> None:
+    def connect_to_db(self) -> None:
         
         self.DB_CONNECTION = psycopg2.connect(
             host=os.getenv('DEX_DB_HOST'),
             database=os.getenv('DEX_DB_NAME'),
             user=os.getenv('DEX_DB_USER'),
+            port=os.getenv('DEX_DB_PORT'),
             password=os.getenv('DEX_DB_PASSWORD'),
         )
     
     async def get_prefix(self, message):
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT prefix FROM guilds WHERE guild_id = %s;', (message.guild.id,))
+        cur.execute('SELECT prefix FROM guilds WHERE guild_id = \'' + str(message.guild.id) + '\';')
         prefix = cur.fetchone()
-        print("ID: " + str(message.guild.id) + " prefix: " + prefix)
         return prefix
-    
-    async def get_prefix_json(self, message):
-        with open('./data/prefixes.json', 'r') as pref:
-            prefixes = json.load(pref)
-        return prefixes[str(message.guild.id)] + ' '
 
     def run(self) -> None:
         super().run(os.getenv('BOT_TOKEN'))
@@ -62,13 +56,19 @@ class Bot(commands.Bot):
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self))
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('CREATE TYPE IF NOT EXISTS SWITCH AS ENUM (\'on\', \'off\');')
         cur.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
+        self.DB_CONNECTION.commit()
 
     async def on_guild_join(self, guild) -> None:
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (%s, %s, %s);', (str(guild.id), '$dex ', 'on'))
+        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' + str(guild.id)+'\', \'$dex \', \'on\');')
+        self.DB_CONNECTION.commit()
         cur.close()
+        for channel in guild.text_channels:
+            if channel.permissions_for(guild.me).send_messages:
+                general = channel
+        if general is not None:
+            await general.send(embed=self.intro_msg_embed(guild))
         return
         with open('./data/prefixes.json', 'r') as pref:
             prefixes = json.load(pref)
@@ -80,15 +80,11 @@ class Bot(commands.Bot):
         tag_messages[str(guild.id)] = 'on'
         with open('./data/tag_messages.json', 'w') as tag_:
             json.dump(tag_messages, tag_, indent=4)
-        for channel in guild.text_channels:
-            if channel.permissions_for(guild.me).send_messages:
-                general = channel
-        if general is not None:
-            await general.send(embed=self.intro_msg_embed(guild))
 
     async def on_guild_remove(self, guild) -> None:
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('DELETE FROM guilds WHERE guild_id = %s;', (guild.id))
+        cur.execute('DELETE FROM guilds WHERE guild_id = \'' + str(guild.id) + '\';')
+        self.DB_CONNECTION.commit()
         cur.close()
         return
         with open('./data/prefixes.json', 'r') as pref:
@@ -107,13 +103,14 @@ class Bot(commands.Bot):
     async def on_message(self, message) -> None:
         await self.process_commands(message)
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = %s', (message.guild.id,))
+        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(message.guild.id) + '\';')
         tag_switch = cur.fetchone()
         cur.close()
-        if tag_switch == 'off':
+        print(tag_switch[0])
+        if tag_switch[0] == 'off':
             return
         target = message.author
-        if target == self.user or target.bot:
+        if target == self.user:
             return
         embed = discord.Embed(
             title='Message Tagged',
