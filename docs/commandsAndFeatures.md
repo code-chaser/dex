@@ -195,7 +195,7 @@ ___
 | ✔️ | Shows Server Information |
 |    | Plays Music | -->
 
-
+<!--
 <table align = "center">
 <thead>
 <tr>
@@ -271,5 +271,6 @@ ___
 </tr>
 </tbody>
 </table>
+-->
 
 ___
