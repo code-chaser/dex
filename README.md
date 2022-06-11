@@ -1,6 +1,7 @@
 
 <h3 align="center"><a href="https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=397590396532&scope=bot"><img src="https://user-images.githubusercontent.com/63065397/155839904-29ff9faa-f349-4d40-b21c-8f48b856e3a9.jpg" width="500"></a></h3>
 
+
 <h1 align="center"> 
   
   <br>
