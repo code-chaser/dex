@@ -23,7 +23,7 @@ class Bot(commands.Bot):
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
-                name="Stop WW3!",
+                name="$dex help",
                 large_image_url=self.EXHAUSTED_FACE,
                 small_image_url=self.EXHAUSTED_FACE,
                 start=datetime.datetime(2022, 2, 24),
@@ -129,12 +129,11 @@ class Bot(commands.Bot):
         await ctx.send(embed=embed)
 
     def intro_msg_embed(self, guild):
-        description = ''
-        description = description.join(
-            '\nThanks for adding me to ' + guild.name + '!')
-        description = description.join('\nUse `$dex help` to get started!')
-        description = description.join(
-            '\nVisit: '.join(self.REPOSITORY_URL))
+        description = ('\nThanks for adding me to ' + guild.name + '!')
+        description += ('\nUse `$dex help` to get started!')
+        description += ('\nSource Code: [Link](')
+        description += (self.REPOSITORY_URL)
+        description += (')')
         embed = discord.Embed(
             title='**GREETINGS!**',
             description=description,

@@ -105,7 +105,7 @@ class ModSet(Cog):
                 embed = discord.Embed(title="**GOOD BYE!**", description=f"""
                 Had a great time in {ctx.guild.name}!
                 Now it's time, I guess!
-                To report any issues: https://github.com/code-chaser/dex/issues/new
+                Report any issues: [Here](https://github.com/code-chaser/dex/issues/new)
                 """, color=0x8e38ce, timestamp=datetime.utcnow())
                 embed.set_image(
                     url="https://user-images.githubusercontent.com/63065397/156924332-3638cd0d-9cf9-4e08-b4de-6f20cedd921a.png")
