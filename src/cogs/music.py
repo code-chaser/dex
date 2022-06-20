@@ -456,13 +456,13 @@ class Music(commands.Cog):
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Remaining in queue", value=str(
-                len(self.music_queue)), inline=True)
+                len(self.music_queue)-pos), inline=True)
         await ctx.send(embed=embed)
         counter = 0
         while counter < int(pos) - 1:
             self.music_queue.pop(0)
             counter += 1
-        await self.skip_song(ctx)
+        await self.skip_command(ctx)
 
     @commands.command(name="volume", aliases=["vol"], help="changes the volume of the music player")
     async def volume_command(self, ctx, volume: int):
