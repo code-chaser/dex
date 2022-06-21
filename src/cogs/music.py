@@ -63,6 +63,7 @@ class Music(commands.Cog):
     # queue format:
     # query/url(str) | download(bool) | ctx(ctx)
     music_queue = []
+    popped = 0
     currently_playing_music = ()
     currently_playing_player = None
     is_playing = False
@@ -198,8 +199,6 @@ class Music(commands.Cog):
             f'Player error: {e}') if e else None)
         await ctx.send(embed=embed)
 
-    _random_int = 0
-
     async def keep_playing(self, ctx):
         while len(self.music_queue) > 0:
             if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
@@ -308,7 +307,7 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
         await self.keep_playing(ctx)
 
-    # @commands.command(name="loop", help="loops the currently playing song")
+    # @commands.command(name="repeat", help="loops the currently playing song")
     # async def loop(self, ctx):
     #     if ctx.voice_client is None:
     #         async with ctx.typing():
