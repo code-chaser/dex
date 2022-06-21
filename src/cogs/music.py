@@ -81,6 +81,14 @@ class Music(commands.Cog):
         "\n**To avoid any further unexpected errors, make the bot rejoin the voice channel using `<prefix> leave` and then `<prefix> join`**\n"))
     bad_request_error_message += (''.join("**SORRY FOR THE INCONVENIENCE!**"))
 
+    embed_error_no_vc_dex = discord.Embed(
+        title="Error",
+        description=''.join(
+            "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
+        colour=0xff0000,
+        timestamp=datetime.datetime.utcnow()
+    )
+
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
 
     def __init__(self, bot):
@@ -304,12 +312,7 @@ class Music(commands.Cog):
     # async def loop(self, ctx):
     #     if ctx.voice_client is None:
     #         async with ctx.typing():
-    #             embed=discord.Embed(
-    #                 title="Error",
-    #                 description=''.join("Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-    #                 colour=0xff0000,
-    #                 timestamp=datetime.datetime.utcnow()
-    #             )
+    #             embed=self.embed_error_no_vc_dex
     #         await ctx.send(embed=embed)
     #         return
     #     if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
@@ -333,13 +336,7 @@ class Music(commands.Cog):
                 return
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) == 0:
@@ -380,13 +377,7 @@ class Music(commands.Cog):
         pos = int(pos)
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) < int(pos):
@@ -423,13 +414,7 @@ class Music(commands.Cog):
         pos = int(pos)
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
         if len(self.music_queue) < int(pos):
@@ -468,13 +453,7 @@ class Music(commands.Cog):
     async def volume_command(self, ctx, volume: int):
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
         ctx.voice_client.source.volume = volume / 100
@@ -492,13 +471,7 @@ class Music(commands.Cog):
     async def stop_command(self, ctx):
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
         if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
@@ -509,12 +482,7 @@ class Music(commands.Cog):
     @commands.command(name="pause", help="pauses the music player")
     async def pause_command(self, ctx):
         if ctx.voice_client is None:
-            embed = discord.Embed(
-                title="Error",
-                description=''.join(
-                    "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
-                colour=0xff0000,
-                timestamp=datetime.datetime.utcnow())
+            embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
         elif ctx.voice_client.is_playing():
             ctx.voice_client.pause()
@@ -522,12 +490,7 @@ class Music(commands.Cog):
     @commands.command(name="resume", help="resumes the music player")
     async def resume_command(self, ctx):
         if ctx.voice_client is None:
-            embed = discord.Embed(
-                title="Error",
-                description=''.join(
-                    "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
-                colour=0xff0000,
-                timestamp=datetime.datetime.utcnow())
+            embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
         elif ctx.voice_client.is_paused():
             ctx.voice_client.resume()
@@ -541,12 +504,7 @@ class Music(commands.Cog):
         self.currently_playing_music = None
         self.currently_playing_player = None
         if ctx.voice_client is None:
-            embed = discord.Embed(
-                title="Error",
-                description=''.join(
-                    "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
-                colour=0xff0000,
-                timestamp=datetime.datetime.utcnow())
+            embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
         else:
             await ctx.voice_client.disconnect()
@@ -555,13 +513,7 @@ class Music(commands.Cog):
     async def skip_command(self, ctx):
         if ctx.voice_client is None:
             async with ctx.typing():
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one**"),
-                    colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow(),
-                )
+                embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
         else:
             if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():

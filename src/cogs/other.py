@@ -85,7 +85,7 @@ class Other(commands.Cog):
                             value=original, inline=True)
             await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
-    
+
     @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
     async def ping_command(self, ctx):
         async with ctx.typing():
@@ -108,6 +108,7 @@ class Other(commands.Cog):
             )
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
+
 
 def setup(bot):
     bot.add_cog(Other(bot))
