@@ -20,7 +20,8 @@ class ModSet(Cog):
     @command(name="tags", aliases=["tagging", "msgtag"], help="toggles message tags")
     async def message_tags(self, ctx, switch: Optional[str]):
         cur = self.bot.DB_CONNECTION.cursor()
-        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
+        cur.execute(
+            'SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
         tag_messages = cur.fetchone()
         tag_switch = tag_messages[0]
         if switch is None:
@@ -42,7 +43,8 @@ class ModSet(Cog):
             return
 
         cur = self.bot.DB_CONNECTION.cursor()
-        cur.execute('UPDATE guilds SET tag_messages = \'' + tag_switch + '\' WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
+        cur.execute('UPDATE guilds SET tag_messages = \'' + tag_switch +
+                    '\' WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
         self.bot.DB_CONNECTION.commit()
         cur.close()
         embed = Embed(title="Status",
@@ -55,7 +57,6 @@ class ModSet(Cog):
     @command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
     async def change_prefix(self, ctx, *args):
         prefix = "".join(args)
-        prefix += ' '
         if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
             embed = Embed(title="Status",
                           colour=0xff0000,
@@ -73,8 +74,10 @@ class ModSet(Cog):
                 await ctx.send(embed=embed)
                 return
             if (prefix != "") and (len(prefix) <= 27):
+                prefix += " "
                 cur = self.bot.DB_CONNECTION.cursor()
-                cur.execute("UPDATE guilds SET prefix = \'"+prefix+"\' WHERE guild_id = \'"+str(ctx.guild.id)+"\';")
+                cur.execute("UPDATE guilds SET prefix = \'"+prefix +
+                            "\' WHERE guild_id = \'"+str(ctx.guild.id)+"\';")
                 self.bot.DB_CONNECTION.commit()
                 cur.close()
                 embed = Embed(title="Status",
@@ -88,7 +91,7 @@ class ModSet(Cog):
                               colour=0xff0000,
                               timestamp=datetime.utcnow())
                 embed.add_field(
-                    name="Error", value="prefix length must be strictly between (0 - 28)", inline=True)
+                    name="Error", value="prefix length must be between (1 - 27)", inline=True)
                 await ctx.send(embed=embed)
 
     @command(name="goodbye!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
@@ -117,8 +120,9 @@ class ModSet(Cog):
             await ctx.send(embed=embed)
             guild = ctx.guild
             await ctx.guild.leave()
-            cur=self.bot.DB_CONNECTION.cursor()
-            cur.execute("DELETE FROM guilds WHERE guild_id = \'"+str(guild.id)+"\';")
+            cur = self.bot.DB_CONNECTION.cursor()
+            cur.execute("DELETE FROM guilds WHERE guild_id = \'" +
+                        str(guild.id)+"\';")
             self.bot.DB_CONNECTION.commit()
             cur.close()
         return

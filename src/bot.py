@@ -35,7 +35,7 @@ class Bot(commands.Bot):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
     def connect_to_db(self) -> None:
-        
+
         self.DB_CONNECTION = psycopg2.connect(
             host=os.getenv('DEX_DB_HOST'),
             database=os.getenv('DEX_DB_NAME'),
@@ -43,10 +43,11 @@ class Bot(commands.Bot):
             port=os.getenv('DEX_DB_PORT'),
             password=os.getenv('DEX_DB_PASSWORD'),
         )
-    
+
     async def get_prefix(self, message):
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT prefix FROM guilds WHERE guild_id = \'' + str(message.guild.id) + '\';')
+        cur.execute('SELECT prefix FROM guilds WHERE guild_id = \'' +
+                    str(message.guild.id) + '\';')
         prefix = cur.fetchone()
         return prefix
 
@@ -61,7 +62,8 @@ class Bot(commands.Bot):
 
     async def on_guild_join(self, guild) -> None:
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' + str(guild.id)+'\', \'$dex \', \'on\');')
+        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' +
+                    str(guild.id)+'\', \'$dex \', \'on\');')
         self.DB_CONNECTION.commit()
         cur.close()
         for channel in guild.text_channels:
@@ -73,7 +75,8 @@ class Bot(commands.Bot):
 
     async def on_guild_remove(self, guild) -> None:
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('DELETE FROM guilds WHERE guild_id = \'' + str(guild.id) + '\';')
+        cur.execute('DELETE FROM guilds WHERE guild_id = \'' +
+                    str(guild.id) + '\';')
         self.DB_CONNECTION.commit()
         cur.close()
         return
@@ -81,10 +84,10 @@ class Bot(commands.Bot):
     async def on_message(self, message) -> None:
         await self.process_commands(message)
         cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(message.guild.id) + '\';')
+        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' +
+                    str(message.guild.id) + '\';')
         tag_switch = cur.fetchone()
         cur.close()
-        print(tag_switch[0])
         if tag_switch[0] == 'off':
             return
         target = message.author
