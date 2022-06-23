@@ -1,11 +1,9 @@
 import discord
-import psycopg2
 from typing import Optional
 from datetime import datetime
 from discord.ext.commands import Cog
 from discord.ext.commands import command
 import os
-import json
 
 
 class ModSet(Cog):

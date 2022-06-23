@@ -1,8 +1,5 @@
-from ast import alias
-from turtle import title
 import discord
 import aiohttp
-import json
 import youtube_dl
 import asyncio
 import typing
