@@ -57,7 +57,7 @@ class ModSet(Cog):
     @command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
     async def change_prefix(self, ctx, *args):
         prefix = "".join(args)
-        if ctx.guild.id == int(os.environ['PUBLIC_BOT_SERVER']):
+        if ctx.guild.id == int(os.environ['DEX_PUBLIC_BOT_SERVER']):
             embed = Embed(title="Status",
                           colour=0xff0000,
                           timestamp=datetime.utcnow())

@@ -20,7 +20,7 @@ class Report(commands.Cog):
                 if m.bot:
                     bot_count += 1
 
-        channel = self.bot.get_channel(int(os.getenv('CONSOLE_CHANNEL_ID')))
+        channel = self.bot.get_channel(int(os.getenv('DEX_CONSOLE_CHANNEL_ID')))
         embed = discord.Embed(title='Status', colour=0x0023dd,
                               timestamp=datetime.utcnow())
         fields = [
@@ -68,7 +68,7 @@ class Report(commands.Cog):
             for n, v, i in fields:
                 embed.add_field(name=n, value=v, inline=i)
             channel = self.bot.get_channel(
-                int(os.getenv('CONSOLE_CHANNEL_ID'))
+                int(os.getenv('DEX_CONSOLE_CHANNEL_ID'))
             )
             await channel.send(embed=embed)
 
@@ -84,7 +84,7 @@ class Report(commands.Cog):
         embed.set_author(name=str(target), icon_url=target.avatar_url)
         embed.add_field(name='Message', value=message.content, inline=False)
         channel = self.bot.get_channel(
-            int(os.getenv('USAGE_HISTORY_CHANNEL_ID'))
+            int(os.getenv('DEX_USAGE_HISTORY_CHANNEL_ID'))
         )
         await channel.send(embed=embed)
 

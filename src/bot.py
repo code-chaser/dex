@@ -35,14 +35,14 @@ class Bot(commands.Bot):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
     def connect_to_db(self) -> None:
-
-        self.DB_CONNECTION = psycopg2.connect(
-            host=os.getenv('DEX_DB_HOST'),
-            database=os.getenv('DEX_DB_NAME'),
-            user=os.getenv('DEX_DB_USER'),
-            port=os.getenv('DEX_DB_PORT'),
-            password=os.getenv('DEX_DB_PASSWORD'),
-        )
+        print(os.environ['DEX_USAGE_HISTORY_CHANNEL_ID'])
+        # self.DB_CONNECTION = psycopg2.connect(
+        #     host=os.getenv('DEX_DB_HOST'),
+        #     database=os.getenv('DEX_DB_NAME'),
+        #     user=os.getenv('DEX_DB_USER'),
+        #     port=os.getenv('DEX_DB_PORT'),
+        #     password=os.getenv('DEX_DB_PASSWORD'),
+        # )
 
     async def get_prefix(self, message):
         cur = self.DB_CONNECTION.cursor()
@@ -52,7 +52,7 @@ class Bot(commands.Bot):
         return prefix
 
     def run(self) -> None:
-        super().run(os.getenv('BOT_TOKEN'))
+        super().run(os.getenv('DEX_BOT_TOKEN'))
 
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self))

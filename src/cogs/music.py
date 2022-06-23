@@ -144,7 +144,6 @@ class Music(commands.Cog):
             else:
                 await ctx.voice_client.move_to(ctx.author.voice.channel)
                 return True
-
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
@@ -272,7 +271,7 @@ class Music(commands.Cog):
         self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
-    
+
     @commands.command(name="playm", aliases=["streamm", "pm", "addm"], help="plays multiple songs (seperated by semicolons ';')")
     async def playm_command(self, ctx, *, args):
         urls = args.split(';')
@@ -317,7 +316,7 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
         self.keep_playing(ctx)
     # ----------------------------------------------------------------------------------------------------------------------
-    
+
     @commands.command(name='dplaym', help="dplays multiple songs (seperated by semicolons ';')")
     async def dplaym_command(self, ctx, *, args):
         urls = args.split(';')

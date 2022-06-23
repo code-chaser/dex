@@ -32,7 +32,7 @@ class Fun(commands.Cog):
 
     async def get_nasa(self):
         API_URL = "https://api.nasa.gov/planetary/apod?api_key=" + \
-            str(os.getenv('NASA_API_KEY'))
+            str(os.getenv('DEX_NASA_API_KEY'))
         async with aiohttp.ClientSession() as session:
             async with session.get(API_URL) as resp:
                 data_json = await resp.json()
