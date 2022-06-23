@@ -63,7 +63,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 class Music(commands.Cog):
 
     # queue format:
-    # query/url(str) | download(bool) | ctx(ctx)
+    # player | ctx | url(from_user) | stream_or_not
     music_queue = []
     popped = 0
     current = -1
@@ -514,10 +514,21 @@ class Music(commands.Cog):
         embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
         size = len(self.music_queue)
         for i in range(0, size, 25):
+            embed = discord.Embed(
+                title="Queue",
+                description=str("Page " + str(i // 25 + 1) + " of " + str(size // 25 + 1)),
+                colour=0x0000ff,
+                timestamp=datetime.datetime.utcnow()
+            )
+            embed.set_thumbnail(url=self.MUSIC_ICON)
+            embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
             for j in range(i, min(size, i + 25)):
                 k = "**" if j == self.current else ""
                 embed.add_field(
-                    name=str(j + 1) + (" ***(Currently Playing)***" if j == self.current else ""), value=k+str(self.music_queue[j][0].title)+k, inline=False)
+                    name=str(j + 1) + (" ***(Currently Playing)***" if j == self.current else ""),
+                    value=k+str(self.music_queue[j][0].title)+k,
+                    inline=False
+                )
             async with ctx.typing():
                 embed.set_footer(
                     text="Page " + str(int(i / 25) + 1) + " of " + str(int(size / 25) + 1))
