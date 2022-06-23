@@ -184,7 +184,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def keep_playing(self, ctx):
-        while ((len(self.music_queue) - self.popped > 0) or (self.loop_queue is True)) and (len(self.music_queue) > 0):
+        while ((len(self.music_queue) - self.current > 1) or (self.loop_queue is True)) and (len(self.music_queue) > 0):
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.is_playing = True
                 if (not self.repeat_song) or (self.current == -1):
@@ -409,7 +409,7 @@ class Music(commands.Cog):
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.utcnow()
+                    timestamp=datetime.datetime.utcnow()
                 )
                 embed.add_field(
                     name="Error",
@@ -422,7 +422,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="Status",
                 colour=0x00ff00,
-                timestamp=datetime.utcnow()
+                timestamp=datetime.datetime.utcnow()
             )
             embed.add_field(
                 name="Done",
@@ -457,7 +457,7 @@ class Music(commands.Cog):
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.utcnow()
+                    timestamp=datetime.datetime.utcnow()
                 )
                 embed.add_field(
                     name="Error",
@@ -470,7 +470,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="Status",
                 colour=0x00ff00,
-                timestamp=datetime.utcnow()
+                timestamp=datetime.datetime.utcnow()
             )
             embed.add_field(
                 name="Done",
