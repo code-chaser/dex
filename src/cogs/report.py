@@ -20,7 +20,8 @@ class Report(commands.Cog):
                 if m.bot:
                     bot_count += 1
 
-        channel = self.bot.get_channel(int(os.getenv('DEX_CONSOLE_CHANNEL_ID')))
+        channel = self.bot.get_channel(
+            int(os.getenv('DEX_CONSOLE_CHANNEL_ID')))
         embed = discord.Embed(title='Status', colour=0x0023dd,
                               timestamp=datetime.utcnow())
         fields = [

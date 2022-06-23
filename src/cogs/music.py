@@ -1,3 +1,4 @@
+from ast import alias
 from turtle import title
 import discord
 import aiohttp
@@ -70,7 +71,7 @@ class Music(commands.Cog):
     popped = 0
     current = -1
     queued = 0
-    loop_queue = True
+    loop_queue = False
     repeat_song = False
     currently_playing_music = ()
     currently_playing_player = None
@@ -153,6 +154,8 @@ class Music(commands.Cog):
         self.current = -1
         self.popped = 0
         self.queued = 0
+        self.loop_queue = False
+        self.repeat_song = False
         self.currently_playing_player = None
         if ctx.voice_client is None:
             embed = self.embed_error_no_vc_dex
@@ -237,6 +240,7 @@ class Music(commands.Cog):
                 v = "Missing required arguements"
                 embed.add_field(name=n, value=v, inline=False)
             await ctx.send(embed=embed)
+            return
 
         joined = await self.join_command(ctx)
         if joined == False:
@@ -275,17 +279,45 @@ class Music(commands.Cog):
     @commands.command(name="playm", aliases=["streamm", "pm", "addm"], help="plays multiple songs (seperated by semicolons ';')")
     async def playm_command(self, ctx, *, args):
         urls = args.split(';')
+        joined = await self.join_command(ctx)
+        if joined == False:
+            return
         for url in urls:
-            print("\n*****calling play_command with url: " + url)
-            await self.play_command(ctx, url=url)
-        print("\n*****returning from playm_command")
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            if player is None:
+                async with ctx.typing():
+                    embed = discord.Embed(
+                        title="Error",
+                        description=''.join(self.bad_request_error_message),
+                        colour=0xff0000,
+                        timestamp=datetime.datetime.utcnow(),
+                    )
+                await ctx.send(embed=embed)
+                continue
+            self.music_queue.append([player, ctx, url, True])
+            self.queued += 1
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Added to queue",
+                    description="\"" + url + "\" requested by " + ctx.author.mention,
+                    colour=0x00ff00,
+                    timestamp=datetime.datetime.utcnow(),
+                )
+                embed.set_thumbnail(url=self.MUSIC_ICON)
+                embed.set_author(name=player.title, url=player.url,
+                                 icon_url=ctx.author.avatar_url)
+                embed.add_field(name="Title", value=player.title, inline=False)
+                embed.add_field(name="Queue Position", value=len(
+                    self.music_queue), inline=True)
+            await ctx.send(embed=embed)
+        self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name='dplay', help="downloads a song and then queues it to reduce any possible lags")
     async def dplay_command(self, ctx, *, url):
-        await self.join_command(ctx)
-        if ctx.voice_client is None:
+        joined = await self.join_command(ctx)
+        if joined == False:
             return
         player = await YTDLSource.from_url(url, loop=self.bot.loop)
         if player is None:
@@ -315,36 +347,141 @@ class Music(commands.Cog):
                 self.music_queue), inline=True)
         await ctx.send(embed=embed)
         self.keep_playing(ctx)
+        return
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name='dplaym', help="dplays multiple songs (seperated by semicolons ';')")
     async def dplaym_command(self, ctx, *, args):
         urls = args.split(';')
+        joined = await self.join_command(ctx)
+        if joined == False:
+            return
         for url in urls:
-            print("\n*****calling dplay_command with url: " + url)
-            await self.dplay_command(ctx, url=url)
-        print("\n*****returning from dplaym_command")
+            player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            if player is None:
+                async with ctx.typing():
+                    embed = discord.Embed(
+                        title="Error",
+                        description=''.join(self.bad_request_error_message),
+                        colour=0xff0000,
+                        timestamp=datetime.datetime.utcnow()
+                    )
+                await ctx.send(embed=embed)
+                continue
+            self.music_queue.append([player, ctx, url, False])
+            self.queued += 1
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Downloaded & Added to queue",
+                    description="\"" + url + "\" requested by " + ctx.author.mention,
+                    colour=0x00ff00,
+                    timestamp=datetime.datetime.utcnow(),
+                )
+                embed.set_thumbnail(url=self.MUSIC_ICON)
+                embed.set_author(name=player.title, url=player.url,
+                                 icon_url=ctx.author.avatar_url)
+                embed.add_field(name="Title", value=player.title, inline=False)
+                embed.add_field(name="Queue Position", value=len(
+                    self.music_queue), inline=True)
+            await ctx.send(embed=embed)
+        self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
-    # @commands.command(name="repeat", help="loops the currently playing song")
-    # async def loop(self, ctx):
-    #     if ctx.voice_client is None:
-    #         async with ctx.typing():
-    #             embed=self.embed_error_no_vc_dex
-    #         await ctx.send(embed=embed)
-    #         return
-    #     if (not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused()):
-    #         async with ctx.typing():
-    #             embed=discord.Embed(
-    #                 title="Error",
-    #                 description=''.join("Queue is empty, nothing to loop through\nUse `<prefix> play <query/url>` to add to queue"),
-    #                 colour=0xff0000,
-    #                 timestamp=datetime.datetime.utcnow()
-    #             )
-    #         await ctx.send(embed=embed)
-    #         return
-    #     while True:
+    @commands.command(name='loop', help="toggles looping of the queue")
+    async def loop_command(self, ctx, loop_switch: typing.Optional[str]):
+
+        if ctx.voice_client is None:
+            async with ctx.typing():
+                embed = self.embed_error_no_vc_dex
+            await ctx.send(embed=embed)
+            return
+
+        if loop_switch is None:
+            self.loop_queue = not self.loop_queue
+            if self.loop_queue:
+                loop_switch = "on"
+            else:
+                loop_switch = "off"
+        elif loop_switch.lower() == "on":
+            self.loop_queue = True
+        elif loop_switch.lower() == "off":
+            self.loop_queue = False
+        else:
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Status",
+                    colour=0xff0000,
+                    timestamp=datetime.utcnow()
+                )
+                embed.add_field(
+                    name="Error",
+                    value="Invalid value provided",
+                    inline=True
+                )
+            await ctx.send(embed=embed)
+            return
+        async with ctx.typing():
+            embed = discord.Embed(
+                title="Status",
+                colour=0x00ff00,
+                timestamp=datetime.utcnow()
+            )
+            embed.add_field(
+                name="Done",
+                value="Queue looping is now " + loop_switch.lower(),
+                inline=True
+            )
+        await ctx.send(embed=embed)
+        return
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    @commands.command(name='repeat', help="toggles repeating of the currently playing song")
+    async def repeat_command(self, ctx, repeat_switch: typing.Optional[str]):
+
+        if ctx.voice_client is None:
+            async with ctx.typing():
+                embed = self.embed_error_no_vc_dex
+            await ctx.send(embed=embed)
+            return
+
+        if repeat_switch is None:
+            self.repeat_song = not self.repeat_song
+            if self.repeat_song:
+                repeat_switch = "on"
+            else:
+                repeat_switch = "off"
+        elif repeat_switch.lower() == "on":
+            self.repeat_song = True
+        elif repeat_switch.lower() == "off":
+            self.repeat_song = False
+        else:
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="Status",
+                    colour=0xff0000,
+                    timestamp=datetime.utcnow()
+                )
+                embed.add_field(
+                    name="Error",
+                    value="Invalid value provided",
+                    inline=True
+                )
+            await ctx.send(embed=embed)
+            return
+        async with ctx.typing():
+            embed = discord.Embed(
+                title="Status",
+                colour=0x00ff00,
+                timestamp=datetime.utcnow()
+            )
+            embed.add_field(
+                name="Done",
+                value="Song repeat is now " + repeat_switch.lower(),
+                inline=True
+            )
+        await ctx.send(embed=embed)
+        return
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="queue", aliases=["view"], help="displays the current queue")
@@ -353,11 +490,13 @@ class Music(commands.Cog):
             if url != "":
                 await self.play_command(ctx, url=url)
                 return
+
         if ctx.voice_client is None:
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
             return
+
         if len(self.music_queue) == 0:
             async with ctx.typing():
                 embed = discord.Embed(
@@ -438,12 +577,13 @@ class Music(commands.Cog):
             self.current -= 1
             self.popped -= 1
         elif self.current == pos:
+            self.repeat_song = False
             self.current -= 1
             ctx.voice_client.stop()
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="jump", help="jumps to a song in the queue, takes song position as argument")
+    @commands.command(name="jump", alises=["jumpto"], help="jumps to a song in the queue, takes song position as argument")
     async def jump_command(self, ctx, pos):
         pos = int(pos)
         if ctx.voice_client is None:
@@ -489,6 +629,7 @@ class Music(commands.Cog):
             embed.add_field(
                 name="Queue Looping", value="On" if self.loop_queue else "Off", inline=True)
         await ctx.send(embed=embed)
+        self.repeat_song = False
         self.popped = pos
         self.current = pos - 1
         ctx.voice_client.stop()
@@ -518,6 +659,8 @@ class Music(commands.Cog):
         self.current = -1
         self.popped = 0
         self.queued = 0
+        self.loop_queue = False
+        self.repeat_song = False
         self.currently_playing_music = None
         self.currently_playing_player = None
         if ctx.voice_client is None:
@@ -578,6 +721,7 @@ class Music(commands.Cog):
                                     value=ctx.author.mention, inline=False)
                     embed.set_footer(text="skip requested by "+ctx.author.name)
                 await ctx.send(embed=embed)
+                self.repeat_song = False
                 self.popped += 1
                 ctx.voice_client.stop()
         return
