@@ -215,7 +215,7 @@ class Music(commands.Cog):
                 ctx.voice_client.resume()
             elif len(self.music_queue) > 0:
                 if not ctx.voice_client.is_playing():
-                    self.keep_playing(ctx)
+                    await self.keep_playing(ctx)
             else:
                 embed = discord.Embed(
                     title="Error",
@@ -269,7 +269,7 @@ class Music(commands.Cog):
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue), inline=True)
         await ctx.send(embed=embed)
-        self.keep_playing(ctx)
+        await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -307,7 +307,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue), inline=True)
             await ctx.send(embed=embed)
-        self.keep_playing(ctx)
+        await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -343,7 +343,7 @@ class Music(commands.Cog):
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue), inline=True)
         await ctx.send(embed=embed)
-        self.keep_playing(ctx)
+        await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -381,7 +381,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue), inline=True)
             await ctx.send(embed=embed)
-        self.keep_playing(ctx)
+        await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
