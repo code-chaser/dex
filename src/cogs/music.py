@@ -106,6 +106,13 @@ class Music(commands.Cog):
         self.currently_playing_music = ()
         self.currently_playing_player = None
         self.music_queue = []
+        # self.destroy()
+    # ----------------------------------------------------------------------------------------------------------------------
+    
+    # async def destroy(self, bot):
+    #     while(bot.user.voice.channel is not None):
+    #         await asyncio.sleep(1)
+    #     self.__del__()
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="join", aliases=["connect"], help="joins the voice channel of the author")
@@ -159,6 +166,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.voice_client.disconnect()
+        self.__del__()
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def play_music_from_player(self, ctx, *, player):
