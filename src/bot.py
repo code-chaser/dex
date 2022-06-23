@@ -88,10 +88,12 @@ class Bot(commands.Bot):
                     str(message.guild.id) + '\';')
         tag_switch = cur.fetchone()
         cur.close()
-        if tag_switch[0] == 'off':
-            return
         target = message.author
         if target == self.user:
+            return
+        print("\n\n-----------------------\n-----------------------\n\n" +
+              str(message.content) + "\n-----------------------\n")
+        if tag_switch[0] == 'off':
             return
         embed = discord.Embed(
             title='Message Tagged',
