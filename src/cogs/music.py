@@ -63,7 +63,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 class Music(commands.Cog):
 
     # queue format:
-    # player | ctx | url(from_user) | stream_or_not
+    # [guild.id] -> [player | ctx | url(from_user) | stream_or_not]
 
     bad_request_error_message = ''
     bad_request_error_message += (
@@ -96,16 +96,13 @@ class Music(commands.Cog):
         self.MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
         self.currently_playing_music = ()
         self.currently_playing_player = None
-        self.music_queue = []
-        self.music_queue = []
+        self.music_queue = {}
         self.popped = 0
         self.current = -1
         self.queued = 0
+        self.vol = 1
         self.loop_queue = False
         self.repeat_song = False
-        self.currently_playing_music = ()
-        self.currently_playing_player = None
-        self.is_playing = False
         # self.destroy()
     # ----------------------------------------------------------------------------------------------------------------------
     
@@ -153,10 +150,11 @@ class Music(commands.Cog):
 
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
     async def leave_command(self, ctx):
-        self.music_queue.clear()
+        self.music_queue[str(ctx.guild.id)].clear()
         self.currently_playing_music = None
         self.current = -1
         self.queued = 0
+        self.vol = 1
         self.popped = 0
         self.loop_queue = False
         self.repeat_song = False
@@ -175,7 +173,7 @@ class Music(commands.Cog):
         embed = discord.Embed(
             title="Now Playing",
             description="- requested by " +
-            self.music_queue[self.current][1].author.mention,
+            self.music_queue[str(ctx.guild.id)][self.current][1].author.mention,
             colour=0x00ff00,
             timestamp=datetime.datetime.utcnow()
         )
@@ -185,24 +183,25 @@ class Music(commands.Cog):
         embed.add_field(name="Title", value=player.title, inline=False)
         embed.add_field(name="Position in queue",
                         value=self.current+1, inline=False)
+        ctx.voice_client.source.volume = self.vol
         ctx.voice_client.play(player, after=lambda e: print(
             f'Player error: {e}') if e else None)
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def keep_playing(self, ctx):
-        while ((len(self.music_queue) - self.current > 1) or (self.loop_queue is True)) and (len(self.music_queue) > 0):
+        while ((len(self.music_queue[str(ctx.guild.id)]) - self.current > 1) or (self.loop_queue is True)) and (len(self.music_queue[str(ctx.guild.id)]) > 0):
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.is_playing = True
                 if (not self.repeat_song) or (self.current == -1):
                     self.current += 1
-                if self.popped == len(self.music_queue):
+                if self.popped == len(self.music_queue[str(ctx.guild.id)]):
                     self.popped = 0
-                if self.current == len(self.music_queue):
+                if self.current == len(self.music_queue[str(ctx.guild.id)]):
                     self.current = 0
-                player = await YTDLSource.from_url(self.music_queue[self.current][2], loop=self.bot.loop, stream=self.music_queue[self.current][3])
-                self.music_queue[self.current][0] = player
-                await self.play_music_from_player(self.music_queue[self.current][1], player=player)
+                player = await YTDLSource.from_url(self.music_queue[str(ctx.guild.id)][self.current][2], loop=self.bot.loop, stream=self.music_queue[str(ctx.guild.id)][self.current][3])
+                self.music_queue[str(ctx.guild.id)][self.current][0] = player
+                await self.play_music_from_player(self.music_queue[str(ctx.guild.id)][self.current][1], player=player)
                 if not self.repeat_song:
                     self.popped += 1
             await asyncio.sleep(0.5)
@@ -220,7 +219,7 @@ class Music(commands.Cog):
                 return
             if ctx.voice_client.is_paused():
                 ctx.voice_client.resume()
-            elif len(self.music_queue) > 0:
+            elif len(self.music_queue[str(ctx.guild.id)]) > 0:
                 if not ctx.voice_client.is_playing():
                     await self.keep_playing(ctx)
             else:
@@ -260,7 +259,7 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        self.music_queue.append([player, ctx, url, True])
+        self.music_queue[str(ctx.guild.id)].append([player, ctx, url, True])
         self.queued += 1
         async with ctx.typing():
             embed = discord.Embed(
@@ -274,7 +273,7 @@ class Music(commands.Cog):
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
-                self.music_queue), inline=True)
+                self.music_queue[str(ctx.guild.id)]), inline=True)
         await ctx.send(embed=embed)
         await self.keep_playing(ctx)
         return
@@ -298,7 +297,7 @@ class Music(commands.Cog):
                     )
                 await ctx.send(embed=embed)
                 continue
-            self.music_queue.append([player, ctx, url, True])
+            self.music_queue[str(ctx.guild.id)].append([player, ctx, url, True])
             self.queued += 1
             async with ctx.typing():
                 embed = discord.Embed(
@@ -312,7 +311,7 @@ class Music(commands.Cog):
                                  icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
-                    self.music_queue), inline=True)
+                    self.music_queue[str(ctx.guild.id)]), inline=True)
             await ctx.send(embed=embed)
         await self.keep_playing(ctx)
         return
@@ -334,7 +333,7 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        self.music_queue.append([player, ctx, url, False])
+        self.music_queue[str(ctx.guild.id)].append([player, ctx, url, False])
         self.queued += 1
         async with ctx.typing():
             embed = discord.Embed(
@@ -348,7 +347,7 @@ class Music(commands.Cog):
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
-                self.music_queue), inline=True)
+                self.music_queue[str(ctx.guild.id)]), inline=True)
         await ctx.send(embed=embed)
         await self.keep_playing(ctx)
         return
@@ -372,7 +371,7 @@ class Music(commands.Cog):
                     )
                 await ctx.send(embed=embed)
                 continue
-            self.music_queue.append([player, ctx, url, False])
+            self.music_queue[str(ctx.guild.id)].append([player, ctx, url, False])
             self.queued += 1
             async with ctx.typing():
                 embed = discord.Embed(
@@ -386,7 +385,7 @@ class Music(commands.Cog):
                                  icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
-                    self.music_queue), inline=True)
+                    self.music_queue[str(ctx.guild.id)]), inline=True)
             await ctx.send(embed=embed)
         await self.keep_playing(ctx)
         return
@@ -501,7 +500,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        if len(self.music_queue) == 0:
+        if len(self.music_queue[str(ctx.guild.id)]) == 0:
             async with ctx.typing():
                 embed = discord.Embed(
                     title="Queue",
@@ -519,7 +518,7 @@ class Music(commands.Cog):
         )
         embed.set_thumbnail(url=self.MUSIC_ICON)
         embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
-        size = len(self.music_queue)
+        size = len(self.music_queue[str(ctx.guild.id)])
         for i in range(0, size, 25):
             embed = discord.Embed(
                 title="Queue",
@@ -533,7 +532,7 @@ class Music(commands.Cog):
                 k = "**" if j == self.current else ""
                 embed.add_field(
                     name=str(j + 1) + (" ***(Currently Playing)***" if j == self.current else ""),
-                    value=k+str(self.music_queue[j][0].title)+k,
+                    value=k+str(self.music_queue[str(ctx.guild.id)][j][0].title)+k,
                     inline=False
                 )
             async with ctx.typing():
@@ -560,12 +559,12 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        if (1 > int(pos)) or (len(self.music_queue) < int(pos)):
+        if (1 > int(pos)) or (len(self.music_queue[str(ctx.guild.id)]) < int(pos)):
             async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=str(
-                        "Queue Position must be between (1 & "+str(len(self.music_queue))+")"),
+                        "Queue Position must be between (1 & "+str(len(self.music_queue[str(ctx.guild.id)]))+")"),
                     colour=0xff0000,
                     timestamp=datetime.datetime.utcnow()
                 )
@@ -576,18 +575,18 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="Removed from queue",
                 description="track requested by " +
-                self.music_queue[int(pos)][1].author.mention,
+                self.music_queue[str(ctx.guild.id)][int(pos)][1].author.mention,
                 colour=0x00ff00,
                 timestamp=datetime.datetime.utcnow()
             )
-            player = self.music_queue[int(pos)][0]
+            player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Remove request by",
                             value=ctx.author.mention, inline=True)
-        self.music_queue.pop(int(pos))
+        self.music_queue[str(ctx.guild.id)].pop(int(pos))
         if self.current > pos:
             self.current -= 1
             self.popped -= 1
@@ -617,12 +616,12 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
             return
-        if (1 > int(pos)) or (len(self.music_queue) < int(pos)):
+        if (1 > int(pos)) or (len(self.music_queue[str(ctx.guild.id)]) < int(pos)):
             async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
                     description=str(
-                        "Queue Position must be between (1 & "+str(len(self.music_queue))+")"),
+                        "Queue Position must be between (1 & "+str(len(self.music_queue[str(ctx.guild.id)]))+")"),
                     colour=0xff0000,
                     timestamp=datetime.datetime.utcnow()
                 )
@@ -636,7 +635,7 @@ class Music(commands.Cog):
                 colour=0x00ff00,
                 timestamp=datetime.datetime.utcnow()
             )
-            player = self.music_queue[int(pos)][0]
+            player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
@@ -658,6 +657,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         ctx.voice_client.source.volume = volume / 100
+        self.vol=volume
         async with ctx.typing():
             embed = discord.Embed(
                 title=str(volume) + "%",
@@ -674,6 +674,7 @@ class Music(commands.Cog):
         self.current = -1
         self.popped = 0
         self.queued = 0
+        self.vol = 1
         self.loop_queue = False
         self.repeat_song = False
         self.currently_playing_music = None
@@ -684,7 +685,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-            self.music_queue.clear()
+            self.music_queue[str(ctx.guild.id)].clear()
             ctx.voice_client.stop()
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -706,7 +707,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         elif ctx.voice_client.is_paused():
             ctx.voice_client.resume()
-        elif len(self.music_queue) > 0:
+        elif len(self.music_queue[str(ctx.guild.id)]) > 0:
             if not ctx.voice_client.is_playing():
                 await self.keep_playing(ctx)
         return
