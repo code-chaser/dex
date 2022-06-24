@@ -111,9 +111,20 @@ class Music(commands.Cog):
     #         await asyncio.sleep(1)
     #     self.__del__()
     # ----------------------------------------------------------------------------------------------------------------------
+    
+    # async def on_voice_state_update(self):
+    #     pass
+    # ----------------------------------------------------------------------------------------------------------------------
+    
+    def create_guild_queue(self,ctx):
+        if str(ctx.guild.id) not in self.music_queue.keys():
+            self.music_queue[str(ctx.guild.id)] = []
+        return
+    # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="join", aliases=["connect"], help="joins the voice channel of the author")
     async def join_command(self, ctx):
+        self.create_guild_queue(ctx)
         if ctx.author.voice is None:
             async with ctx.typing():
                 embed = discord.Embed(
@@ -150,6 +161,7 @@ class Music(commands.Cog):
 
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
     async def leave_command(self, ctx):
+        self.create_guild_queue(ctx)
         self.music_queue[str(ctx.guild.id)].clear()
         self.currently_playing_music = None
         self.current = -1
@@ -210,6 +222,7 @@ class Music(commands.Cog):
 
     @commands.command(name="play", aliases=["stream", "p", "add"], help="streams a song directly from youtube")
     async def play_command(self, ctx, *, url: typing.Optional[str]):
+        self.create_guild_queue(ctx)
         if (url is None) and (ctx.message.content[(len(ctx.message.content)-3):(len(ctx.message.content))] != "add"):
             if ctx.voice_client is None:
                 await self.join_command(ctx)
@@ -281,6 +294,7 @@ class Music(commands.Cog):
 
     @commands.command(name="playm", aliases=["streamm", "pm", "addm"], help="plays multiple songs (seperated by semicolons ';')")
     async def playm_command(self, ctx, *, args):
+        self.create_guild_queue(ctx)
         urls = args.split(';')
         joined = await self.join_command(ctx)
         if joined == False:
@@ -319,6 +333,7 @@ class Music(commands.Cog):
 
     @commands.command(name='dplay', help="downloads a song and then queues it to reduce any possible lags")
     async def dplay_command(self, ctx, *, url):
+        self.create_guild_queue(ctx)
         joined = await self.join_command(ctx)
         if joined == False:
             return
@@ -355,6 +370,7 @@ class Music(commands.Cog):
 
     @commands.command(name='dplaym', help="dplays multiple songs (seperated by semicolons ';')")
     async def dplaym_command(self, ctx, *, args):
+        self.create_guild_queue(ctx)
         urls = args.split(';')
         joined = await self.join_command(ctx)
         if joined == False:
@@ -394,6 +410,8 @@ class Music(commands.Cog):
     @commands.command(name='loop', help="toggles looping of the queue")
     async def loop_command(self, ctx, loop_switch: typing.Optional[str]):
 
+        self.create_guild_queue(ctx)
+            
         if ctx.voice_client is None:
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
@@ -442,6 +460,8 @@ class Music(commands.Cog):
     @commands.command(name='repeat', help="toggles repeating of the currently playing song")
     async def repeat_command(self, ctx, repeat_switch: typing.Optional[str]):
 
+        self.create_guild_queue(ctx)
+            
         if ctx.voice_client is None:
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
@@ -489,6 +509,9 @@ class Music(commands.Cog):
 
     @commands.command(name="queue", aliases=["view"], help="displays the current queue")
     async def queue_command(self, ctx, *, url: typing.Optional[str]):
+        
+        self.create_guild_queue(ctx)
+            
         if url is not None:
             if url != "":
                 await self.play_command(ctx, url=url)
@@ -543,6 +566,7 @@ class Music(commands.Cog):
 
     @commands.command(name="remove", help="removes a song from the queue, takes song position as argument")
     async def remove_command(self, ctx, pos):
+        self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
@@ -599,6 +623,7 @@ class Music(commands.Cog):
 
     @commands.command(name="jump", alises=["jumpto"], help="jumps to a song in the queue, takes song position as argument")
     async def jump_command(self, ctx, pos):
+        self.create_guild_queue(ctx)
         pos = int(pos)
         if ctx.voice_client is None:
             async with ctx.typing():
@@ -671,6 +696,7 @@ class Music(commands.Cog):
 
     @commands.command(name="stop", aliases=["stfu", "shut"], help="stops the music player and clears the queue")
     async def stop_command(self, ctx):
+        self.create_guild_queue(ctx)
         self.current = -1
         self.popped = 0
         self.queued = 0
@@ -692,6 +718,7 @@ class Music(commands.Cog):
 
     @commands.command(name="pause", help="pauses the music player")
     async def pause_command(self, ctx):
+        self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
@@ -702,6 +729,7 @@ class Music(commands.Cog):
 
     @commands.command(name="resume", help="resumes the music player")
     async def resume_command(self, ctx):
+        self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
@@ -715,6 +743,7 @@ class Music(commands.Cog):
 
     @commands.command(name="skip", aliases=["next"], help="skips the currently playing song")
     async def skip_command(self, ctx):
+        self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
@@ -753,6 +782,7 @@ class Music(commands.Cog):
 
     @commands.command(name='lyrics', help='sends the lyrics of the song')
     async def lyrics_command(self, ctx, *args) -> None:
+        self.create_guild_queue(ctx)
         song_title = ''
         for arg in args:
             song_title += arg+'%20'
