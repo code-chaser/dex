@@ -156,8 +156,8 @@ class Music(commands.Cog):
         self.music_queue.clear()
         self.currently_playing_music = None
         self.current = -1
-        self.popped = 0
         self.queued = 0
+        self.popped = 0
         self.loop_queue = False
         self.repeat_song = False
         self.currently_playing_player = None
