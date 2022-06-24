@@ -90,7 +90,7 @@ class Music(commands.Cog):
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
     # ----------------------------------------------------------------------------------------------------------------------
 
-    async def __init__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
         self.is_playing = False
         self.MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
