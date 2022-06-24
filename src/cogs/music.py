@@ -182,23 +182,25 @@ class Music(commands.Cog):
         if player is None:
             return
         self.currently_playing_player = player
-        embed = discord.Embed(
-            title="Now Playing",
-            description="- requested by " +
-            self.music_queue[str(ctx.guild.id)][self.current][1].author.mention,
-            colour=0x00ff00,
-            timestamp=datetime.datetime.utcnow()
-        )
-        embed.set_thumbnail(url=self.MUSIC_ICON)
-        embed.set_author(name=player.title, url=player.url,
-                         icon_url=ctx.author.avatar_url)
-        embed.add_field(name="Title", value=player.title, inline=False)
-        embed.add_field(name="Position in queue",
-                        value=self.current+1, inline=False)
-        ctx.voice_client.source.volume = self.vol
+        async with ctx.typing():
+            embed = discord.Embed(
+                title="Now Playing",
+                description="- requested by " +
+                self.music_queue[str(ctx.guild.id)][self.current][1].author.mention,
+                colour=0x00ff00,
+                timestamp=datetime.datetime.utcnow()
+            )
+            embed.set_thumbnail(url=self.MUSIC_ICON)
+            embed.set_author(name=player.title, url=player.url,
+                            icon_url=ctx.author.avatar_url)
+            embed.add_field(name="Title", value=player.title, inline=False)
+            embed.add_field(name="Position in queue",
+                            value=self.current+1, inline=False)
+            embed.add_field(name="Volume", value=str(self.vol * 100) + "%", inline=False)
+        await ctx.send(embed=embed)
         ctx.voice_client.play(player, after=lambda e: print(
             f'Player error: {e}') if e else None)
-        await ctx.send(embed=embed)
+        ctx.voice_client.source.volume = self.vol
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def keep_playing(self, ctx):
@@ -682,7 +684,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
             return
         ctx.voice_client.source.volume = volume / 100
-        self.vol=volume
+        self.vol = volume / 100
         async with ctx.typing():
             embed = discord.Embed(
                 title=str(volume) + "%",
