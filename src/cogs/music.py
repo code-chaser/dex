@@ -64,15 +64,6 @@ class Music(commands.Cog):
 
     # queue format:
     # player | ctx | url(from_user) | stream_or_not
-    music_queue = []
-    popped = 0
-    current = -1
-    queued = 0
-    loop_queue = False
-    repeat_song = False
-    currently_playing_music = ()
-    currently_playing_player = None
-    is_playing = False
 
     bad_request_error_message = ''
     bad_request_error_message += (
@@ -99,13 +90,22 @@ class Music(commands.Cog):
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
     # ----------------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, bot):
+    async def __init__(self, bot):
         self.bot = bot
         self.is_playing = False
         self.MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
         self.currently_playing_music = ()
         self.currently_playing_player = None
         self.music_queue = []
+        self.music_queue = []
+        self.popped = 0
+        self.current = -1
+        self.queued = 0
+        self.loop_queue = False
+        self.repeat_song = False
+        self.currently_playing_music = ()
+        self.currently_playing_player = None
+        self.is_playing = False
         # self.destroy()
     # ----------------------------------------------------------------------------------------------------------------------
     
@@ -166,7 +166,6 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.voice_client.disconnect()
-        self.__del__()
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def play_music_from_player(self, ctx, *, player):
@@ -810,7 +809,6 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
-
 
 def setup(bot):
     bot.add_cog(Music(bot))
