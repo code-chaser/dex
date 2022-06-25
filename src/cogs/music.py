@@ -301,6 +301,7 @@ class Music(commands.Cog):
         joined = await self.join_command(ctx)
         if joined == False:
             return
+        last_url = urls.pop()
         for url in urls:
             url = url.strip()
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
@@ -330,7 +331,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
             await ctx.send(embed=embed)
-        await self.keep_playing(ctx)
+        await self.play_command(ctx, url=last_url)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -378,6 +379,7 @@ class Music(commands.Cog):
         joined = await self.join_command(ctx)
         if joined == False:
             return
+        last_url=urls.pop()
         for url in urls:
             url = url.strip()
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
@@ -407,7 +409,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
             await ctx.send(embed=embed)
-        await self.keep_playing(ctx)
+        await self.dplay_command(ctx, url=last_url)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
