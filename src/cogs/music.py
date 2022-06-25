@@ -97,7 +97,6 @@ class Music(commands.Cog):
         self.currently_playing_music = ()
         self.currently_playing_player = None
         self.music_queue = {}
-        self.popped = 0
         self.current = -1
         self.queued = 0
         self.vol = 1
@@ -167,7 +166,6 @@ class Music(commands.Cog):
         self.current = -1
         self.queued = 0
         self.vol = 1
-        self.popped = 0
         self.loop_queue = False
         self.repeat_song = False
         self.currently_playing_player = None
@@ -207,17 +205,12 @@ class Music(commands.Cog):
         while ((len(self.music_queue[str(ctx.guild.id)]) - self.current > 1) or (self.loop_queue is True)) and (len(self.music_queue[str(ctx.guild.id)]) > 0):
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.is_playing = True
-                if (not self.repeat_song) or (self.current == -1):
+                if (not self.repeat_song):
                     self.current += 1
-                if self.popped == len(self.music_queue[str(ctx.guild.id)]):
-                    self.popped = 0
-                if self.current == len(self.music_queue[str(ctx.guild.id)]):
-                    self.current = 0
+                self.current %= len(self.music_queue[str(ctx.guild.id)])
                 player = await YTDLSource.from_url(self.music_queue[str(ctx.guild.id)][self.current][2], loop=self.bot.loop, stream=self.music_queue[str(ctx.guild.id)][self.current][3])
                 self.music_queue[str(ctx.guild.id)][self.current][0] = player
                 await self.play_music_from_player(self.music_queue[str(ctx.guild.id)][self.current][1], player=player)
-                if not self.repeat_song:
-                    self.popped += 1
             await asyncio.sleep(0.5)
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -622,7 +615,6 @@ class Music(commands.Cog):
         self.music_queue[str(ctx.guild.id)].pop(int(pos))
         if self.current > pos:
             self.current -= 1
-            self.popped -= 1
         elif self.current == pos:
             self.repeat_song = False
             self.current -= 1
@@ -678,7 +670,6 @@ class Music(commands.Cog):
                 name="Queue Looping", value="On" if self.loop_queue else "Off", inline=True)
         await ctx.send(embed=embed)
         self.repeat_song = False
-        self.popped = pos
         self.current = pos - 1
         ctx.voice_client.stop()
     # ----------------------------------------------------------------------------------------------------------------------
@@ -707,7 +698,6 @@ class Music(commands.Cog):
     async def stop_command(self, ctx):
         self.create_guild_queue(ctx)
         self.current = -1
-        self.popped = 0
         self.queued = 0
         self.vol = 1
         self.loop_queue = False
@@ -750,8 +740,8 @@ class Music(commands.Cog):
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="skip", aliases=["next"], help="skips the currently playing song")
-    async def skip_command(self, ctx):
+    @commands.command(name="next", aliases=["skip"], help="plays the next song in the queue")
+    async def next_command(self, ctx):
         self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             async with ctx.typing():
@@ -759,24 +749,53 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         else:
             if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                async with ctx.typing():
-                    embed = discord.Embed(
-                        title="Skipping",
-                        colour=0x00ff00,
-                        timestamp=datetime.datetime.utcnow()
-                    )
-                    player = self.currently_playing_player
-                    embed.set_thumbnail(url=self.MUSIC_ICON)
-                    embed.set_author(
-                        name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
-                    embed.add_field(
-                        name="Title", value=player.title, inline=False)
-                    embed.add_field(name="Requested by",
-                                    value=ctx.author.mention, inline=False)
-                    embed.set_footer(text="skip requested by "+ctx.author.name)
-                await ctx.send(embed=embed)
+                # async with ctx.typing():
+                #     embed = discord.Embed(
+                #         title="Skipping",
+                #         colour=0x00ff00,
+                #         timestamp=datetime.datetime.utcnow()
+                #     )
+                #     player = self.currently_playing_player
+                #     embed.set_thumbnail(url=self.MUSIC_ICON)
+                #     embed.set_author(
+                #         name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
+                #     embed.add_field(
+                #         name="Title", value=player.title, inline=False)
+                #     embed.add_field(name="Requested by",
+                #                     value=ctx.author.mention, inline=False)
+                #     embed.set_footer(text="skip requested by "+ctx.author.name)
+                # await ctx.send(embed=embed)
                 self.repeat_song = False
-                self.popped += 1
+                ctx.voice_client.stop()
+        return
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    @commands.command(name="previous", aliases=["prev"], help="plays the previous song in the queue")
+    async def next_command(self, ctx):
+        self.create_guild_queue(ctx)
+        if ctx.voice_client is None:
+            async with ctx.typing():
+                embed = self.embed_error_no_vc_dex
+            await ctx.send(embed=embed)
+        else:
+            if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
+                # async with ctx.typing():
+                #     embed = discord.Embed(
+                #         title="Skipping",
+                #         colour=0x00ff00,
+                #         timestamp=datetime.datetime.utcnow()
+                #     )
+                #     player = self.currently_playing_player
+                #     embed.set_thumbnail(url=self.MUSIC_ICON)
+                #     embed.set_author(
+                #         name=player.title, url=player.url, icon_url=ctx.author.avatar_url)
+                #     embed.add_field(
+                #         name="Title", value=player.title, inline=False)
+                #     embed.add_field(name="Requested by",
+                #                     value=ctx.author.mention, inline=False)
+                #     embed.set_footer(text="skip requested by "+ctx.author.name)
+                # await ctx.send(embed=embed)
+                self.repeat_song = False
                 ctx.voice_client.stop()
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -849,6 +868,7 @@ class Music(commands.Cog):
                 )
             await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
+
 
 def setup(bot):
     bot.add_cog(Music(bot))
