@@ -97,7 +97,7 @@ class Music(commands.Cog):
         self.currently_playing_music = ()
         self.currently_playing_player = None
         self.music_queue = {}
-        self.current = 0
+        self.current = -1
         self.queued = 0
         self.vol = 1
         self.loop_queue = False
@@ -163,7 +163,7 @@ class Music(commands.Cog):
         self.create_guild_queue(ctx)
         self.music_queue[str(ctx.guild.id)].clear()
         self.currently_playing_music = None
-        self.current = 0
+        self.current = -1
         self.queued = 0
         self.vol = 1
         self.loop_queue = False
@@ -727,7 +727,7 @@ class Music(commands.Cog):
     @commands.command(name="stop", aliases=["stfu", "shut"], help="stops the music player and clears the queue")
     async def stop_command(self, ctx):
         self.create_guild_queue(ctx)
-        self.current = 0
+        self.current = -1
         self.queued = 0
         self.vol = 1
         self.loop_queue = False
