@@ -195,7 +195,7 @@ class Music(commands.Cog):
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Position in queue",
                             value=self.current+1, inline=False)
-            embed.add_field(name="Volume", value=str(self.vol * 100) + "%", inline=False)
+            embed.add_field(name="Volume", value=str(int(self.vol * 100)) + "%", inline=False)
             # View
             # restart_btn = Button()
             # previous_btn = Button()
@@ -779,9 +779,19 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         else:
             if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                self.current += 0
-                self.repeat_song = False
-                ctx.voice_client.stop()
+                if self.current < len(self.music_queue[str(ctx.guild.id)]) - 1 or self.loop_queue:
+                    self.current += 0
+                    self.repeat_song = False
+                    ctx.voice_client.stop()
+                else:
+                    async with ctx.typing():
+                        embed=discord.Embed(
+                            title="Error",
+                            description="Nothing to play after this",
+                            colour=0xff0000,
+                            timestamp=datetime.datetime.utcnow()
+                        )
+                    await ctx.send(embed=embed)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -794,9 +804,19 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
         else:
             if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                self.current -= 2
-                self.repeat_song = False
-                ctx.voice_client.stop()
+                if self.current > 0 or self.loop_queue:
+                    self.current -= 2
+                    self.repeat_song = False
+                    ctx.voice_client.stop()
+                else:
+                    async with ctx.typing():
+                        embed=discord.Embed(
+                            title="Error",
+                            description="Nothing to play before this",
+                            colour=0xff0000,
+                            timestamp=datetime.datetime.utcnow()
+                        )
+                    await ctx.send(embed=embed)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
