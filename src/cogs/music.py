@@ -786,7 +786,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="previous", aliases=["prev"], help="plays the previous song in the queue")
-    async def next_command(self, ctx):
+    async def previous_command(self, ctx):
         self.create_guild_queue(ctx)
         if ctx.voice_client is None:
             async with ctx.typing():
