@@ -302,6 +302,7 @@ class Music(commands.Cog):
         if joined == False:
             return
         for url in urls:
+            url = url.strip()
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
             if player is None:
                 async with ctx.typing():
@@ -378,6 +379,7 @@ class Music(commands.Cog):
         if joined == False:
             return
         for url in urls:
+            url = url.strip()
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
             if player is None:
                 async with ctx.typing():
