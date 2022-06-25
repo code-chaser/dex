@@ -91,7 +91,8 @@ class Music(commands.Cog):
         self.bot = bot
         # -------------------------------------
         self.properties = {}
-        # "guild_id": str -> {
+        # FORMAT OF DICT self.properties:
+        # [str(guild.id)] -> {
         # "is_playing": False,
         # "currently_playing_player": None,
         # "current": -1,
@@ -103,7 +104,8 @@ class Music(commands.Cog):
         # }
         # -------------------------------------
         self.music_queue = {}
-        # [guild.id] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not]
+        # FORMAT OF DICT self.music_queue:
+        # [str(guild.id)] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not]
         # -------------------------------------
         return
     # ----------------------------------------------------------------------------------------------------------------------
