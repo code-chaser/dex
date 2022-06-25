@@ -35,7 +35,6 @@ class Bot(commands.Bot):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
     def connect_to_db(self) -> None:
-
         self.DB_CONNECTION = psycopg2.connect(
             host=os.getenv('DEX_DB_HOST'),
             database=os.getenv('DEX_DB_NAME'),
@@ -52,7 +51,7 @@ class Bot(commands.Bot):
         return prefix
 
     def run(self) -> None:
-        super().run(os.getenv('BOT_TOKEN'))
+        super().run(os.getenv('DEX_BOT_TOKEN'))
 
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self))
@@ -88,10 +87,12 @@ class Bot(commands.Bot):
                     str(message.guild.id) + '\';')
         tag_switch = cur.fetchone()
         cur.close()
-        if tag_switch[0] == 'off':
-            return
         target = message.author
         if target == self.user:
+            return
+        print("\n\n-----------------------\n-----------------------\n\n" +
+              str(message.content) + "\n-----------------------\n")
+        if tag_switch[0] == 'off':
             return
         embed = discord.Embed(
             title='Message Tagged',
