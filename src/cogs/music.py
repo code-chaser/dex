@@ -63,7 +63,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 class Music(commands.Cog):
 
     # queue format:
-    # [guild.id] -> [player | ctx | url(from_user) | stream_or_not]
+    # [guild.id] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not]
 
     bad_request_error_message = ''
     bad_request_error_message += (
@@ -512,6 +512,9 @@ class Music(commands.Cog):
     @commands.command(name="queue", aliases=["view"], help="displays the current queue")
     async def queue_command(self, ctx, *, url: typing.Optional[str]):
         
+        if str(ctx.guild.id) in self.music_queue: # for debugging purposes
+            print(self.music_queue[str(ctx.guild.id)])
+            
         self.create_guild_queue(ctx)
             
         if url is not None:
