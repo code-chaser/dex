@@ -5,7 +5,6 @@ import asyncio
 import typing
 import datetime
 from discord.ext import commands
-from discord.ui import Button, Paginator, View
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -198,22 +197,22 @@ class Music(commands.Cog):
                             value=self.current+1, inline=False)
             embed.add_field(name="Volume", value=str(self.vol * 100) + "%", inline=False)
             # View
-            restart_btn = Button()
-            previous_btn = Button()
-            play_btn = Button()
-            pause_btn = Button()
-            next_btn = Button()
-            repeat_song_btn = Button()
-            loop_queue_btn = Button()
-            view = discord.ui.View()
-            view.add_item(restart_btn)
-            view.add_item(previous_btn)
-            view.add_item(play_btn)
-            view.add_item(pause_btn)
-            view.add_item(next_btn)
-            view.add_item(repeat_song_btn)
-            view.add_item(loop_queue_btn)
-        await ctx.send(embed=embed, view=view)
+            # restart_btn = Button()
+            # previous_btn = Button()
+            # play_btn = Button()
+            # pause_btn = Button()
+            # next_btn = Button()
+            # repeat_song_btn = Button()
+            # loop_queue_btn = Button()
+            # view = discord.ui.View()
+            # view.add_item(restart_btn)
+            # view.add_item(previous_btn)
+            # view.add_item(play_btn)
+            # view.add_item(pause_btn)
+            # view.add_item(next_btn)
+            # view.add_item(repeat_song_btn)
+            # view.add_item(loop_queue_btn)
+        await ctx.send(embed=embed)
         ctx.voice_client.play(player, after=lambda e: print(
             f'Player error: {e}') if e else None)
         ctx.voice_client.source.volume = self.vol
