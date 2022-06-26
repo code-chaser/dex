@@ -15,7 +15,7 @@ class ModSet(Cog):
         pass
 
     @command(name="tags", aliases=["tagging", "msgtag"], help="toggles message tags")
-    async def message_tags(self, ctx, switch: Optional[str]):
+    async def tags_command(self, ctx, switch: Optional[str]):
         cur = self.bot.DB_CONNECTION.cursor()
         cur.execute(
             'SELECT tag_messages FROM guilds WHERE guild_id = \'' + str(ctx.guild.id) + '\';')
@@ -66,7 +66,7 @@ class ModSet(Cog):
         await ctx.send(embed=embed)
 
     @command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
-    async def change_prefix(self, ctx, *args):
+    async def changeprefix_command(self, ctx, *args):
         prefix = "".join(args)
         if ctx.guild.id == int(os.environ['DEX_PUBLIC_BOT_SERVER']):
             embed = discord.Embed(title="Status",
@@ -106,7 +106,7 @@ class ModSet(Cog):
                 await ctx.send(embed=embed)
 
     @command(name="goodbye!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
-    async def leave_this_server(self, ctx):
+    async def goodbye_command(self, ctx):
         if ctx.author != ctx.guild.owner:
             embed = discord.Embed(title="Status",
                                   colour=0xff0000,
@@ -139,7 +139,7 @@ class ModSet(Cog):
         return
 
     @command(name="madeby?", help="shows the creator of the bot")
-    async def madeby(self, ctx):
+    async def madeby_command(self, ctx):
         async with ctx.typing():
             embed = discord.Embed(title="Made by", description="""
             **codechaser#0647**

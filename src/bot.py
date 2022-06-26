@@ -1,9 +1,7 @@
 import discord
-import json
 import os
 import datetime
 import psycopg2
-import configparser
 from discord.ext import commands
 
 

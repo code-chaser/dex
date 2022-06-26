@@ -1,6 +1,5 @@
 import discord
 import aiohttp
-import json
 import os
 import datetime
 import typing
@@ -20,7 +19,7 @@ class Fun(commands.Cog):
                 return (quote_json)
 
     @commands.command(name="inspire", aliases=["iquote"], help="sends a random inspirational quote")
-    async def send_iquote(self, ctx):
+    async def inspire_command(self, ctx):
         embed = discord.Embed(title="Inspirational Quote",
                               colour=ctx.author.colour,
                               timestamp=datetime.datetime.utcnow())
@@ -39,7 +38,7 @@ class Fun(commands.Cog):
                 return (data_json)
 
     @commands.command(name="apod", aliases=["napod", "astropic", "astropicotd"], help="sends astronomy pic of the day from NASA")
-    async def send_nasa_pic_otd(self, ctx):
+    async def apod_command(self, ctx):
         embed = discord.Embed(title="NASA",
                               description="Picture of the day",
                               colour=0x0B3D91,
@@ -63,7 +62,7 @@ class Fun(commands.Cog):
                 return (data_json)
 
     @commands.command(name="meme", aliases=["hehe"], help="sends a random meme")
-    async def send_meme(self, ctx):
+    async def meme_command(self, ctx):
         embed = discord.Embed(title="MEME",
                               colour=0xffee00,
                               timestamp=datetime.datetime.utcnow())
@@ -85,7 +84,7 @@ class Fun(commands.Cog):
                 return (data_json)
 
     @commands.command(name="reddit", aliases=["subreddit"], help="shows top headlines of the given subreddit")
-    async def send_subreddit(self, ctx, subreddit, number: typing.Optional[int]):
+    async def subreddit_command(self, ctx, subreddit, number: typing.Optional[int]):
         data = await self.get_subreddit(subreddit)
         if ('message' in data.keys()):
             if data['message'] == "Not Found":

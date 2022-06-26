@@ -1,11 +1,7 @@
 import discord
 import aiohttp
-import json
-import os
 import datetime
-import typing
 from discord.ext import commands
-from psycopg2 import Timestamp
 
 
 class Codeforces(commands.Cog):
@@ -29,7 +25,7 @@ class Codeforces(commands.Cog):
                 return (user_json)
 
     @commands.command(name="cf-handle", aliases=["cf-user"], help="shows details of the requested codeforces handle")
-    async def send_user(self, ctx, username):
+    async def cf_handle_command(self, ctx, username):
         handle = await self.get_user(username)
         if handle["status"] == "FAILED":
             async with ctx.typing():

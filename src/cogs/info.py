@@ -1,7 +1,3 @@
-import json
-import discord
-import string
-import os
 from typing import Optional
 from datetime import datetime
 from discord import Embed, Member, Guild
@@ -15,7 +11,7 @@ class Info(Cog):
         self.bot = bot
 
     @command(name="userinfo", aliases=["ui", "memberinfo", "mi"], help="shows user info")
-    async def user_info(self, ctx, target: Optional[Member]):
+    async def userinfo_command(self, ctx, target: Optional[Member]):
         target = target or ctx.author
         embed = Embed(title="User Information",
                       colour=target.colour,
@@ -40,7 +36,7 @@ class Info(Cog):
         await ctx.send(embed=embed)
 
     @command(name="serverinfo", aliases=["si", "guildinfo", "gi"], help="shows server information")
-    async def server_info(self, ctx, target: Optional[Guild]):
+    async def serverinfo_command(self, ctx, target: Optional[Guild]):
         flag = True
         if(target):
             flag = False

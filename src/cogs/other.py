@@ -1,9 +1,6 @@
 import discord
 import aiohttp
-import json
-import os
 import datetime
-import typing
 from discord.ext import commands
 
 
@@ -20,7 +17,7 @@ class Other(commands.Cog):
                 return (data_json)
 
     @commands.command(name="covid19", help="sends COVID-19 stats of the given country (global stats if country == null)")
-    async def covid19_data(self, ctx, *args):
+    async def covid19_command(self, ctx, *args):
         countr = ""
         for arg in args:
             countr += arg + " "

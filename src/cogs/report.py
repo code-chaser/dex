@@ -1,6 +1,5 @@
 import discord
 import os
-from typing import Optional
 from datetime import datetime
 from discord.ext import commands
 
