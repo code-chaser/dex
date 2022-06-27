@@ -91,6 +91,7 @@ class Bot(commands.Bot):
         return
 
     async def on_message(self, message):
+        await self.process_commands(message)
         tag_switch = self.DATABASE['guilds'][str(
             message.guild.id)]['tag_messages']
         target = message.author
