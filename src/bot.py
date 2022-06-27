@@ -57,7 +57,6 @@ class Bot(commands.Bot):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
-        self.command_prefix = self.get_prefix
 
     def get_prefix(self, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
