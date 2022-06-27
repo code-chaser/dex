@@ -1,6 +1,6 @@
 import discord
 import aiohttp
-import datetime
+from datetime import datetime
 from discord.ext import commands
 
 
@@ -33,7 +33,7 @@ class Other(commands.Cog):
                         title=(k["Country"]).title(),
                         description="COVID-19 Statistics",
                         colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
+                        timestamp=datetime.utcnow()
                     )
                     flag_url = "https://flagcdn.com/w640/" + \
                         str(k["CountryCode"]).lower() + ".jpg"
@@ -57,7 +57,7 @@ class Other(commands.Cog):
                 title="Global",
                 description="COVID-19 Statistics",
                 colour=0xff0000,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(
                 url="https://user-images.githubusercontent.com/63065397/156144079-6f90504d-ad48-4f2e-bec5-bae31cebd858.png"
@@ -101,7 +101,7 @@ class Other(commands.Cog):
                 title="Ping",
                 description="**"+str(ping)+"ms**",
                 colour=discord.Color.from_rgb(int(red*255), int(green*255), 0),
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------

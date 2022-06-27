@@ -1,19 +1,17 @@
+import discord
 from typing import Optional
 from datetime import datetime
-from discord import Embed, Member, Guild
-from discord.ext.commands import Cog
-from discord.ext.commands import command
 from discord.ext import commands
 
 
-class Info(Cog):
+class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @command(name="userinfo", aliases=["ui", "memberinfo", "mi"], help="shows user info")
-    async def userinfo_command(self, ctx, target: Optional[Member]):
+    @commands.command(name="userinfo", aliases=["ui", "memberinfo", "mi"], help="shows user info")
+    async def userinfo_command(self, ctx, target: Optional[discord.Member]):
         target = target or ctx.author
-        embed = Embed(title="User Information",
+        embed = discord.Embed(title="User Information",
                       colour=target.colour,
                       timestamp=datetime.utcnow())
         embed.set_thumbnail(url=target.avatar_url)
@@ -35,8 +33,8 @@ class Info(Cog):
             embed.add_field(name=n, value=v, inline=i)
         await ctx.send(embed=embed)
 
-    @command(name="serverinfo", aliases=["si", "guildinfo", "gi"], help="shows server information")
-    async def serverinfo_command(self, ctx, target: Optional[Guild]):
+    @commands.command(name="serverinfo", aliases=["si", "guildinfo", "gi"], help="shows server information")
+    async def serverinfo_command(self, ctx, target: Optional[discord.Guild]):
         flag = True
         if(target):
             flag = False
@@ -44,7 +42,7 @@ class Info(Cog):
                 if g.id == target.id:
                     flag = True
         target = target or ctx.guild
-        embed = Embed(title="Server Information",
+        embed = discord.Embed(title="Server Information",
                       colour=ctx.guild.owner.colour,
                       timestamp=datetime.utcnow())
         if flag == False:

@@ -1,7 +1,7 @@
 import discord
 import os
-import datetime
-import psycopg2
+import asyncpg
+from datetime import datetime
 from discord.ext import commands
 
 
@@ -12,57 +12,69 @@ class Bot(commands.Bot):
     EXHAUSTED_FACE = 'https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
     DEX_YELLOW = 0x8e38ce
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
-    DB_CONNECTION = None
 
     def __init__(self, *args, **kwargs):
-        self.connect_to_db()
         super().__init__(
-            command_prefix=self.get_prefix,
+            command_prefix=self.get_pref,
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
                 name="$dex help",
                 large_image_url=self.EXHAUSTED_FACE,
                 small_image_url=self.EXHAUSTED_FACE,
-                start=datetime.datetime(2022, 2, 24),
+                start=datetime(2022, 2, 24),
             ),
         )
+        self.DB_CONNECTION = None
+        self.DATABASE = {}
+        self.loop.create_task(self.startup())
 
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
 
-    def connect_to_db(self) -> None:
-        self.DB_CONNECTION = psycopg2.connect(
+    async def connect_to_db(self) -> None:
+        self.DB_CONNECTION = await asyncpg.connect(
             host=os.getenv('DEX_DB_HOST'),
             database=os.getenv('DEX_DB_NAME'),
             user=os.getenv('DEX_DB_USER'),
             port=os.getenv('DEX_DB_PORT'),
-            password=os.getenv('DEX_DB_PASSWORD'),
+            password=os.getenv('DEX_DB_PASSWORD')
         )
+        print("\nDATABASE CONNECTED\n")
 
-    async def get_prefix(self, message):
-        cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT prefix FROM guilds WHERE guild_id = \'' +
-                    str(message.guild.id) + '\';')
-        prefix = cur.fetchone()
-        return prefix
+    async def clone_database(self):
+        await self.DB_CONNECTION.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
+        self.DATABASE['guilds'] = {}
+        self.DATABASE['guilds'] = {result['guild_id']: {k: v for k, v in result.items() if k != 'guild_id'} for result in await self.DB_CONNECTION.fetch("SELECT * FROM guilds")}
+        print("\nDATABASE CLONED\n")
+        print("\n\n****DATABASE DICTIONARY****\n\n")
+        print(self.DATABASE)
+        print("\n\n")
+        return
+
+    async def startup(self):
+        print("\nINSIDE Bot.startup()\n")
+        await self.connect_to_db()
+        await self.clone_database()
+
+    def get_pref(self, _, message):
+        return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
 
     def run(self) -> None:
         super().run(os.getenv('DEX_BOT_TOKEN'))
 
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self))
-        cur = self.DB_CONNECTION.cursor()
-        cur.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
-        self.DB_CONNECTION.commit()
 
-    async def on_guild_join(self, guild) -> None:
-        cur = self.DB_CONNECTION.cursor()
-        cur.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' +
-                    str(guild.id)+'\', \'$dex \', \'on\');')
-        self.DB_CONNECTION.commit()
-        cur.close()
+    async def on_guild_join(self, guild):
+        if str(guild.id) in self.DATABASE['guilds'].keys():
+            return
+        await self.DB_CONNECTION.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' +
+                                         str(guild.id)+'\', \'$dex \', \'on\');')
+        self.DATABASE['guilds'][str(guild.id)] = {}
+        self.DATABASE['guilds'][str(guild.id)] = {
+            'prefix': '$dex ', 'tag_messages': 'on'}
         for channel in guild.text_channels:
             if channel.permissions_for(guild.me).send_messages:
                 general = channel
@@ -70,32 +82,28 @@ class Bot(commands.Bot):
             await general.send(embed=self.intro_msg_embed(guild))
         return
 
-    async def on_guild_remove(self, guild) -> None:
-        cur = self.DB_CONNECTION.cursor()
-        cur.execute('DELETE FROM guilds WHERE guild_id = \'' +
-                    str(guild.id) + '\';')
-        self.DB_CONNECTION.commit()
-        cur.close()
+    async def on_guild_remove(self, guild):
+        await self.DB_CONNECTION.execute('DELETE FROM guilds WHERE guild_id = \'' +
+                                         str(guild.id) + '\';')
+        if str(guild.id) in self.DATABASE['guilds'].keys():
+            self.DATABASE['guilds'].pop(str(guild.id))
         return
 
-    async def on_message(self, message) -> None:
+    async def on_message(self, message):
         await self.process_commands(message)
-        cur = self.DB_CONNECTION.cursor()
-        cur.execute('SELECT tag_messages FROM guilds WHERE guild_id = \'' +
-                    str(message.guild.id) + '\';')
-        tag_switch = cur.fetchone()
-        cur.close()
+        tag_switch = self.DATABASE['guilds'][str(
+            message.guild.id)]['tag_messages']
         target = message.author
         if target == self.user:
             return
         print("\n\n-----------------------\n-----------------------\n\n" +
               str(message.content) + "\n-----------------------\n")
-        if tag_switch[0] == 'off':
+        if tag_switch == 'off':
             return
         embed = discord.Embed(
             title='Message Tagged',
             colour=target.colour,
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.utcnow(),
         )
         embed.set_footer(
             text=''.join('`<prefix> tags off` -to turn this off'),
@@ -109,7 +117,7 @@ class Bot(commands.Bot):
         embed = discord.Embed(
             title='Status',
             colour=0xff0000,
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.utcnow(),
         )
         if isinstance(error, commands.MissingPermissions):
             n = 'Error'
@@ -141,7 +149,7 @@ class Bot(commands.Bot):
             title='**GREETINGS!**',
             description=description,
             color=self.DEX_YELLOW,
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.utcnow(),
         )
         embed.set_image(url=self.INTRO_IMG_URL)
         embed.set_author(

@@ -7,6 +7,4 @@ requests==2.27.1
 aiohttp==3.7.4
 typing==3.7.4.3
 async-timeout==3.0.1
-psycopg2==2.9.3
-config==0.5.1
-configparser==5.2.0
+asyncpg==0.25.0
