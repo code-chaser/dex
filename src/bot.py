@@ -51,10 +51,13 @@ class Bot(commands.Bot):
         return
 
     async def startup(self):
-        await self.wait_until_ready()
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
+        
+    async def setup_hook(self):
+        await super.setup_hook()
+        await self.startup()
 
     async def get_prefix(self, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
