@@ -94,15 +94,15 @@ ___
     ```python
     import asyncio
     ```
-- **psycopg2**:
-  - version = `2.9.3`
+- **asyncpg**:
+  - version = `0.25.0`
   - installation:
     ```bash
-    pip install psycopg2==2.9.3
+    pip install asyncpg==0.25.0
     ```
   - import:
     ```python
-    import psycopg2
+    import asyncpg
     ```
 ___
 
