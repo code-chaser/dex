@@ -15,8 +15,7 @@ class Bot(commands.Bot):
     DB_CONNECTION = None
 
     def __init__(self, *args, **kwargs):
-        self.DATABASE = {}
-        self.DATABASE['guilds'] = {}
+        self.loop.create_task(self.startup())
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -45,18 +44,15 @@ class Bot(commands.Bot):
 
     async def clone_database(self):
         await self.DB_CONNECTION.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
-        print("\nDATABASE CLONED\n")
         self.DATABASE['guilds'] = {}
         self.DATABASE['guilds'] = {result['guild_id']: {k: v for k, v in result.items() if k != 'guild_id'} for result in await self.DB_CONNECTION.fetch("SELECT * FROM guilds")}
+        print("\nDATABASE CLONED\n")
         return
 
     async def startup(self):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
-        
-    async def setup_hook(self):
-        await self.startup()
 
     async def get_prefix(self, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
