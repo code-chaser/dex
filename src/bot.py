@@ -12,7 +12,6 @@ class Bot(commands.Bot):
     EXHAUSTED_FACE = 'https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
     DEX_YELLOW = 0x8e38ce
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
-    DB_CONNECTION = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -26,6 +25,8 @@ class Bot(commands.Bot):
                 start=datetime(2022, 2, 24),
             ),
         )
+        self.DB_CONNECTION = None
+        self.DATABASE = {}
         self.loop.create_task(self.startup())
 
         for file in os.listdir('./src/cogs'):
