@@ -2,8 +2,8 @@ import discord
 import aiohttp
 import youtube_dl
 import asyncio
-import typing
-import datetime
+from typing import Optional
+from datetime import datetime
 from discord.ext import commands
 
 # Suppress noise about console usage from errors
@@ -81,7 +81,7 @@ class Music(commands.Cog):
         description=''.join(
             "Dex is not in any voice channel\n**Use `<prefix> join` to make it connect to one and then use music commands**"),
         colour=0xff0000,
-        timestamp=datetime.datetime.utcnow()
+        timestamp=datetime.utcnow()
     )
 
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
@@ -140,7 +140,7 @@ class Music(commands.Cog):
                     title="Error",
                     description=ctx.author.mention + ", you are not connected to a voice channel",
                     colour=0xFF0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 embed.set_footer(text="join request from " + ctx.author.name)
             await ctx.send(embed=embed)
@@ -157,7 +157,7 @@ class Music(commands.Cog):
                         description=''.join(
                             "Can't move b/w channels while playing music!\n**NOTE: **You can still add music to the queue!"),
                         colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
+                        timestamp=datetime.utcnow()
                     )
                     embed.set_footer(
                         text="join request from " + ctx.author.name)
@@ -199,7 +199,7 @@ class Music(commands.Cog):
                 self.music_queue[str(ctx.guild.id)
                                  ][self.properties[str(ctx.guild.id)]["current"]][1].author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
@@ -251,7 +251,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="play", aliases=["stream", "p", "add"], help="streams a song directly from youtube")
-    async def play_command(self, ctx, *, url: typing.Optional[str]):
+    async def play_command(self, ctx, *, url: Optional[str]):
         self.add_guild(ctx)
         if (url is None) and (ctx.message.content[(len(ctx.message.content)-3):(len(ctx.message.content))] != "add"):
             if ctx.voice_client is None:
@@ -272,7 +272,7 @@ class Music(commands.Cog):
                     description=''.join(
                         "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 await ctx.send(embed=embed)
             return
@@ -281,7 +281,7 @@ class Music(commands.Cog):
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 n = "Error"
                 v = "Missing required arguements"
@@ -299,7 +299,7 @@ class Music(commands.Cog):
                     title="Error",
                     description=''.join(self.bad_request_error_message),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=datetime.utcnow(),
                 )
             await ctx.send(embed=embed)
             return
@@ -310,7 +310,7 @@ class Music(commands.Cog):
                 title="Added to queue",
                 description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
@@ -341,7 +341,7 @@ class Music(commands.Cog):
                         title="Error",
                         description=''.join(self.bad_request_error_message),
                         colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow(),
+                        timestamp=datetime.utcnow(),
                     )
                 await ctx.send(embed=embed)
                 continue
@@ -353,7 +353,7 @@ class Music(commands.Cog):
                     title="Added to queue",
                     description="\"" + url + "\" requested by " + ctx.author.mention,
                     colour=0x00ff00,
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=datetime.utcnow(),
                 )
                 embed.set_thumbnail(url=self.MUSIC_ICON)
                 embed.set_author(name=player.title, url=player.url,
@@ -379,7 +379,7 @@ class Music(commands.Cog):
                     title="Error",
                     description=''.join(self.bad_request_error_message),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
@@ -390,7 +390,7 @@ class Music(commands.Cog):
                 title="Downloaded & Added to queue",
                 description="\"" + url + "\" requested by " + ctx.author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name=player.title, url=player.url,
@@ -421,7 +421,7 @@ class Music(commands.Cog):
                         title="Error",
                         description=''.join(self.bad_request_error_message),
                         colour=0xff0000,
-                        timestamp=datetime.datetime.utcnow()
+                        timestamp=datetime.utcnow()
                     )
                 await ctx.send(embed=embed)
                 continue
@@ -433,7 +433,7 @@ class Music(commands.Cog):
                     title="Downloaded & Added to queue",
                     description="\"" + url + "\" requested by " + ctx.author.mention,
                     colour=0x00ff00,
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=datetime.utcnow(),
                 )
                 embed.set_thumbnail(url=self.MUSIC_ICON)
                 embed.set_author(name=player.title, url=player.url,
@@ -447,7 +447,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name='loop', help="toggles looping of the queue")
-    async def loop_command(self, ctx, loop_switch: typing.Optional[str]):
+    async def loop_command(self, ctx, loop_switch: Optional[str]):
 
         self.add_guild(ctx)
 
@@ -473,7 +473,7 @@ class Music(commands.Cog):
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 embed.add_field(
                     name="Error",
@@ -486,7 +486,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="Status",
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.add_field(
                 name="Done",
@@ -498,7 +498,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name='repeat', help="toggles repeating of the currently playing song")
-    async def repeat_command(self, ctx, repeat_switch: typing.Optional[str]):
+    async def repeat_command(self, ctx, repeat_switch: Optional[str]):
 
         self.add_guild(ctx)
 
@@ -524,7 +524,7 @@ class Music(commands.Cog):
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 embed.add_field(
                     name="Error",
@@ -537,7 +537,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title="Status",
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.add_field(
                 name="Done",
@@ -563,7 +563,7 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="queue", aliases=["view"], help="displays the current queue")
-    async def queue_command(self, ctx, *, url: typing.Optional[str]):
+    async def queue_command(self, ctx, *, url: Optional[str]):
 
         self.add_guild(ctx)
 
@@ -585,14 +585,14 @@ class Music(commands.Cog):
                     description=''.join(
                         "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
         embed = discord.Embed(
             title="Queue",
             colour=0x0000ff,
-            timestamp=datetime.datetime.utcnow()
+            timestamp=datetime.utcnow()
         )
         embed.set_thumbnail(url=self.MUSIC_ICON)
         embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
@@ -603,7 +603,7 @@ class Music(commands.Cog):
                 description=str("Page " + str(i // 25 + 1) +
                                 " of " + str(size // 25 + 1)),
                 colour=0x0000ff,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
             embed.set_author(name="Dex", icon_url=self.bot.user.avatar_url)
@@ -638,7 +638,7 @@ class Music(commands.Cog):
                     description=''.join(
                         "Missing required argument: `<position>`"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
@@ -649,7 +649,7 @@ class Music(commands.Cog):
                     description=str(
                         "Queue Position must be between (1 & "+str(len(self.music_queue[str(ctx.guild.id)]))+")"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
@@ -661,7 +661,7 @@ class Music(commands.Cog):
                 self.music_queue[str(ctx.guild.id)][int(pos)
                                                     ][1].author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
@@ -696,7 +696,7 @@ class Music(commands.Cog):
                     description=''.join(
                         "Missing required argument: `<position>`"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
@@ -707,7 +707,7 @@ class Music(commands.Cog):
                     description=str(
                         "Queue Position must be between (1 & "+str(len(self.music_queue[str(ctx.guild.id)]))+")"),
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
             await ctx.send(embed=embed)
             return
@@ -717,7 +717,7 @@ class Music(commands.Cog):
                 title="Jumping to " + str(pos + 1),
                 description="- requested by " + ctx.author.mention,
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
@@ -746,7 +746,7 @@ class Music(commands.Cog):
             embed = discord.Embed(
                 title=str(volume) + "%",
                 colour=0x00ff00,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             embed.set_author(name="Volume set to",
                              icon_url=ctx.author.avatar_url)
@@ -817,7 +817,7 @@ class Music(commands.Cog):
                             title="Error",
                             description="Nothing to play after this",
                             colour=0xff0000,
-                            timestamp=datetime.datetime.utcnow()
+                            timestamp=datetime.utcnow()
                         )
                     await ctx.send(embed=embed)
         return
@@ -842,7 +842,7 @@ class Music(commands.Cog):
                             title="Error",
                             description="Nothing to play before this",
                             colour=0xff0000,
-                            timestamp=datetime.datetime.utcnow()
+                            timestamp=datetime.utcnow()
                         )
                     await ctx.send(embed=embed)
         return
@@ -871,7 +871,7 @@ class Music(commands.Cog):
                         title="Error",
                         description="No song is currently playing",
                         color=0xff0000,
-                        timestamp=datetime.datetime.utcnow(),
+                        timestamp=datetime.utcnow(),
                     )
                 await ctx.send(embed=embed)
                 return
@@ -889,7 +889,7 @@ class Music(commands.Cog):
                 description=err_mssg +
                 ('\n'+'[see results from GoogleSearch](https://www.google.com/search?q='+song_title+'+lyrics)'),
                 colour=0xff0000,
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=datetime.utcnow(),
             )
             await ctx.send(embed=embed)
         else:
@@ -906,7 +906,7 @@ class Music(commands.Cog):
                     title=data['title'],
                     description=lyrics+extend_text,
                     color=0x00ff00,
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=datetime.utcnow(),
                 )
                 embed.set_author(
                     name=data['author'],

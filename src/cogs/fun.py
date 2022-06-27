@@ -1,8 +1,8 @@
 import discord
 import aiohttp
 import os
-import datetime
-import typing
+from typing import Optional
+from datetime import datetime
 from discord.ext import commands
 
 
@@ -22,7 +22,7 @@ class Fun(commands.Cog):
     async def inspire_command(self, ctx):
         embed = discord.Embed(title="Inspirational Quote",
                               colour=ctx.author.colour,
-                              timestamp=datetime.datetime.utcnow())
+                              timestamp=datetime.utcnow())
         iquote = await self.get_iquote()
         embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
         embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
@@ -42,7 +42,7 @@ class Fun(commands.Cog):
         embed = discord.Embed(title="NASA",
                               description="Picture of the day",
                               colour=0x0B3D91,
-                              timestamp=datetime.datetime.utcnow())
+                              timestamp=datetime.utcnow())
         embed.set_thumbnail(
             url="https://user-images.githubusercontent.com/63065397/156291255-4af80382-836c-4801-8b4f-47da33ea36c5.png")
         embed.set_footer(text="updated daily at 05:00:00 UTC [00:00:00 ET]")
@@ -65,7 +65,7 @@ class Fun(commands.Cog):
     async def meme_command(self, ctx):
         embed = discord.Embed(title="MEME",
                               colour=0xffee00,
-                              timestamp=datetime.datetime.utcnow())
+                              timestamp=datetime.utcnow())
         meme = await self.get_meme()
         embed.add_field(name="Post Link", value=meme["postLink"], inline=True)
         embed.add_field(name="Author", value=meme["author"], inline=True)
@@ -84,14 +84,14 @@ class Fun(commands.Cog):
                 return (data_json)
 
     @commands.command(name="reddit", aliases=["subreddit"], help="shows top headlines of the given subreddit")
-    async def subreddit_command(self, ctx, subreddit, number: typing.Optional[int]):
+    async def subreddit_command(self, ctx, subreddit, number: Optional[int]):
         data = await self.get_subreddit(subreddit)
         if ('message' in data.keys()):
             if data['message'] == "Not Found":
                 embed = discord.Embed(
                     title="Status",
                     colour=0xff0000,
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=datetime.utcnow()
                 )
                 embed.add_field(name="Error", value="Not Found", inline=True)
                 embed.set_footer(text="given subreddit: "+subreddit)
@@ -101,7 +101,7 @@ class Fun(commands.Cog):
                 title="Error",
                 description="API Request Fail",
                 colour=0xff0000,
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             for key_i in data.keys():
                 if key_i != 'message' and key_i != 'error':
@@ -117,7 +117,7 @@ class Fun(commands.Cog):
             await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title=str("/r/"+subreddit),
-                                  colour=0xff5700, timestamp=datetime.datetime.utcnow())
+                                  colour=0xff5700, timestamp=datetime.utcnow())
             embed.set_thumbnail(
                 url="https://user-images.githubusercontent.com/63065397/156344382-821872f3-b6e3-46e7-b925-b5f1a0821da8.png")
             i = 1
