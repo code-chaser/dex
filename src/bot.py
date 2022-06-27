@@ -14,6 +14,9 @@ class Bot(commands.Bot):
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
 
     def __init__(self, *args, **kwargs):
+        self.DB_CONNECTION = None
+        self.DATABASE = {}
+        super().loop.create_task(self.startup())
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -25,10 +28,6 @@ class Bot(commands.Bot):
                 start=datetime(2022, 2, 24),
             ),
         )
-        self.DB_CONNECTION = None
-        self.DATABASE = {}
-        self.loop.create_task(self.startup())
-
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
@@ -65,6 +64,8 @@ class Bot(commands.Bot):
         print('Logged in as {0.user}'.format(self))
 
     async def on_guild_join(self, guild):
+        if str(guild.id) in self.DATABASE['guilds'].keys():
+            return
         await self.DB_CONNECTION.execute('INSERT INTO guilds (guild_id,prefix,tag_messages) VALUES (\'' +
                                          str(guild.id)+'\', \'$dex \', \'on\');')
         self.DATABASE['guilds'][str(guild.id)] = {}
@@ -80,8 +81,8 @@ class Bot(commands.Bot):
     async def on_guild_remove(self, guild):
         await self.DB_CONNECTION.execute('DELETE FROM guilds WHERE guild_id = \'' +
                                          str(guild.id) + '\';')
-        if str(guild.id) in self.bot.DATABASE['guilds'].keys():
-            del self.bot.DATABASE['guilds'][str(guild.id)]
+        if str(guild.id) in self.DATABASE['guilds'].keys():
+            self.DATABASE['guilds'].pop(str(guild.id))
         return
 
     async def on_message(self, message):
