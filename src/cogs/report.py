@@ -74,7 +74,6 @@ class Report(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        await self.bot.process_commands(message)
         target = message.author
         if target == self.bot.user or target.bot:
             return
