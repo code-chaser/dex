@@ -15,7 +15,6 @@ class Bot(commands.Bot):
     DB_CONNECTION = None
 
     def __init__(self, *args, **kwargs):
-        self.loop.create_task(self.startup())
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -27,6 +26,7 @@ class Bot(commands.Bot):
                 start=datetime(2022, 2, 24),
             ),
         )
+        self.loop.create_task(self.startup())
 
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
