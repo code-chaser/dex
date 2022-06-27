@@ -48,6 +48,7 @@ class Bot(commands.Bot):
         self.DATABASE['guilds'] = {}
         self.DATABASE['guilds'] = {result['guild_id']: {k: v for k, v in result.items() if k != 'guild_id'} for result in await self.DB_CONNECTION.fetch("SELECT * FROM guilds")}
         print("\nDATABASE CLONED\n")
+        print("\n\n****DATABASE DICTIONARY****\n\n" + self.DATABASE + "\n\n")
         return
 
     async def startup(self):
