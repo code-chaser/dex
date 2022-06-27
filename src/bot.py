@@ -58,7 +58,7 @@ class Bot(commands.Bot):
         await self.connect_to_db()
         await self.clone_database()
 
-    def get_pref(self, message):
+    def get_pref(self, commands.Bot, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
 
     def run(self) -> None:
