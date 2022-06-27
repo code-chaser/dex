@@ -14,9 +14,6 @@ class Bot(commands.Bot):
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
 
     def __init__(self, *args, **kwargs):
-        self.DB_CONNECTION = None
-        self.DATABASE = {}
-        super().loop.create_task(self.startup())
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -28,6 +25,10 @@ class Bot(commands.Bot):
                 start=datetime(2022, 2, 24),
             ),
         )
+        self.DB_CONNECTION = None
+        self.DATABASE = {}
+        self.loop.create_task(self.startup())
+
         for file in os.listdir('./src/cogs'):
             if file.endswith('.py'):
                 self.load_extension(f'src.cogs.{file[:-3]}')
@@ -53,8 +54,9 @@ class Bot(commands.Bot):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
+        self.command_prefix = self.get_prefix
 
-    async def get_prefix(self, message):
+    def get_prefix(self, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
 
     def run(self) -> None:
