@@ -56,7 +56,6 @@ class Bot(commands.Bot):
         await self.clone_database()
         
     async def setup_hook(self):
-        await super.setup_hook()
         await self.startup()
 
     async def get_prefix(self, message):
