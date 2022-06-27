@@ -15,7 +15,7 @@ class Bot(commands.Bot):
 
     def __init__(self, *args, **kwargs):
         super().__init__(
-            command_prefix=self.get_prefix,
+            command_prefix=self.get_pref,
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
@@ -58,7 +58,7 @@ class Bot(commands.Bot):
         await self.connect_to_db()
         await self.clone_database()
 
-    async def get_prefix(self, message):
+    def get_pref(self, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
 
     def run(self) -> None:
