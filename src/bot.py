@@ -13,9 +13,10 @@ class Bot(commands.Bot):
     DEX_YELLOW = 0x8e38ce
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
     DB_CONNECTION = None
-    DATABASE = {}
 
     def __init__(self, *args, **kwargs):
+        self.DATABASE = {}
+        self.DATABASE['guilds'] = {}
         super().__init__(
             command_prefix=self.get_prefix,
             intents=discord.Intents.all(),
@@ -40,15 +41,18 @@ class Bot(commands.Bot):
             port=os.getenv('DEX_DB_PORT'),
             password=os.getenv('DEX_DB_PASSWORD')
         )
+        print("\nDATABASE CONNECTED\n")
 
     async def clone_database(self):
         await self.DB_CONNECTION.execute('CREATE TABLE IF NOT EXISTS guilds (guild_id VARCHAR(27) NOT NULL, prefix VARCHAR(108) NOT NULL, tag_messages SWITCH NOT NULL, PRIMARY KEY (guild_id));')
+        print("\nDATABASE CLONED\n")
         self.DATABASE['guilds'] = {}
         self.DATABASE['guilds'] = {result['guild_id']: {k: v for k, v in result.items() if k != 'guild_id'} for result in await self.DB_CONNECTION.fetch("SELECT * FROM guilds")}
         return
 
     async def startup(self):
         await self.wait_until_ready()
+        print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
 
