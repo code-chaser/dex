@@ -160,7 +160,12 @@ class ModSet(commands.Cog):
             embed.add_field(
                 name="Done",
                 value="Prefix Space is now " + prefix_space_switch,
-                inline=True
+                inline=False
+            )
+            embed.add_field(
+                name="Prefix",
+                value="`" + prefix + "`",
+                inline=False
             )
         await ctx.send(embed=embed)
 
