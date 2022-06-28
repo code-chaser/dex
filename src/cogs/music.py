@@ -186,7 +186,7 @@ class Music(commands.Cog):
             await ctx.voice_client.disconnect()
     # ----------------------------------------------------------------------------------------------------------------------
 
-    async def play_music_from_player(self, ctx, *, player, data):
+    async def play_music_from_player(self, ctx, *, player):
         if player is None:
             return
         self.properties[str(ctx.guild.id)]["currently_playing_player"] = player
