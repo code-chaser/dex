@@ -52,7 +52,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         else:
             return None
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return [cls(discord.FFmpegPCMAudio(filename, **FFMPEG_OPTIONS), data=data), data]
+        return cls(discord.FFmpegPCMAudio(filename, **FFMPEG_OPTIONS), data=data)
     # ----------------------------------------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -208,6 +208,9 @@ class Music(commands.Cog):
                             value=self.properties[str(ctx.guild.id)]["current"]+1, inline=False)
             embed.add_field(name="Volume", value=str(
                 int(self.properties[str(ctx.guild.id)]["vol"] * 100)) + "%", inline=False)
+            print("\n\n********************************\nthis is player data:\n")
+            print(player.thumbnail)
+            print("\n\n********************************\n\n")
             # View
             # restart_btn = Button()
             # previous_btn = Button()
@@ -240,12 +243,10 @@ class Music(commands.Cog):
                     self.properties[str(ctx.guild.id)]["current"] += 1
                 self.properties[str(ctx.guild.id)]["current"] %= len(
                     self.music_queue[str(ctx.guild.id)])
-                player_and_data = await YTDLSource.from_url(self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][2], loop=self.bot.loop, stream=self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][3])
-                player = player_and_data[0]
-                data = player_and_data[1]
+                player = await YTDLSource.from_url(self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][2], loop=self.bot.loop, stream=self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][3])
                 self.music_queue[str(ctx.guild.id)][self.properties[str(
                     ctx.guild.id)]["current"]][0] = player
-                await self.play_music_from_player(self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][1], player=player, data=data)
+                await self.play_music_from_player(self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][1], player=player)
             await asyncio.sleep(0.5)
         self.properties[str(ctx.guild.id)]["inside_keep_playing"] = False
         return
@@ -293,9 +294,7 @@ class Music(commands.Cog):
         joined = await self.join_command(ctx)
         if joined == False:
             return
-        player_and_data = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-        player = player_and_data[0]
-        data = player_and_data[1]
+        player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
         if player is None:
             async with ctx.typing():
                 embed = discord.Embed(
@@ -322,9 +321,6 @@ class Music(commands.Cog):
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue[str(ctx.guild.id)]), inline=True)
         await ctx.send(embed=embed)
-        print("\n\n************************\nthis is data:\n\n")
-        print(data)
-        print("\n\n************************\n")
         if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
             await self.keep_playing(ctx)
         return
@@ -340,9 +336,7 @@ class Music(commands.Cog):
         last_url = urls.pop()
         for url in urls:
             url = url.strip()
-            player_and_data = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            player = player_and_data[0]
-            data = player_and_data[1]
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
             if player is None:
                 async with ctx.typing():
                     embed = discord.Embed(
@@ -380,9 +374,7 @@ class Music(commands.Cog):
         joined = await self.join_command(ctx)
         if joined == False:
             return
-        player_and_data = await YTDLSource.from_url(url, loop=self.bot.loop)
-        player = player_and_data[0]
-        data = player_and_data[1]
+        player = await YTDLSource.from_url(url, loop=self.bot.loop)
         if player is None:
             async with ctx.typing():
                 embed = discord.Embed(
@@ -424,9 +416,7 @@ class Music(commands.Cog):
         last_url = urls.pop()
         for url in urls:
             url = url.strip()
-            player_and_data = await YTDLSource.from_url(url, loop=self.bot.loop)
-            player = player_and_data[0]
-            data = player_and_data[1]
+            player = await YTDLSource.from_url(url, loop=self.bot.loop)
             if player is None:
                 async with ctx.typing():
                     embed = discord.Embed(
@@ -454,7 +444,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
                 # embed.set_image(url="https://img.youtube.com/vi/" + player + "/0.jpg")
-                # embed.set_image(url=data[])
+                # embed.set_image(url=player.thumbnail)
             await ctx.send(embed=embed)
         await self.dplay_command(ctx, url=last_url)
         return
