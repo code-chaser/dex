@@ -209,7 +209,7 @@ class Music(commands.Cog):
             embed.add_field(name="Volume", value=str(
                 int(self.properties[str(ctx.guild.id)]["vol"] * 100)) + "%", inline=False)
             print("\n\n********************************\nthis is player data:\n")
-            print(player)
+            print(player.thumbnail)
             print("\n\n********************************\n\n")
             # View
             # restart_btn = Button()
@@ -444,6 +444,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
                 # embed.set_image(url="https://img.youtube.com/vi/" + player + "/0.jpg")
+                # embed.set_image(url=player.thumbnail)
             await ctx.send(embed=embed)
         await self.dplay_command(ctx, url=last_url)
         return
