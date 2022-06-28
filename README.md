@@ -31,6 +31,15 @@ Once the bot joins your server, you can get started with `$dex help` to get the 
 You can also check out commands & features [here](https://github.com/code-chaser/dex/tree/main/docs/commandsAndFeatures.md).
 ___
 
+
+<h2 align="center"> Demo Video </h2>
+
+
+https://user-images.githubusercontent.com/63065397/176228328-34b86601-5619-49aa-a03a-8e4e346abd1c.mp4
+
+
+___
+
 <h2 align="center"> DEPENDENCIES </h2>
 <p align="center"><b>PYTHON -> 3.9.10</b>
 
@@ -107,6 +116,8 @@ ___
 ___
 
 <br>
+
+
 
 
 ___
