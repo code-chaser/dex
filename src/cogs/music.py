@@ -201,7 +201,7 @@ class Music(commands.Cog):
                 timestamp=datetime.utcnow()
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Position in queue",
@@ -317,11 +317,12 @@ class Music(commands.Cog):
                 timestamp=datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue[str(ctx.guild.id)]), inline=True)
+            embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
         await ctx.send(embed=embed)
         print("\n\n************************\nthis is data:\n\n")
         print(data)
@@ -365,11 +366,12 @@ class Music(commands.Cog):
                     timestamp=datetime.utcnow(),
                 )
                 embed.set_thumbnail(url=self.MUSIC_ICON)
-                embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+                embed.set_author(name=player.title, url=player.url,
                                  icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
+                embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
             await ctx.send(embed=embed)
         await self.play_command(ctx, url=last_url)
         return
@@ -404,11 +406,12 @@ class Music(commands.Cog):
                 timestamp=datetime.utcnow(),
             )
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue[str(ctx.guild.id)]), inline=True)
+            embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
         await ctx.send(embed=embed)
         if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
             await self.keep_playing(ctx)
@@ -449,11 +452,12 @@ class Music(commands.Cog):
                     timestamp=datetime.utcnow(),
                 )
                 embed.set_thumbnail(url=self.MUSIC_ICON)
-                embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+                embed.set_author(name=player.title, url=player.url,
                                  icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
+                embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
             await ctx.send(embed=embed)
         await self.dplay_command(ctx, url=last_url)
         return
@@ -678,7 +682,7 @@ class Music(commands.Cog):
             )
             player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Remove request by",
@@ -734,7 +738,7 @@ class Music(commands.Cog):
             )
             player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title, url=player.url,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(
