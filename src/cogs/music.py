@@ -208,6 +208,7 @@ class Music(commands.Cog):
                             value=self.properties[str(ctx.guild.id)]["current"]+1, inline=False)
             embed.add_field(name="Volume", value=str(
                 int(self.properties[str(ctx.guild.id)]["vol"] * 100)) + "%", inline=False)
+            embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
             # View
             # restart_btn = Button()
             # previous_btn = Button()
@@ -321,6 +322,7 @@ class Music(commands.Cog):
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue[str(ctx.guild.id)]), inline=True)
+            embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
         await ctx.send(embed=embed)
         print("\n\n************************\nthis is data:\n\n")
         print(data)
@@ -369,6 +371,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
+                embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
             await ctx.send(embed=embed)
         await self.play_command(ctx, url=last_url)
         return
@@ -408,6 +411,7 @@ class Music(commands.Cog):
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Queue Position", value=len(
                 self.music_queue[str(ctx.guild.id)]), inline=True)
+            embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
         await ctx.send(embed=embed)
         if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
             await self.keep_playing(ctx)
@@ -453,8 +457,7 @@ class Music(commands.Cog):
                 embed.add_field(name="Title", value=player.title, inline=False)
                 embed.add_field(name="Queue Position", value=len(
                     self.music_queue[str(ctx.guild.id)]), inline=True)
-                # embed.set_image(url="https://img.youtube.com/vi/" + player + "/0.jpg")
-                # embed.set_image(url=data[])
+                embed.set_image(url="https://img.youtube.com/vi/" + data['id'] + "/0.jpg")
             await ctx.send(embed=embed)
         await self.dplay_command(ctx, url=last_url)
         return
