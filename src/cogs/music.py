@@ -677,7 +677,7 @@ class Music(commands.Cog):
             )
             player = self.music_queue[str(ctx.guild.id)][int(pos)][0]
             embed.set_thumbnail(url=self.MUSIC_ICON)
-            embed.set_author(name=player.title, url="https://www.youtube.com/watch?v=" + data['id'],
+            embed.set_author(name=player.title,
                              icon_url=ctx.author.avatar_url)
             embed.add_field(name="Title", value=player.title, inline=False)
             embed.add_field(name="Remove request by",

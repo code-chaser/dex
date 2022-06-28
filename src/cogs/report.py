@@ -44,27 +44,33 @@ class Report(commands.Cog):
                 len(list(filter(lambda m: str(m.status) == 'dnd', target.members))),
                 len(list(filter(lambda m: str(m.status) == 'offline', target.members)))
             ]
-
-            fields = [
-                ('Title', str(target), True),
-                ('ID', target.id, True),
-                ('Owner', str(target.owner), True),
-                ('Region', target.region, True),
-                ('Created at', target.created_at.strftime(
-                    '%d/%m/%Y %H:%M:%S'), True),
-                ('Members', len(target.members), True),
-                ('Humans', len(list(filter(lambda m: not m.bot, target.members))), True),
-                ('Bots', len(list(filter(lambda m: m.bot, target.members))), True),
-                ('Banned Members', len(await target.bans()), True),
-                ("Members' status", ':green_circle: ' + str(statuses[0]) + ' :orange_circle: ' + str(
-                    statuses[1]) + ' :red_circle: ' + str(statuses[2]) + ' :white_circle: ' + str(statuses[3]), True),
-                ('Text Channels', len(target.text_channels), True),
-                ('Voice Channels', len(target.voice_channels), True),
-                ('Categories', len(target.categories), True),
-                ('Roles', len(target.roles), True),
-                ('Invites', len(await target.invites()), True),
-                ('\u200b', '\u200b', True)
-            ]
+            fields = []
+            try:
+                fields = [
+                    ('Title', str(target), True),
+                    ('ID', target.id, True),
+                    ('Owner', str(target.owner), True),
+                    ('Region', target.region, True),
+                    ('Created at', target.created_at.strftime(
+                        '%d/%m/%Y %H:%M:%S'), True),
+                    ('Members', len(target.members), True),
+                    ('Humans', len(list(filter(lambda m: not m.bot, target.members))), True),
+                    ('Bots', len(list(filter(lambda m: m.bot, target.members))), True),
+                    ('Banned Members', len(await target.bans()), True),
+                    ("Members' status", ':green_circle: ' + str(statuses[0]) + ' :orange_circle: ' + str(
+                        statuses[1]) + ' :red_circle: ' + str(statuses[2]) + ' :white_circle: ' + str(statuses[3]), True),
+                    ('Text Channels', len(target.text_channels), True),
+                    ('Voice Channels', len(target.voice_channels), True),
+                    ('Categories', len(target.categories), True),
+                    ('Roles', len(target.roles), True),
+                    ('Invites', len(await target.invites()), True),
+                    ('\u200b', '\u200b', True)
+                ]
+            except discord.errors.Forbidden:
+                fields = [
+                    ('Title', str(target), True),
+                    ('ID', target.id, True)
+                ]
             for n, v, i in fields:
                 embed.add_field(name=n, value=v, inline=i)
             channel = self.bot.get_channel(
