@@ -234,7 +234,9 @@ class Music(commands.Cog):
 
     async def keep_playing(self, ctx):
         self.properties[str(ctx.guild.id)]["inside_keep_playing"] = True
-        while ((len(self.music_queue[str(ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1) or (self.properties[str(ctx.guild.id)]["loop_queue"] is True)) and (len(self.music_queue[str(ctx.guild.id)]) > 0):
+        bool_flag = len(self.music_queue[str(ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1
+        bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"] is True)) and len(self.music_queue[str(ctx.guild.id)]) > 0
+        while bool_flag:
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.properties[str(ctx.guild.id)]["is_playing"] = True
                 if (not self.properties[str(ctx.guild.id)]["repeat_song"]):
@@ -264,6 +266,8 @@ class Music(commands.Cog):
                 return
             if ctx.voice_client.is_paused():
                 ctx.voice_client.resume()
+                if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+                    await self.keep_playing(ctx)
             elif len(self.music_queue[str(ctx.guild.id)]) > 0:
                 if not ctx.voice_client.is_playing():
                     if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
@@ -506,6 +510,8 @@ class Music(commands.Cog):
                 inline=True
             )
         await ctx.send(embed=embed)
+        if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+            await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -557,6 +563,8 @@ class Music(commands.Cog):
                 inline=True
             )
         await ctx.send(embed=embed)
+        if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+            await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -571,6 +579,8 @@ class Music(commands.Cog):
         self.properties[str(ctx.guild.id)]["current"] -= (
             1 if not self.properties[str(ctx.guild.id)]["repeat_song"] else 0)
         ctx.voice_client.stop()
+        if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+            await self.keep_playing(ctx)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -689,6 +699,8 @@ class Music(commands.Cog):
             self.properties[str(ctx.guild.id)]["repeat_song"] = False
             self.properties[str(ctx.guild.id)]["current"] -= 1
             ctx.voice_client.stop()
+        if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+            await self.keep_playing(ctx)
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -742,6 +754,8 @@ class Music(commands.Cog):
         self.properties[str(ctx.guild.id)]["repeat_song"] = False
         self.properties[str(ctx.guild.id)]["current"] = pos - 1
         ctx.voice_client.stop()
+        if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+            await self.keep_playing(ctx)
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="volume", aliases=["vol"], help="changes the volume of the music player")
@@ -817,21 +831,23 @@ class Music(commands.Cog):
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
-        else:
-            if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                if self.properties[str(ctx.guild.id)]["current"] < len(self.music_queue[str(ctx.guild.id)]) - 1 or self.properties[str(ctx.guild.id)]["loop_queue"]:
-                    self.properties[str(ctx.guild.id)]["current"] += 0
-                    self.properties[str(ctx.guild.id)]["repeat_song"] = False
-                    ctx.voice_client.stop()
-                else:
-                    async with ctx.typing():
-                        embed = discord.Embed(
-                            title="Error",
-                            description="Nothing to play after this",
-                            colour=0xff0000,
-                            timestamp=datetime.utcnow()
-                        )
-                    await ctx.send(embed=embed)
+            return
+        if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
+            if self.properties[str(ctx.guild.id)]["current"] < len(self.music_queue[str(ctx.guild.id)]) - 1 or self.properties[str(ctx.guild.id)]["loop_queue"]:
+                self.properties[str(ctx.guild.id)]["current"] += 0
+                self.properties[str(ctx.guild.id)]["repeat_song"] = False
+                ctx.voice_client.stop()
+                if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+                    await self.keep_playing(ctx)
+            else:
+                async with ctx.typing():
+                    embed = discord.Embed(
+                        title="Error",
+                        description="Nothing to play after this",
+                        colour=0xff0000,
+                        timestamp=datetime.utcnow()
+                    )
+                await ctx.send(embed=embed)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -842,21 +858,23 @@ class Music(commands.Cog):
             async with ctx.typing():
                 embed = self.embed_error_no_vc_dex
             await ctx.send(embed=embed)
-        else:
-            if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-                if self.properties[str(ctx.guild.id)]["current"] > 0 or self.properties[str(ctx.guild.id)]["loop_queue"]:
-                    self.properties[str(ctx.guild.id)]["current"] -= 2
-                    self.properties[str(ctx.guild.id)]["repeat_song"] = False
-                    ctx.voice_client.stop()
-                else:
-                    async with ctx.typing():
-                        embed = discord.Embed(
-                            title="Error",
-                            description="Nothing to play before this",
-                            colour=0xff0000,
-                            timestamp=datetime.utcnow()
-                        )
-                    await ctx.send(embed=embed)
+            return
+        if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
+            if self.properties[str(ctx.guild.id)]["current"] > 0 or self.properties[str(ctx.guild.id)]["loop_queue"]:
+                self.properties[str(ctx.guild.id)]["current"] -= 2
+                self.properties[str(ctx.guild.id)]["repeat_song"] = False
+                ctx.voice_client.stop()
+                if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
+                    await self.keep_playing(ctx)
+            else:
+                async with ctx.typing():
+                    embed = discord.Embed(
+                        title="Error",
+                        description="Nothing to play before this",
+                        colour=0xff0000,
+                        timestamp=datetime.utcnow()
+                    )
+                await ctx.send(embed=embed)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
