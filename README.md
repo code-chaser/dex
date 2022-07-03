@@ -32,7 +32,7 @@ You can also check out commands & features [here](https://github.com/code-chaser
 ___
 
 
-<h2 align="center"> Demo Video </h2>
+<h2 align="center"> DEMO VIDEO </h2>
 
 
 https://user-images.githubusercontent.com/63065397/176365615-b1a43fd8-ea54-40ac-a247-132b6b0efd65.mp4
@@ -40,8 +40,154 @@ https://user-images.githubusercontent.com/63065397/176365615-b1a43fd8-ea54-40ac-
 
 ___
 
+
 <h2 align="center"> DEPENDENCIES </h2>
-<p align="center"><b>PYTHON -> 3.9.10</b>
+<p align="center"><b>PYTHON == <code>3.9.10</code></b>
+
+<table align="center">
+
+
+<tr>
+<th>Module</th>
+<th>Version</th>
+<th>Installation</th>
+<th>Description</th>
+</tr>
+
+
+<tr>
+<td><b>discord.py</b></td>
+<td><code>1.7.3</code></td>
+<td>
+
+```bash
+pip install discord.py==1.7.3
+```
+
+</td>
+<td>
+
+- Well, this is the backbone of the bot!
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>youtube_dl</b></td>
+<td><code>2021.12.17</code></td>
+<td>
+
+```bash
+pip install youtube_dl==2021.12.17
+```
+
+</td>
+<td>
+
+- Fetches music data from YouTube;
+- Commands `play`, `playm`, `dplay`, `dplaym` depend on this;
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>aiohttp</b></td>
+<td><code>3.7.4</code></td>
+<td>
+
+```bash
+pip install aiohttp==3.7.4
+```
+
+</td>
+<td>
+
+- Library for making async HTTP requests;
+- Commands `inspire`, `apod`, `meme`, `reddit` depend on this;
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>async-timeout</b></td>
+<td><code>3.0.1</code></td>
+<td>
+
+```bash
+pip install async-timeout==3.0.1
+```
+
+</td>
+<td>
+
+- Asyncio compatible timeout context manager;
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>typing</b></td>
+<td><code>3.7.4.3</code></td>
+<td>
+
+```bash
+pip install typing==3.7.4.3
+```
+
+</td>
+<td>
+
+- Required for type hinting in python;
+- Installation not required for python`>=3.5`;
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>asyncio</b></td>
+<td><code>3.4.3</code></td>
+<td>
+
+```bash
+pip install asyncio==3.4.3
+```
+
+</td>
+<td>
+
+- Required for writing concurrent code in python;
+- Installation not required for python`>=3.4`;
+
+</td>
+</tr>
+
+
+<tr>
+<td><b>asyncpg</b></td>
+<td><code>0.25.0</code></td>
+<td>
+
+```bash
+pip install asyncpg==0.25.0
+```
+
+</td>
+<td>
+
+- Library for making async postgreSQL queries;
+- Most basic feature, the bot prefix depends on it;
+- Bot Prefix (for the corresponding server) is fetched using this library;
+
+</td>
+</tr>
+</table>
+
+<!--
 
 - **discord.py**:
   - version = `1.7.3`
@@ -113,11 +259,12 @@ ___
     ```python
     import asyncpg
     ```
+-->    
+
 ___
 
-<br>
 
-
+<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>
 
 
 ___
