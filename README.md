@@ -264,7 +264,7 @@ pip install asyncpg==0.25.0
 ___
 
 
-<p align="right"><b><a href="https://github.com/code-chaser/dex#---dex-discord-bot--------">Bact to top</a></b></p>
+<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>
 
 
 ___
