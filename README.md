@@ -105,7 +105,7 @@ pip install aiohttp==3.7.4
 <td>
 
 - Library for making async HTTP requests;
-- Commands `inspire`, `apod`, `meme`, `reddit` depend on this;
+- Commands `inspire`, `apod`, `meme`, `reddit`, `covid-19`, `lyrics`, `cf-handle` depend on this;
 
 </td>
 </tr>
@@ -264,7 +264,7 @@ pip install asyncpg==0.25.0
 ___
 
 
-<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>
+<p align="right"><b><a href="https://github.com/code-chaser/dex#---dex-discord-bot--------">Bact to top</a></b></p>
 
 
 ___
