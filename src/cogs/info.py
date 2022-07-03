@@ -8,7 +8,7 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="userinfo", aliases=["ui", "memberinfo", "mi"], help="shows user info")
+    @commands.command(name="userinfo", aliases=["ui", "memberinfo", "mi"], help="shows user information")
     async def userinfo_command(self, ctx, target: Optional[discord.Member]):
         target = target or ctx.author
         embed = discord.Embed(title="User Information",

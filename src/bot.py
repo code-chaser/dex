@@ -16,6 +16,7 @@ class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(
             command_prefix=self.get_pref,
+            help_command=None,
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,

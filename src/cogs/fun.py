@@ -84,7 +84,7 @@ class Fun(commands.Cog):
                 return (data_json)
 
     @commands.command(name="reddit", aliases=["subreddit"], help="shows top headlines of the given subreddit")
-    async def subreddit_command(self, ctx, subreddit, number: Optional[int]):
+    async def reddit_command(self, ctx, subreddit, number: Optional[int]):
         data = await self.get_subreddit(subreddit)
         if ('message' in data.keys()):
             if data['message'] == "Not Found":

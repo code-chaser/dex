@@ -704,7 +704,7 @@ class Music(commands.Cog):
         await ctx.send(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="jump", alises=["jumpto"], help="jumps to a song in the queue, takes song position as argument")
+    @commands.command(name="jump", aliases=["jumpto"], help="jumps to a song in the queue, takes song position as argument")
     async def jump_command(self, ctx, pos):
         self.add_guild(ctx)
         pos = int(pos)
