@@ -35,33 +35,34 @@ class Codeforces(commands.Cog):
                                       timestamp=datetime.datetime.utcnow())
             await ctx.reply(embed=embed)
             return
-        async with ctx.typing():
-            embed = discord.Embed(title=username,
-                                  description=(handle["result"][0]["firstName"] if "firstName" in handle["result"][0] else "") + " " + (
-                                      handle["result"][0]["lastName"] if "lastName" in handle["result"][0] else ""),
-                                  colour=self.cf_red if handle["result"][0]["maxRating"] >= 2400 else self.cf_orange if handle["result"][0]["maxRating"] >= 2200 else self.cf_violet if handle["result"][0]["maxRating"] >= 1900 else self.cf_blue if handle[
-                                      "result"][0]["maxRating"] >= 1600 else self.cf_cyan if handle["result"][0]["maxRating"] >= 1400 else self.cf_green if handle["result"][0]["maxRating"] >= 1200 else self.cf_gray,
-                                  timestamp=datetime.datetime.utcnow())
-            embed.add_field(name="City", value=handle["result"][0]["city"]
-                            if "city" in handle["result"][0] else "Unknown", inline=True)
-            embed.add_field(name="Country", value=handle["result"][0]["country"]
-                            if "country" in handle["result"][0] else "Unknown", inline=True)
-            embed.add_field(
-                name="Friend of", value=handle["result"][0]["friendOfCount"], inline=True)
-            embed.add_field(name="Max Rating",
-                            value=handle["result"][0]["maxRating"], inline=True)
-            embed.add_field(name="Max Rank",
-                            value=handle["result"][0]["maxRank"], inline=True)
-            embed.add_field(name="Organization", value=handle["result"][0]["organization"]
-                            if handle["result"][0]["organization"] != "" else "Unknown", inline=True)
-            embed.add_field(
-                name="Rating", value=handle["result"][0]["rating"], inline=True)
-            embed.add_field(
-                name="Rank", value=handle["result"][0]["rank"], inline=True)
-            embed.add_field(name="Last Online", value=datetime.datetime.utcfromtimestamp(
-                handle["result"][0]["lastOnlineTimeSeconds"]).strftime('%Y-%m-%d %H:%M:%S'), inline=True)
-            embed.set_thumbnail(url=handle["result"][0]["avatar"])
-        await ctx.reply(embed=embed)
+        for res in handle["result"]:
+            async with ctx.typing():
+                embed = discord.Embed(title=username,
+                                    description=(res["firstName"] if "firstName" in res else "") + " " + (
+                                        res["lastName"] if "lastName" in res else ""),
+                                    colour=self.cf_red if res["maxRating"] >= 2400 else self.cf_orange if res["maxRating"] >= 2200 else self.cf_violet if res["maxRating"] >= 1900 else self.cf_blue if handle[
+                                        "result"][0]["maxRating"] >= 1600 else self.cf_cyan if res["maxRating"] >= 1400 else self.cf_green if res["maxRating"] >= 1200 else self.cf_gray,
+                                    timestamp=datetime.datetime.utcnow())
+                embed.add_field(name="City", value=res["city"]
+                                if "city" in res else "Unknown", inline=True)
+                embed.add_field(name="Country", value=res["country"]
+                                if "country" in res else "Unknown", inline=True)
+                embed.add_field(
+                    name="Friend of", value=res["friendOfCount"], inline=True)
+                embed.add_field(name="Max Rating",
+                                value=res["maxRating"], inline=True)
+                embed.add_field(name="Max Rank",
+                                value=res["maxRank"], inline=True)
+                embed.add_field(name="Organization", value=res["organization"]
+                                if res["organization"] != "" else "Unknown", inline=True)
+                embed.add_field(
+                    name="Rating", value=res["rating"], inline=True)
+                embed.add_field(
+                    name="Rank", value=res["rank"], inline=True)
+                embed.add_field(name="Last Online", value=datetime.datetime.utcfromtimestamp(
+                    res["lastOnlineTimeSeconds"]).strftime('%Y-%m-%d %H:%M:%S'), inline=True)
+                embed.set_thumbnail(url=res["avatar"])
+            await ctx.reply(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
 
