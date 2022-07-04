@@ -5,7 +5,7 @@ from discord.ext import commands
 
 
 class Help(commands.Cog):
-    commands_descriptions = {
+    commands_description = {
         "Music - Basic": {
             "join": ["Joins the voice channel of the author", ["connect"]],
             "leave": ["Leaves if connected to any voice channel", ["disconnect", "dc"]],
@@ -70,13 +70,13 @@ class Help(commands.Cog):
                 color=self.bot.DEX_YELLOW,
                 timestamp=datetime.utcnow(),
             )
-            for category in self.commands_descriptions.keys():
+            for category in self.commands_description.keys():
                 embed.add_field(name='**'+category+'**', value="\n".join(["**`{}`** - *{}*".format(
-                    command, description[0]) for command, description in self.commands_descriptions[category].items()]), inline=False)
+                    command, description[0]) for command, description in self.commands_description[category].items()]), inline=False)
             embed.set_footer(
                 text="Use `help <command>` to get more info about a command"
             )
-            embed.set_author(icon_url=ctx.author.avatar_url, name="| " +
+            embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                              self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help")
         await ctx.reply(embed=embed)
         return
@@ -88,9 +88,9 @@ class Help(commands.Cog):
             return
         invalid = True
         category = None
-        for key in self.commands_descriptions.keys():
-            for sub_key in self.commands_descriptions[key].keys():
-                if (command_name in self.commands_descriptions[key][sub_key][1]) or (sub_key == command_name):
+        for key in self.commands_description.keys():
+            for sub_key in self.commands_description[key].keys():
+                if (command_name in self.commands_description[key][sub_key][1]) or (sub_key == command_name):
                     invalid = False
                     command_name = sub_key
                     category = key
@@ -104,7 +104,7 @@ class Help(commands.Cog):
                     color=0xff0000,
                     timestamp=datetime.utcnow()
                 )
-                embed.set_author(icon_url=ctx.author.avatar_url, name="| " +
+                embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                                  self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help " + command_name)
             await ctx.reply(embed=embed)
             return
@@ -116,20 +116,20 @@ class Help(commands.Cog):
                 timestamp=datetime.utcnow()
             )
             embed.add_field(
-                name="Description", value=self.commands_descriptions[category][command_name][0], inline=False)
+                name="Description", value=self.commands_description[category][command_name][0], inline=False)
             aliases_string = "None"
-            if len(self.commands_descriptions[category][command_name][1]) > 0:
+            if len(self.commands_description[category][command_name][1]) > 0:
                 aliases_string = "["
-                for i in range(0, len(self.commands_descriptions[category][command_name][1])):
+                for i in range(0, len(self.commands_description[category][command_name][1])):
                     aliases_string += "`" + \
-                        self.commands_descriptions[category][command_name][1][i] + "`"
-                    if i != len(self.commands_descriptions[category][command_name][1]) - 1:
+                        self.commands_description[category][command_name][1][i] + "`"
+                    if i != len(self.commands_description[category][command_name][1]) - 1:
                         aliases_string += ", "
                 aliases_string += "]"
             embed.add_field(name="Aliases", value=aliases_string, inline=False)
             embed.set_footer(text="Use `"+self.bot.DATABASE['guilds'][str(
                 ctx.guild.id)]['prefix']+"help` to get description of all commands")
-            embed.set_author(icon_url=ctx.author.avatar_url, name="| " +
+            embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                              self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help " + command_name)
         await ctx.reply(embed=embed)
         return

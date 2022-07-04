@@ -59,7 +59,7 @@ class ModSet(commands.Cog):
             )
         await ctx.reply(embed=embed)
 
-    @commands.command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
+    @commands.command(name="prefix", aliases=["changeprefix", "changepref"], help="changes the prefix to the appended string")
     async def changeprefix_command(self, ctx, *args):
         prefix = "".join(args)
         if ctx.guild.id == int(os.environ['DEX_PUBLIC_BOT_SERVER']):
@@ -100,7 +100,7 @@ class ModSet(commands.Cog):
                     name="Error", value="prefix length must be between (1 - 27)", inline=True)
                 await ctx.reply(embed=embed)
 
-    @commands.command(name="prefixspace", aliases=["prefspace"], help="toggles the trailing space in the prefix")
+    @commands.command(name="prefixspace", aliases=["prefspace", "prefspc"], help="toggles the trailing space in the prefix")
     async def prefixspace_command(self, ctx, switch: Optional[str]):
         if ctx.guild.id == int(os.environ['DEX_PUBLIC_BOT_SERVER']):
             embed = discord.Embed(title="Status",
