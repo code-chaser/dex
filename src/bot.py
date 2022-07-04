@@ -58,16 +58,16 @@ class Bot(commands.Bot):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
+        await self.wait_until_ready()
         print("\n\n len(self.guilds) = " + str(len(self.guilds)) + "\n\n")
-        for guild_id in self.DATABASE['guilds'].keys():
-            guild = self.get_guild(int(guild_id))
+        for guild in self.guilds:
             embed = discord.Embed(
                 title="**NEW UPDATE**",
                 description="**[*dex*]("+self.REPOSITORY_URL+") version 2.1.1**",
                 color=self.DEX_YELLOW,
                 timestamp=datetime.utcnow()
             )
-            changes1 = "**`1.`**: *Help Menu is customized; Use* `"+self.DATABASE['guilds'][guild_id]['prefix']+"help` *to check it out!*\n"
+            changes1 = "**`1.`**: *Help Menu is customized; Use* `"+self.DATABASE['guilds'][str(guild.id)]['prefix']+"help` *to check it out!*\n"
             changes2 = "**`2.`**: *Command* `changepref` *is now changed to just* `prefix` *(though the former is still valid);*\n"
             changes3 = "**`3.`**: *Command* `prefixspace` *got a new alias* `prefspc`*;*\n"
             embed.add_field(
