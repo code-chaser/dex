@@ -58,6 +58,7 @@ class Bot(commands.Bot):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
+        print("\n\n len(self.guilds) = " + str(len(self.guilds)) + "\n\n")
         for guild in self.guilds:
             embed = discord.Embed(
                 title="**NEW UPDATE**",
