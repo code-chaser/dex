@@ -59,7 +59,8 @@ class Bot(commands.Bot):
         await self.connect_to_db()
         await self.clone_database()
         print("\n\n len(self.guilds) = " + str(len(self.guilds)) + "\n\n")
-        for guild in self.guilds:
+        for guild_id in self.DATABASE['guilds'].keys():
+            guild = self.get_guild(int(guild_id))
             embed = discord.Embed(
                 title="**NEW UPDATE**",
                 description="**[*dex*]("+self.REPOSITORY_URL+") version 2.1.1**",
