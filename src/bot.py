@@ -58,6 +58,29 @@ class Bot(commands.Bot):
         print("\nINSIDE Bot.startup()\n")
         await self.connect_to_db()
         await self.clone_database()
+        for guild in self.guilds:
+            embed = discord.Embed(
+                title="**NEW UPDATE**",
+                description="**[*dex*]("+self.REPOSITORY_URL+") version 2.1.1**",
+                color=self.DEX_YELLOW,
+                timestamp=datetime.utcnow()
+            )
+            changes1 = "**`1.`**: *Help Menu is customized; Use* `"+self.DATABASE['guilds'][str(guild.id)]['prefix']+"help` *to check it out!*\n"
+            changes2 = "**`2.`**: *Command* `changepref` *is now changed to just* `prefix` *(though the former is still valid);*\n"
+            changes3 = "**`3.`**: *Command* `prefixspace` *got a new alias* `prefspc`*;*\n"
+            embed.add_field(
+                name="**Changes**",
+                value=changes1+changes2+changes3,
+                inline=False
+            )
+            embed.set_author(icon_url=self.CC_LOGO_URL,
+                             name="|  codechaser#0647", url=self.REPOSITORY_URL)
+            general = None
+            for channel in guild.text_channels:
+                if channel.permissions_for(guild.me).send_messages:
+                    general = channel
+            if general is not None:
+                await general.send(embed=embed)
 
     def get_pref(self, _, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
