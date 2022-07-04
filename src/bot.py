@@ -16,6 +16,7 @@ class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(
             command_prefix=self.get_pref,
+            help_command=None,
             intents=discord.Intents.all(),
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
@@ -137,7 +138,7 @@ class Bot(commands.Bot):
         else:
             raise error
         embed.add_field(name=n, value=v, inline=False)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     def intro_msg_embed(self, guild):
         description = ('\nThanks for adding me to ' + guild.name + '!')
