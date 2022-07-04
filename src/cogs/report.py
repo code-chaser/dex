@@ -88,12 +88,17 @@ class Report(commands.Cog):
                               timestamp=message.created_at)
         embed.set_thumbnail(url=target.avatar_url)
         embed.set_author(name=str(target), icon_url=target.avatar_url)
-        embed.add_field(name='Message', value=message.content, inline=False)
+        embeds_list = message.embeds
+        if len(message.embeds) > 0:
+            embed.add_field(name='Message Type', value='Embed', inline=True)
+        else:
+            embed.add_field(name='Message', value=message.content, inline=False)
         channel = self.bot.get_channel(
             int(os.getenv('DEX_USAGE_HISTORY_CHANNEL_ID'))
         )
         await channel.send(embed=embed)
-
+        for embed in embeds_list:
+            await channel.send(embed=embed)
         embed = discord.Embed(
             title='Message Information',
             colour=target.colour if target.colour is not None else 0x530cff,

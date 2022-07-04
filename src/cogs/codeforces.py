@@ -33,7 +33,7 @@ class Codeforces(commands.Cog):
                                       description=handle["comment"],
                                       colour=0xff0000,
                                       timestamp=datetime.datetime.utcnow())
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             return
         async with ctx.typing():
             embed = discord.Embed(title=username,
@@ -61,7 +61,7 @@ class Codeforces(commands.Cog):
             embed.add_field(name="Last Online", value=datetime.datetime.utcfromtimestamp(
                 handle["result"][0]["lastOnlineTimeSeconds"]).strftime('%Y-%m-%d %H:%M:%S'), inline=True)
             embed.set_thumbnail(url=handle["result"][0]["avatar"])
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
 

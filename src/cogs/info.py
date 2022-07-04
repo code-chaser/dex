@@ -31,7 +31,7 @@ class Info(commands.Cog):
         ]
         for n, v, i in fields:
             embed.add_field(name=n, value=v, inline=i)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name="serverinfo", aliases=["si", "guildinfo", "gi"], help="shows server information")
     async def serverinfo_command(self, ctx, target: Optional[discord.Guild]):
@@ -79,7 +79,7 @@ class Info(commands.Cog):
             ]
             for n, v, i in fields:
                 embed.add_field(name=n, value=v, inline=i)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):

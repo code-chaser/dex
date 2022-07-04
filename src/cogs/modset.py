@@ -39,7 +39,7 @@ class ModSet(commands.Cog):
                     value="Invalid value provided",
                     inline=True
                 )
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             return
 
         await self.bot.DB_CONNECTION.execute('UPDATE guilds SET tag_messages = \'' + tag_switch +
@@ -57,7 +57,7 @@ class ModSet(commands.Cog):
                 value="Message Tags are now " + tag_switch,
                 inline=True
             )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name="changepref", aliases=["changeprefix"], help="changes the prefix to the appended string")
     async def changeprefix_command(self, ctx, *args):
@@ -69,7 +69,7 @@ class ModSet(commands.Cog):
                                   timestamp=datetime.utcnow())
             embed.add_field(
                 name="Error", value="Prefix changes are not allowed on this server!", inline=True)
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
         else:
             if ctx.author != ctx.guild.owner:
                 embed = discord.Embed(title="Status",
@@ -78,7 +78,7 @@ class ModSet(commands.Cog):
                                       timestamp=datetime.utcnow())
                 embed.add_field(
                     name="Error", value="Only server owner can change the prefix!", inline=True)
-                await ctx.send(embed=embed)
+                await ctx.reply(embed=embed)
                 return
             if (prefix != "") and (len(prefix) <= 27):
                 prefix += " "
@@ -91,14 +91,14 @@ class ModSet(commands.Cog):
                                       timestamp=datetime.utcnow())
                 embed.add_field(
                     name="Done", value="New Prefix is `" + prefix + "`", inline=True)
-                await ctx.send(embed=embed)
+                await ctx.reply(embed=embed)
             else:
                 embed = discord.Embed(title="Status",
                                       colour=0xff0000,
                                       timestamp=datetime.utcnow())
                 embed.add_field(
                     name="Error", value="prefix length must be between (1 - 27)", inline=True)
-                await ctx.send(embed=embed)
+                await ctx.reply(embed=embed)
 
     @commands.command(name="prefixspace", aliases=["prefspace"], help="toggles the trailing space in the prefix")
     async def prefixspace_command(self, ctx, switch: Optional[str]):
@@ -109,7 +109,7 @@ class ModSet(commands.Cog):
                                   timestamp=datetime.utcnow())
             embed.add_field(
                 name="Error", value="Prefix changes are not allowed on this server!", inline=True)
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             return
         if ctx.author != ctx.guild.owner:
             embed = discord.Embed(title="Status",
@@ -118,7 +118,7 @@ class ModSet(commands.Cog):
                                   timestamp=datetime.utcnow())
             embed.add_field(
                 name="Error", value="Only server owner can use this command!", inline=True)
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             return
         prefix_space_switch = 'on' if self.bot.DATABASE['guilds'][str(
             ctx.guild.id)]['prefix'][-1] == ' ' else 'off'
@@ -143,7 +143,7 @@ class ModSet(commands.Cog):
                     value="Invalid value provided",
                     inline=True
                 )
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             return
 
         prefix = self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] = self.bot.DATABASE['guilds'][str(
@@ -167,7 +167,7 @@ class ModSet(commands.Cog):
                 value="`" + prefix + "`",
                 inline=False
             )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name="goodbye!", aliases=["leaveThisServer"], help="makes the bot to leave the server (only for server owner)")
     async def goodbye_command(self, ctx):
@@ -178,7 +178,7 @@ class ModSet(commands.Cog):
                                   timestamp=datetime.utcnow())
             embed.add_field(
                 name="Error", value="Only server owner can use this command!", inline=True)
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
         else:
             async with ctx.typing():
                 embed = discord.Embed(title="**GOOD BYE!**", description=f"""
@@ -193,7 +193,7 @@ class ModSet(commands.Cog):
                 embed.set_footer(text="made by codechaser",
                                  icon_url="https://avatars.githubusercontent.com/u/63065397?v=4")
                 embed.set_thumbnail(url=ctx.guild.icon_url)
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
             guild = ctx.guild
             await ctx.guild.leave()
         return
@@ -211,7 +211,7 @@ class ModSet(commands.Cog):
 
             embed.set_thumbnail(
                 url="https://avatars.githubusercontent.com/u/63065397?v=4")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):
