@@ -67,7 +67,7 @@ class Bot(commands.Bot):
                 color=self.DEX_YELLOW,
                 timestamp=datetime.utcnow()
             )
-            changes1 = "**`1.`**: *Help Menu is customized; Use* `"+self.DATABASE['guilds'][str(guild.id)]['prefix']+"help` *to check it out!*\n"
+            changes1 = "**`1.`**: *Help Menu is customized; Use* `"+self.DATABASE['guilds'][guild_id]['prefix']+"help` *to check it out!*\n"
             changes2 = "**`2.`**: *Command* `changepref` *is now changed to just* `prefix` *(though the former is still valid);*\n"
             changes3 = "**`3.`**: *Command* `prefixspace` *got a new alias* `prefspc`*;*\n"
             embed.add_field(
