@@ -37,7 +37,7 @@ class Help(commands.Cog):
         },
         "Mod Settings": {
             "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"]],
-            "changepref": ["Changes the prefix for the server to the appended string", ["changeprefix"]],
+            "prefix": ["Changes the prefix for the server to the appended string", ["changeprefix", "changepref"]],
             "prefixspace": ["Toggles the trailing space in the prefix", ["prefspace", "prefspc"]],
             "goodbye!": ["Leaves the server", ["leaveThisServer"]],
             "madeby?": ["Show information about the creator of the bot", []]
