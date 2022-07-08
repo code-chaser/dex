@@ -86,7 +86,6 @@ class Bot(commands.Bot):
 
     @tasks.loop(seconds=5)
     async def activity_updates(self):
-        print("\nINSIDE activity_updates()\n")
         user_count = 0
         for g in self.guilds:
             user_count += len(g.members)
