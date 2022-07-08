@@ -84,7 +84,7 @@ class Bot(commands.Bot):
         #     if general is not None:
         #         await general.send(embed=embed)
 
-    @tasks.loop(seconds=5)
+    @tasks.loop(seconds=3)
     async def activity_updates(self):
         user_count = 0
         for g in self.guilds:
