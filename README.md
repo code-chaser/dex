@@ -264,8 +264,8 @@ pip install asyncpg==0.25.0
 ___
 
 
-<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>
-
+<!--<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>-->
+<p align="center"><a href="https://github.com/nastyox/Rando.js#"><img src="http://randojs.com/images/backToTopButtonTransparentBackground.png" alt="Back to top" height="29"/></a></p>
 
 ___
   
