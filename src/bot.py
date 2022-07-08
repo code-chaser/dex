@@ -13,6 +13,7 @@ class Bot(commands.Bot):
     EXHAUSTED_FACE = 'https://user-images.githubusercontent.com/63065397/156922064-95c73c2a-b6cb-402e-b24b-d79fe7bf520a.png'
     DEX_YELLOW = 0x8e38ce
     REPOSITORY_URL = 'https://github.com/code-chaser/dex/'
+    ACTIVITY_UPDATE_SWITCH = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -83,15 +84,25 @@ class Bot(commands.Bot):
         #     if general is not None:
         #         await general.send(embed=embed)
 
-    @tasks.loop(seconds=27)
+    @tasks.loop(seconds=5)
     async def activity_updates(self):
         print("\nINSIDE activity_updates()\n")
         user_count = 0
         for g in self.guilds:
             user_count += len(g.members)
+        name = ""
+        if self.ACTIVITY_UPDATE_SWITCH == 0:
+            name = "$dex help"
+            self.ACTIVITY_UPDATE_SWITCH = 1
+        elif self.ACTIVITY_UPDATE_SWITCH == 1:
+            name = str(user_count) + " users"
+            self.ACTIVITY_UPDATE_SWITCH = 2
+        elif self.ACTIVITY_UPDATE_SWITCH == 2:
+            name = str(len(self.guilds)) + " servers"
+            self.ACTIVITY_UPDATE_SWITCH = 0
         await self.change_presence(activity=discord.Activity(
             type=discord.ActivityType.listening,
-            name="{} users | {} servers".format(user_count, len(self.guilds))
+            name=name
             ))
     
     def get_pref(self, _, message):
