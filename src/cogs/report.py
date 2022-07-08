@@ -18,7 +18,7 @@ class Report(commands.Cog):
             for m in g.members:
                 if m.bot:
                     bot_count += 1
-
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="{} users | {} servers".format(member_count, len(self.bot.guilds))))
         channel = self.bot.get_channel(
             int(os.getenv('DEX_CONSOLE_CHANNEL_ID')))
         embed = discord.Embed(title='Status', colour=0x0023dd,
