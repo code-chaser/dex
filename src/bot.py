@@ -1,6 +1,7 @@
 import discord
 import os
 import asyncpg
+import asyncio
 from datetime import datetime
 from discord.ext import commands
 
@@ -21,9 +22,6 @@ class Bot(commands.Bot):
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
                 name="$dex help",
-                large_image_url=self.EXHAUSTED_FACE,
-                small_image_url=self.EXHAUSTED_FACE,
-                start=datetime(2022, 2, 24),
             ),
         )
         self.DB_CONNECTION = None
@@ -59,6 +57,7 @@ class Bot(commands.Bot):
         await self.connect_to_db()
         await self.clone_database()
         await self.wait_until_ready()
+        self.loop.create_task(self.activity_updates())
         print("\n\n len(self.guilds) = " + str(len(self.guilds)) + "\n\n")
         # for guild in self.guilds:
         #     embed = discord.Embed(
@@ -84,6 +83,15 @@ class Bot(commands.Bot):
         #     if general is not None:
         #         await general.send(embed=embed)
 
+    async def activity_updates(self):
+        print("\nINSIDE activity_updates()\n")
+        while(True):
+            user_count = 0
+            for g in self.guilds:
+                user_count += len(g.members)
+            await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="{} users | {} servers".format(user_count, len(self.guilds))))
+            await asyncio.sleep(60)
+    
     def get_pref(self, _, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']
 
