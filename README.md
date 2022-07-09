@@ -6,7 +6,7 @@
   
   <br>
   
-  <a href="https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=335514139764&scope=bot"><i>dex</i></a> <small>discord bot</small>
+  <a href="https://discord.com/users/946829157445296188"><i>dex</i></a> <small>discord bot</small>
   
   <br>
   
