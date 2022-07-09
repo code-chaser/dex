@@ -148,16 +148,6 @@ class Music(commands.Cog):
     
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        print("printing self.music_queue before: " + str(self.music_queue))
-        if member != self.bot.user:
-            return
-        if after.channel is not None:
-            return
-        if before.channel.guild.id in self.music_queue.keys():
-            self.music_queue.pop(str(before.channel.guild.id))
-        if before.channel.guild.id in self.properties.keys():
-            self.properties.pop(str(before.channel.guild.id))
-        print("printing self.music_queue after: " + str(self.music_queue))
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
