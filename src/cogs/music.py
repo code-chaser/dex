@@ -4,7 +4,7 @@ import youtube_dl
 import asyncio
 from typing import Optional
 from datetime import datetime
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -100,22 +100,70 @@ class Music(commands.Cog):
         # "vol": 1,
         # "loop_queue": False,
         # "repeat_song": False,
-        # "inside_keep_playing": False
+        # "inside_keep_playing": False,
+        # "inactive_time": 0,
+        # "alone_time": 0,
+        # "last_ctx": None
         # }
         # -------------------------------------
         self.music_queue = {}
         # FORMAT OF DICT self.music_queue:
         # [str(guild.id)] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not]
         # -------------------------------------
+        self.timeout_check.start()
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
-    # async def on_voice_state_update(self):
-    #     pass
+    @tasks.loop(seconds=1)
+    async def timeout_check(self):
+        for guild_id in self.properties.keys():
+            bot_voice_client = self.bot.get_guild(int(guild_id)).voice_client
+            if bot_voice_client is None:
+                self.properties[guild_id]["inactive_time"] = -1
+                self.properties[guild_id]["alone_time"] = -1
+                continue
+            if len(self.music_queue[guild_id]) == 0:
+                self.properties[guild_id]["inactive_time"] += 1
+            else:
+                self.properties[guild_id]["inactive_time"] = 0
+            if len(bot_voice_client.channel.members) == 1:
+                self.properties[guild_id]["alone_time"] += 1
+            else:
+                self.properties[guild_id]["alone_time"] = 0
+            if (self.properties[guild_id]["inactive_time"] == 600) or (self.properties[guild_id]["alone_time"] == 600):
+                ctx = self.properties[guild_id]["last_ctx"]
+                await bot_voice_client.disconnect()
+                async with ctx.typing():
+                    embed = discord.Embed(
+                        title="",
+                        description="",
+                        color=0xff0000
+                    )
+                    embed.set_author(name="Left the voice channel due to inactivity")
+                await ctx.reply(embed=embed)
+                self.properties[guild_id]["inactive_time"] = -1
+                self.properties[guild_id]["alone_time"] = -1
+        return
+    # ----------------------------------------------------------------------------------------------------------------------
+    
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        print("printing self.music_queue before: " + str(self.music_queue))
+        if member != self.bot.user:
+            return
+        if after.channel is not None:
+            return
+        if before.channel.guild.id in self.music_queue.keys():
+            self.music_queue.pop(str(before.channel.guild.id))
+        if before.channel.guild.id in self.properties.keys():
+            self.properties.pop(str(before.channel.guild.id))
+        print("printing self.music_queue after: " + str(self.music_queue))
+        return
     # ----------------------------------------------------------------------------------------------------------------------
 
     def add_guild(self, ctx):
         if str(ctx.guild.id) not in self.properties:
+            # properties dict initialization:
             self.properties[str(ctx.guild.id)] = {
                 "is_playing": False,
                 "currently_playing_player": None,
@@ -124,8 +172,12 @@ class Music(commands.Cog):
                 "vol": 1,
                 "loop_queue": False,
                 "repeat_song": False,
-                "inside_keep_playing": False
+                "inside_keep_playing": False,
+                "inactive_time": 0,
+                "alone_time": 0,
+                "last_ctx": None
             }
+        self.properties[str(ctx.guild.id)]["last_ctx"] = ctx
         if str(ctx.guild.id) not in self.music_queue.keys():
             self.music_queue[str(ctx.guild.id)] = []
         return
@@ -133,7 +185,6 @@ class Music(commands.Cog):
 
     @commands.command(name="join", aliases=["connect"], help="joins the voice channel of the author")
     async def join_command(self, ctx):
-        self.add_guild(ctx)
         if ctx.author.voice is None:
             async with ctx.typing():
                 embed = discord.Embed(
@@ -145,6 +196,7 @@ class Music(commands.Cog):
                 embed.set_footer(text="join request from " + ctx.author.name)
             await ctx.reply(embed=embed)
             return False
+        self.add_guild(ctx)
 
         if ctx.voice_client is None:
             await ctx.author.voice.channel.connect()
@@ -170,16 +222,6 @@ class Music(commands.Cog):
 
     @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
     async def leave_command(self, ctx):
-        self.add_guild(ctx)
-        self.music_queue[str(ctx.guild.id)].clear()
-        self.properties[str(ctx.guild.id)]["current"] = -1
-        self.properties[str(ctx.guild.id)]["queued"] = 0
-        self.properties[str(ctx.guild.id)]["vol"] = 1
-        self.properties[str(ctx.guild.id)]["loop_queue"] = False
-        self.properties[str(ctx.guild.id)]["repeat_song"] = False
-        self.properties[str(ctx.guild.id)]["currently_playing_player"] = None
-        self.properties[str(ctx.guild.id)]["is_playing"] = False
-        self.properties[str(ctx.guild.id)]["inside_keep_playing"] = False
         if ctx.voice_client is None:
             embed = self.embed_error_no_vc_dex
             await ctx.reply(embed=embed)
