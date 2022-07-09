@@ -88,7 +88,7 @@ class Bot(commands.Bot):
         user_count = 0
         for g in self.guilds:
             user_count += len(g.members)
-        name = str(user_count) + " users | " + str(len(self.guilds)) + " servers"
+        name = str(user_count) + " users | " + str(len(self.guilds)) + " servers | $dex help"
         await self.change_presence(activity=discord.Activity(
             type=discord.ActivityType.listening,
             name=name
