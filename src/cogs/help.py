@@ -83,46 +83,46 @@ class Help(commands.Cog):
                 len(self.embeds_list)) + " of " + str(len(self.commands_description)) + "\nUse reactions below as buttons to navigate ")
     # ----------------------------------------------------------------------------------------------------------------------
     
-    @commands.Cog.listener()
-    async def on_ready(self):
-        for guild in self.bot.guilds:
-            count = 0
-            if str(guild.id) in ['801427258090192946','802197877039956008']:
-                count = 2
-            spam_channels = []
-            for channel in guild.text_channels:
-                name = str(channel.name).lower()
-                if (name.count("spam", 0, len(name)) + name.count("music", 0, len(name)) + name.count("bot", 0, len(name)) > 0):
-                    spam_channels.append(channel)
+    # @commands.Cog.listener()
+    # async def on_ready(self):
+    #     for guild in self.bot.guilds:
+    #         count = 0
+    #         if str(guild.id) in ['801427258090192946','802197877039956008']:
+    #             count = 2
+    #         spam_channels = []
+    #         for channel in guild.text_channels:
+    #             name = str(channel.name).lower()
+    #             if (name.count("spam", 0, len(name)) + name.count("music", 0, len(name)) + name.count("bot", 0, len(name)) > 0):
+    #                 spam_channels.append(channel)
             
-            for channel in spam_channels:
-                if count == 3:
-                    break
-                if channel.permissions_for(guild.me).send_messages & channel.permissions_for(guild.me).read_messages & channel.permissions_for(guild.me).manage_messages & channel.permissions_for(guild.me).add_reactions:
-                    count += 1
-                    async with channel.typing():
-                        self.embeds_list[0].set_author(icon_url=guild.icon_url, name="|  " +
-                                                    self.bot.DATABASE['guilds'][str(guild.id)]['prefix'] + "user-manual")
-                    msg = await channel.send(embed=self.embeds_list[0])
-                    if msg is not None:
-                        for name, reaction in self.reactions.items():
-                            await msg.add_reaction(reaction)
+    #         for channel in spam_channels:
+    #             if count == 3:
+    #                 break
+    #             if channel.permissions_for(guild.me).send_messages & channel.permissions_for(guild.me).read_messages & channel.permissions_for(guild.me).manage_messages & channel.permissions_for(guild.me).add_reactions:
+    #                 count += 1
+    #                 async with channel.typing():
+    #                     self.embeds_list[0].set_author(icon_url=guild.icon_url, name="|  " +
+    #                                                 self.bot.DATABASE['guilds'][str(guild.id)]['prefix'] + "user-manual")
+    #                 msg = await channel.send(embed=self.embeds_list[0])
+    #                 if msg is not None:
+    #                     for name, reaction in self.reactions.items():
+    #                         await msg.add_reaction(reaction)
                     
-            for channel in guild.text_channels:
-                if count == 3:
-                    break
-                if channel in spam_channels:
-                    continue
-                if channel.permissions_for(guild.me).send_messages:
-                    count += 1
-                    async with channel.typing():
-                        self.embeds_list[0].set_author(icon_url=guild.icon_url, name="|  " +
-                                                    self.bot.DATABASE['guilds'][str(guild.id)]['prefix'] + "user-manual")
-                    msg = await channel.send(embed=self.embeds_list[0])
-                    if msg is not None:
-                        for name, reaction in self.reactions.items():
-                            await msg.add_reaction(reaction)
-        return
+    #         for channel in guild.text_channels:
+    #             if count == 3:
+    #                 break
+    #             if channel in spam_channels:
+    #                 continue
+    #             if channel.permissions_for(guild.me).send_messages:
+    #                 count += 1
+    #                 async with channel.typing():
+    #                     self.embeds_list[0].set_author(icon_url=guild.icon_url, name="|  " +
+    #                                                 self.bot.DATABASE['guilds'][str(guild.id)]['prefix'] + "user-manual")
+    #                 msg = await channel.send(embed=self.embeds_list[0])
+    #                 if msg is not None:
+    #                     for name, reaction in self.reactions.items():
+    #                         await msg.add_reaction(reaction)
+    #     return
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.Cog.listener()
