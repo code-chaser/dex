@@ -55,7 +55,7 @@ class Help(commands.Cog):
         },
         "Help": {
             "help": ["Shows description of commands", []],
-            "user-manual": ["Shows paginated description of commands", ["paginated-help", "help-pages"]],
+            "user-manual": ["Shows paginated description of commands", ["paginated-help", "help-pages"]]
         }
     }
     reactions = {
