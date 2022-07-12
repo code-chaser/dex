@@ -28,7 +28,7 @@ Default set prefix is `$dex ` &nbsp; (yes, mind that trailing space)
 - Try it on your own server: [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=335514139764&scope=bot)
 
 Once the bot joins your server, you can get started with `$dex help` to get the complete list of available commands.
-You can also check out commands & features [here](https://github.com/code-chaser/dex/tree/main/docs/commandsAndFeatures.md).
+You can get the list of all the commands by using `$dex help` or `$dex user-manual`.
 ___
 
 
