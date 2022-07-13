@@ -263,12 +263,19 @@ pip install asyncpg==0.25.0
 ___
 
 
+
 <!--<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>-->
 <p align="center"><a href="https://github.com/code-chaser/dex#"><img src="http://randojs.com/images/backToTopButtonTransparentBackground.png" alt="Back to top" height="29"/></a></p>
 
 ___
-  
-> ***Beep boop. Boop beep! 🤖***
 
-> ***Hope you, like it! 😛***
+### Please see:
+- License: [code-chaser/dex/LICENSE](./LICENSE)
+- Code of Conduct: [code-chaser/dex/CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+
+___
+  
+> ***Beep boop. Boop beep! 🤖*** ***Hope you like it! 😛***
+
+> ***Thanks for the visit!***
 ___
