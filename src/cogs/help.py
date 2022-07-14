@@ -87,7 +87,7 @@ class Help(commands.Cog):
     # async def on_ready(self):
     #     for guild in self.bot.guilds:
     #         count = 0
-    #         if str(guild.id) in ['801427258090192946','802197877039956008']:
+    #         if str(guild.id) in []:
     #             count = 2
     #         spam_channels = []
     #         for channel in guild.text_channels:
