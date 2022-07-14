@@ -179,8 +179,8 @@ pip install asyncpg==0.25.0
 <td>
 
 - Library for making async postgreSQL queries;
-- Most basic feature, the bot prefix depends on it;
-- Bot Prefix (for the corresponding server) is fetched using this library;
+- Required for all the database queries;
+- Server custom prefix is fetched using this library;
 
 </td>
 </tr>
