@@ -49,7 +49,7 @@ class Other(commands.Cog):
                     ]
                     for n, v, i in fields:
                         embed.add_field(name=n, value=v, inline=i)
-                    await ctx.reply(embed=embed)
+                    await ctx.send(reference=ctx.message, embed=embed)
                     found = True
         else:
             k = stats["Global"]
@@ -70,7 +70,7 @@ class Other(commands.Cog):
             ]
             for n, v, i in fields:
                 embed.add_field(name=n, value=v, inline=i)
-            await ctx.reply(embed=embed)
+            await ctx.send(reference=ctx.message, embed=embed)
             found = True
         if not found:
             embed = discord.Embed(
@@ -80,7 +80,7 @@ class Other(commands.Cog):
             )
             embed.add_field(name="Given Country Name",
                             value=original, inline=True)
-            await ctx.reply(embed=embed)
+            await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
     @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
@@ -103,7 +103,7 @@ class Other(commands.Cog):
                 colour=discord.Color.from_rgb(int(red*255), int(green*255), 0),
                 timestamp=datetime.utcnow()
             )
-        await ctx.reply(embed=embed)
+        await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
 

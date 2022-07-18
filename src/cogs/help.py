@@ -199,13 +199,13 @@ class Help(commands.Cog):
                     color=0xFF0000,
                     timestamp=datetime.utcnow(),
                 )
-            await ctx.reply(embed=embed)
+            await ctx.send(reference=ctx.message, embed=embed)
             return
         page -= 1
         async with ctx.typing():
             self.embeds_list[page].set_author(icon_url=ctx.author.avatar_url, name="|  " +
                                           self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "user-manual")
-        msg = await ctx.reply(embed=self.embeds_list[page])
+        msg = await ctx.send(reference=ctx.message, embed=self.embeds_list[page])
         for name, reaction in self.reactions.items():
             await msg.add_reaction(reaction)
         return
@@ -228,7 +228,7 @@ class Help(commands.Cog):
             )
             embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                              self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help")
-        await ctx.reply(embed=embed)
+        await ctx.send(embed=embed, reference=ctx.message)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -257,7 +257,7 @@ class Help(commands.Cog):
                 )
                 embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                                  self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help " + command_name)
-            await ctx.reply(embed=embed)
+            await ctx.send(reference=ctx.message, embed=embed)
             return
         async with ctx.typing():
             embed = discord.Embed(
@@ -282,7 +282,7 @@ class Help(commands.Cog):
                 ctx.guild.id)]['prefix']+"help` to get description of all commands")
             embed.set_author(icon_url=ctx.author.avatar_url, name="|  " +
                              self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix'] + "help " + command_name)
-        await ctx.reply(embed=embed)
+        await ctx.send(reference=ctx.message, embed=embed)
         return
     # ----------------------------------------------------------------------------------------------------------------------
 

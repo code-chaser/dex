@@ -26,7 +26,7 @@ class Fun(commands.Cog):
         iquote = await self.get_iquote()
         embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
         embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
-        await ctx.reply(embed=embed)
+        await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def get_nasa(self):
@@ -51,7 +51,7 @@ class Fun(commands.Cog):
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
         embed.add_field(name="Image Title",
                         value=nasa_api["title"], inline=False)
-        await ctx.reply(embed=embed)
+        await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def get_meme(self):
@@ -73,7 +73,7 @@ class Fun(commands.Cog):
         embed.set_image(url=meme["url"])
         embed.set_thumbnail(
             url="https://user-images.githubusercontent.com/63065397/156142184-0675cfee-2863-41d7-bef8-87f600a713b0.png")
-        await ctx.reply(embed=embed)
+        await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def get_subreddit(self, subreddit):
@@ -95,7 +95,7 @@ class Fun(commands.Cog):
                 )
                 embed.add_field(name="Error", value="Not Found", inline=True)
                 embed.set_footer(text="given subreddit: "+subreddit)
-                await ctx.reply(embed=embed)
+                await ctx.send(reference=ctx.message, embed=embed)
                 return
             embed = discord.Embed(
                 title="Error",
@@ -114,7 +114,7 @@ class Fun(commands.Cog):
                 embed.add_field(name=new_key.title(), value=str(
                     data[new_key]), inline=True)
             embed.set_footer(text="given subreddit: "+subreddit)
-            await ctx.reply(embed=embed)
+            await ctx.send(reference=ctx.message, embed=embed)
         else:
             embed = discord.Embed(title=str("/r/"+subreddit),
                                   colour=0xff5700, timestamp=datetime.utcnow())
@@ -139,7 +139,7 @@ class Fun(commands.Cog):
                     inline=False
                 )
             if number > 0:
-                await ctx.reply(embed=embed)
+                await ctx.send(reference=ctx.message, embed=embed)
             return
     # ----------------------------------------------------------------------------------------------------------------------
 
