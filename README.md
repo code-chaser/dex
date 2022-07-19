@@ -47,10 +47,12 @@ ___
 
 
 <tr>
+
 <th>Module</th>
 <th>Version</th>
 <th>Installation</th>
 <th>Description</th>
+
 </tr>
 
 
