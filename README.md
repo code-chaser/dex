@@ -262,11 +262,21 @@ pip install asyncpg==0.25.0
     ```
 -->    
 
+___
+
+</br>
+
+<h2 align="center">Self Hosting Dex</h2>
+
+I would rather advise you to not run a direct cloned instance of Dex. It would be a lot better if you just [invite](https://discord.com/api/oauth2/authorize?client_id=946829157445296188&permissions=335514139764&scope=bot) it to your discord server for testing purposes. The source code is made publicly available for educational purposes and for transparency on how Dex works.
+
+If you decide to edit, compile or use this code in any way, kindly abide by the [License](./LICENSE)
+
+</br>
 
 ___
 
 
-<!--<p align="right"><b><a href="https://github.com/code-chaser/dex#">Bact to top</a></b></p>-->
 <p align="center"><a href="https://github.com/code-chaser/dex#"><img src="http://randojs.com/images/backToTopButtonTransparentBackground.png" alt="Back to top" height="29"/></a></p>
 
 ___
