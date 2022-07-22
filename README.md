@@ -16,6 +16,7 @@
   
 </h1>
 
+</br>
 
 <h2 align="center"> DESCRIPTION </h2>
 It's DEX, a multi-purpose discord bot that can be used to play music, get user information, server (guild) information, get a random inspirational quote, random meme, covid-19 stats and much more, with options to set a custom prefix for each server.
@@ -30,6 +31,7 @@ Default set prefix is `$dex ` &nbsp; (yes, mind that trailing space)
 Once the bot joins your server, you can get started with `$dex help` or `$dex user-manual` to get the complete list of available commands.
 ___
 
+</br>
 
 <h2 align="center"> DEMO VIDEO </h2>
 
@@ -39,6 +41,7 @@ https://user-images.githubusercontent.com/63065397/176365615-b1a43fd8-ea54-40ac-
 
 ___
 
+</br>
 
 <h2 align="center"> DEPENDENCIES </h2>
 <p align="center"><b>PYTHON == <code>3.9.10</code></b>
