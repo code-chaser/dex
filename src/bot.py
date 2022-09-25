@@ -83,7 +83,7 @@ class Bot(commands.Bot):
         #     if general is not None:
         #         await general.send(embed=embed)
 
-    @tasks.loop(seconds=127)
+    @tasks.loop(seconds=272727)
     async def activity_updates(self):
         user_count = 0
         for g in self.guilds:
@@ -128,6 +128,18 @@ class Bot(commands.Bot):
 
     async def on_message(self, message):
         await self.process_commands(message)
+        if type(message.channel) is discord.VoiceChannel:
+            embed = discord.Embed(
+                description="**You are highly recommended to use DEX in normal text channels, rather than voice dedicated text channels to avoid any unexpected behaviour**",
+                color=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+            embed.set_author(
+                icon_url=message.author.avatar_url,
+                name="| WARNING"
+            )
+            message.channel.send(embed=embed, reference=message)
+            
         tag_switch = self.DATABASE['guilds'][str(
             message.guild.id)]['tag_messages']
         target = message.author
