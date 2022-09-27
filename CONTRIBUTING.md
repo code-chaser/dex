@@ -1,4 +1,5 @@
 ## How to contribute to this repository?
+(Guidelines for Hacktoberfest)
 - You can contribute to this repository in several ways:
   - Opening an issue:
     - Bug Report: [here](https://github.com/code-chaser/dex/issues/new?assignees=code-chaser&labels=bug&template=bug_report.md&title=%5BBUG%5D)
