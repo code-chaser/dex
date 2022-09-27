@@ -20,7 +20,7 @@
 
 <h2 align="center"> DESCRIPTION </h2>
 It's DEX, a multi-purpose discord bot that can be used to play music, get user information, server (guild) information, get a random inspirational quote, random meme, covid-19 stats and much more, with options to set a custom prefix for each server.
-
+- Want to contribute? Please see [this](https://github.com/code-chaser/dex/blob/main/CONTRIBUTING.md).
 ___
 
 Default set prefix is `$dex ` &nbsp; (yes, mind that trailing space)
