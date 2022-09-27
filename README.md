@@ -287,8 +287,9 @@ ___
 ___
 
 ### Please see:
-- License: [code-chaser/dex/LICENSE](./LICENSE)
+- License: [code-chaser/dex/LICENSE](LICENSE)
 - Code of Conduct: [code-chaser/dex/CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Contributing Guidelines: [code-chaser/dex/CONTRIBUTING.md](CONTRIBUTING.md)
 ___
 
 </br>
