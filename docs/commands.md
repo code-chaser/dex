@@ -7,9 +7,9 @@
 | 1  | `$dex join` | Joins the voice channel of the author |
 | 2  | `$dex leave` | Leaves if connected to any voice channel |
 | 3  | `$dex play <song-name>` | Streams a song directly from youtube |
-| 4  | `$dex playm <song-names>` | Streams multiple songs (seperated by semicolons ';') |
+| 4  | `$dex playm <song-names>` | Streams multiple songs (seperated by semicolons `;`) |
 | 5  | `$dex dplay <song-name>` | Downloads a song and then queues it to reduce any possible lags |
-| 6  | `$dex dplaym <song-names>` | 'dplays' multiple songs (seperated by semicolons ';') |
+| 6  | `$dex dplaym <song-names>` | 'dplays' multiple songs (seperated by semicolons `;`) |
 | 7  | `$dex queue` | Shows the current queue |
 | 8  | `$dex stop` | Stops the music and clears the queue |
 | 9  | `$dex pause` | Pauses the player |
