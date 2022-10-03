@@ -32,7 +32,7 @@ Default set prefix is `$dex ` &nbsp; (yes, mind that trailing space)
 
 Once the bot joins your server, you can get started with `$dex help` or `$dex user-manual` to get the complete list of available commands.
 
-You can also see the list of availble commands [here](docs/commands.txt).
+You can also see the list of availble commands [here](docs/commands.md).
 ___
 
 </br>
