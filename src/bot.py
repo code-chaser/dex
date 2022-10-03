@@ -47,9 +47,6 @@ class Bot(commands.Bot):
         self.DATABASE['guilds'] = {}
         self.DATABASE['guilds'] = {result['guild_id']: {k: v for k, v in result.items() if k != 'guild_id'} for result in await self.DB_CONNECTION.fetch("SELECT * FROM guilds")}
         print("\nDATABASE CLONED\n")
-        print("\n\n****DATABASE DICTIONARY****\n\n")
-        print(self.DATABASE)
-        print("\n\n")
         return
 
     async def startup(self):
@@ -57,7 +54,12 @@ class Bot(commands.Bot):
         await self.connect_to_db()
         await self.clone_database()
         await self.wait_until_ready()
-        self.activity_updates.start()
+        name = "$dex help"
+        await self.change_presence(activity=discord.Activity(
+            type=discord.ActivityType.listening,
+            name=name
+        ))
+        # self.activity_updates.start()
         print("\n\n len(self.guilds) = " + str(len(self.guilds)) + "\n\n")
         # for guild in self.guilds:
         #     embed = discord.Embed(
@@ -83,17 +85,17 @@ class Bot(commands.Bot):
         #     if general is not None:
         #         await general.send(embed=embed)
 
-    @tasks.loop(seconds=272727)
-    async def activity_updates(self):
-        user_count = 0
-        for g in self.guilds:
-            user_count += len(g.members)
+    # @tasks.loop(seconds=272727)
+    # async def activity_updates(self):
+    #     user_count = 0
+    #     for g in self.guilds:
+    #         user_count += len(g.members)
 
-        name = "$dex help"
-        await self.change_presence(activity=discord.Activity(
-            type=discord.ActivityType.listening,
-            name=name
-        ))
+    #     name = "$dex help"
+    #     await self.change_presence(activity=discord.Activity(
+    #         type=discord.ActivityType.listening,
+    #         name=name
+    #     ))
 
     def get_pref(self, _, message):
         return self.DATABASE['guilds'][str(message.guild.id)]['prefix']

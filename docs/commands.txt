@@ -1,0 +1,45 @@
+List of available commands
+
+Music - Basic
+join - Joins the voice channel of the author
+leave - Leaves if connected to any voice channel
+play - Streams a song directly from youtube
+playm - Streams multiple songs (seperated by semicolons ';')
+dplay - Downloads a song and then queues it to reduce any possible lags
+dplaym - 'dplays' multiple songs (seperated by semicolons ';')
+Music - Player Controls
+queue - Shows the current queue
+stop - Stops the music and clears the queue
+pause - Pauses the player
+resume - Resumes the player
+volume - Sets the volume of the player to given value
+next - Plays the next song in the queue
+previous - Plays the previous song in the queue
+loop - Toggles looping of the queue
+repeat - Toggles repeating of the currently playing song
+restart - Restarts the currently playing song
+remove - Removes given song from the queue, takes song position as arguement
+jump - Jumps to given song in the queue, takes song position as arguement
+lyrics - Shows the lyrics of the currently playing song
+Fun
+inspire - Sends a random inspirational quote
+apod - Sends astronomy pic of the day from NASA
+meme - Sends a random meme
+reddit - Shows top headlines of the given subreddit
+Mod Settings
+tags - Toggles tagging messages feature
+prefix - Changes the prefix for the server to the appended string
+prefixspace - Toggles the trailing space in the prefix
+goodbye! - Leaves the server
+madeby? - Show information about the creator of the bot
+Codeforces
+cf-handle - Shows details of the requested codeforces handle
+Info
+userinfo - Shows info about the requested user, or the author of the message if no or invalid user is specified
+serverinfo - Shows info about the server
+Other
+covid19 - Shows the current covid19 stats of the given nation, or global if no nation provided
+ping - Shows the latency of the bot
+Help
+help - Shows description of commands
+user-manual - Shows paginated description of commands
