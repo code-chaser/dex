@@ -811,7 +811,7 @@ class Music(commands.Cog):
         await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="stop", aliases=["stfu", "shut"], help="stops the music player and clears the queue")
+    @commands.command(name="stop", aliases=["shut"], help="stops the music player and clears the queue")
     async def stop_command(self, ctx):
         self.add_guild(ctx)
         self.properties[str(ctx.guild.id)]["current"] = -1
