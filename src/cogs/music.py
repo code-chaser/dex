@@ -150,6 +150,13 @@ class Music(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
+        if member != self.bot.user:
+            return
+        if before.channel is None:
+            return
+        if after.channel is None:
+            self.remove_guild(self.properties[str(before.channel.guild.id)]["last_ctx"])
+            return
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
