@@ -108,7 +108,7 @@ class Music(commands.Cog):
         # -------------------------------------
         self.music_queue = {}
         # FORMAT OF DICT self.music_queue:
-        # [str(guild.id)] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not]
+        # [str(guild.id)] -> [0 player | 1 ctx | 2 url(from_user) | 3 stream_or_not(true/false)]
         # -------------------------------------
         self.timeout_check.start()
         return
@@ -132,6 +132,7 @@ class Music(commands.Cog):
                 self.properties[guild_id]["alone_time"] = 0
             if (self.properties[guild_id]["inactive_time"] == 600) or (self.properties[guild_id]["alone_time"] == 600):
                 ctx = self.properties[guild_id]["last_ctx"]
+                self.remove_guild(ctx)
                 await bot_voice_client.disconnect()
                 async with ctx.typing():
                     embed = discord.Embed(
@@ -139,15 +140,23 @@ class Music(commands.Cog):
                         description="",
                         color=0xff0000
                     )
-                    embed.set_author(name="Left the voice channel due to inactivity")
+                    embed.set_author(
+                        name="Left the voice channel due to inactivity")
                 await ctx.send(reference=ctx.message, embed=embed)
                 self.properties[guild_id]["inactive_time"] = -1
                 self.properties[guild_id]["alone_time"] = -1
         return
     # ----------------------------------------------------------------------------------------------------------------------
-    
+
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
+        if member != self.bot.user:
+            return
+        if before.channel is None:
+            return
+        if after.channel is None:
+            self.remove_guild(self.properties[str(before.channel.guild.id)]["last_ctx"])
+            return
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -170,6 +179,14 @@ class Music(commands.Cog):
         self.properties[str(ctx.guild.id)]["last_ctx"] = ctx
         if str(ctx.guild.id) not in self.music_queue.keys():
             self.music_queue[str(ctx.guild.id)] = []
+        return
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    def remove_guild(self, ctx):
+        if str(ctx.guild.id) in self.properties:
+            self.properties.pop(str(ctx.guild.id))
+        if str(ctx.guild.id) in self.music_queue:
+            self.music_queue.pop(str(ctx.guild.id))
         return
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -216,6 +233,7 @@ class Music(commands.Cog):
             embed = self.embed_error_no_vc_dex
             await ctx.send(reference=ctx.message, embed=embed)
         else:
+            self.remove_guild(ctx)
             await ctx.voice_client.disconnect()
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -241,22 +259,6 @@ class Music(commands.Cog):
                             value=self.properties[str(ctx.guild.id)]["current"]+1, inline=False)
             embed.add_field(name="Volume", value=str(
                 int(self.properties[str(ctx.guild.id)]["vol"] * 100)) + "%", inline=False)
-            # View
-            # restart_btn = Button()
-            # previous_btn = Button()
-            # play_btn = Button()
-            # pause_btn = Button()
-            # next_btn = Button()
-            # repeat_song_btn = Button()
-            # loop_queue_btn = Button()
-            # view = discord.ui.View()
-            # view.add_item(restart_btn)
-            # view.add_item(previous_btn)
-            # view.add_item(play_btn)
-            # view.add_item(pause_btn)
-            # view.add_item(next_btn)
-            # view.add_item(repeat_song_btn)
-            # view.add_item(loop_queue_btn)
         await ctx.send(reference=ctx.message, embed=embed)
         ctx.voice_client.play(player, after=lambda e: print(
             f'Player error: {e}') if e else None)
@@ -266,8 +268,12 @@ class Music(commands.Cog):
 
     async def keep_playing(self, ctx):
         self.properties[str(ctx.guild.id)]["inside_keep_playing"] = True
-        bool_flag = len(self.music_queue[str(ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1
-        bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"] is True)) and len(self.music_queue[str(ctx.guild.id)]) > 0
+        bool_flag = len(self.music_queue[str(
+            ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1
+        bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"] is True)) and len(
+            self.music_queue[str(ctx.guild.id)]) > 0
+        bool_flag = bool_flag and (
+            self.properties[str(ctx.guild.id)]["current"] >= 0)
         while bool_flag:
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.properties[str(ctx.guild.id)]["is_playing"] = True
@@ -700,8 +706,8 @@ class Music(commands.Cog):
             async with ctx.typing():
                 embed = discord.Embed(
                     title="Error",
-                    description=str(
-                        "Queue Position must be between (1 & "+str(len(self.music_queue[str(ctx.guild.id)]))+")"),
+                    description=str("Queue Position must be between (1 & " +
+                                    str(len(self.music_queue[str(ctx.guild.id)]))+")"),
                     colour=0xff0000,
                     timestamp=datetime.utcnow()
                 )
@@ -811,7 +817,7 @@ class Music(commands.Cog):
         await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="stop", aliases=["shut"], help="stops the music player and clears the queue")
+    @commands.command(name="stop", aliases=["stfu", "shut"], help="stops the music player and clears the queue")
     async def stop_command(self, ctx):
         self.add_guild(ctx)
         self.properties[str(ctx.guild.id)]["current"] = -1
