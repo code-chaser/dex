@@ -1,6 +1,6 @@
 import discord
 import aiohttp
-import datetime
+from datetime import datetime
 from discord.ext import commands
 
 
@@ -32,17 +32,46 @@ class Codeforces(commands.Cog):
                 embed = discord.Embed(title="Error",
                                       description=handle["comment"],
                                       colour=0xff0000,
-                                      timestamp=datetime.datetime.utcnow())
+                                      timestamp=datetime.utcnow())
             await ctx.send(reference=ctx.message, embed=embed)
             return
         for res in handle["result"]:
             async with ctx.typing():
+                max_rating_color = self.cf_gray
+                if res["maxRating"] < 1200:
+                    max_rating_color = self.cf_gray
+                elif res["maxRating"] < 1400:
+                    max_rating_color = self.cf_green
+                elif res["maxRating"] < 1600:
+                    max_rating_color = self.cf_cyan
+                elif res["maxRating"] < 1900:
+                    max_rating_color = self.cf_blue
+                elif res["maxRating"] < 2100:
+                    max_rating_color = self.cf_violet
+                elif res["maxRating"] < 2400:
+                    max_rating_color = self.cf_orange
+                else:
+                    max_rating_color = self.cf_red
+                curr_rating_color = self.cf_gray
+                if res["rating"] < 1200:
+                    curr_rating_color = self.cf_gray
+                elif res["rating"] < 1400:
+                    curr_rating_color = self.cf_green
+                elif res["rating"] < 1600:
+                    curr_rating_color = self.cf_cyan
+                elif res["rating"] < 1900:
+                    curr_rating_color = self.cf_blue
+                elif res["rating"] < 2100:
+                    curr_rating_color = self.cf_violet
+                elif res["rating"] < 2400:
+                    curr_rating_color = self.cf_orange
+                else:
+                    curr_rating_color = self.cf_red
                 embed = discord.Embed(title=username,
                                     description=(res["firstName"] if "firstName" in res else "") + " " + (
                                         res["lastName"] if "lastName" in res else ""),
-                                    colour=self.cf_red if res["maxRating"] >= 2400 else self.cf_orange if res["maxRating"] >= 2200 else self.cf_violet if res["maxRating"] >= 1900 else self.cf_blue if handle[
-                                        "result"][0]["maxRating"] >= 1600 else self.cf_cyan if res["maxRating"] >= 1400 else self.cf_green if res["maxRating"] >= 1200 else self.cf_gray,
-                                    timestamp=datetime.datetime.utcnow())
+                                    colour=max_rating_color,
+                                    timestamp=datetime.utcnow())
                 embed.add_field(name="City", value=res["city"]
                                 if "city" in res else "Unknown", inline=True)
                 embed.add_field(name="Country", value=res["country"]
@@ -59,7 +88,7 @@ class Codeforces(commands.Cog):
                     name="Rating", value=res["rating"], inline=True)
                 embed.add_field(
                     name="Rank", value=res["rank"], inline=True)
-                embed.add_field(name="Last Online", value=datetime.datetime.utcfromtimestamp(
+                embed.add_field(name="Last Online", value=datetime.utcfromtimestamp(
                     res["lastOnlineTimeSeconds"]).strftime('%Y-%m-%d %H:%M:%S'), inline=True)
                 embed.set_thumbnail(url=res["avatar"])
             await ctx.send(reference=ctx.message, embed=embed)
