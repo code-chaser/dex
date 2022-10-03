@@ -13,12 +13,6 @@ class ModSet(commands.Cog):
     async def modset(self, ctx, target: Optional[discord.Member]):
         pass
 
-    @commands.command(name="settings")
-    async def settings(self, ctx, target: Optional[discord.Member]):
-        pass
-
-    # these commands can be implemented later
-
     @commands.command(name="tags", aliases=["tagging", "msgtags"], help="toggles message tags")
     async def tags_command(self, ctx, switch: Optional[str]):
         tag_switch = self.bot.DATABASE['guilds'][str(
