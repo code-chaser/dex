@@ -980,6 +980,29 @@ class Music(commands.Cog):
             await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
+    @commands.command(name="ping", aliases=["latency"], help="shows the latency of the bot")
+    async def ping_command(self, ctx):
+        async with ctx.typing():
+            ping = round(self.bot.latency * 1000, 1)
+            high = 400
+            low = 30
+            red = min((ping)/high, 1)
+            green = 1-red
+            if ping >= high:
+                red = 1
+                green = 0
+            if ping <= low:
+                red = 0
+                green = 1
+            embed = discord.Embed(
+                title="Ping",
+                description="**"+str(ping)+"ms**",
+                colour=discord.Color.from_rgb(int(red*255), int(green*255), 0),
+                timestamp=datetime.utcnow()
+            )
+        await ctx.send(reference=ctx.message, embed=embed)
+    # ----------------------------------------------------------------------------------------------------------------------
+
 
 def setup(bot):
     bot.add_cog(Music(bot))
