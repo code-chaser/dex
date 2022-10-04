@@ -280,9 +280,12 @@ class Music(commands.Cog):
             ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1
         bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"])) and len(
             self.music_queue[str(ctx.guild.id)]) > 0
-        if bool_flag:
+        if bool_flag and self.properties[str(ctx.guild.id)]["repeat_song"]:
             if self.properties[str(ctx.guild.id)]["current"] == -1:
                 self.properties[str(ctx.guild.id)]["current"] = 0
+        if not bool_flag:
+            self.properties[str(ctx.guild.id)]["inside_keep_playing"] = False
+            return
         while bool_flag:
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.properties[str(ctx.guild.id)]["is_playing"] = True
