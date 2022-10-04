@@ -967,7 +967,7 @@ class Music(commands.Cog):
         else:
             async with ctx.typing():
                 lyrics = data['lyrics']
-                extend_text = '[read more](https://www.google.com/search?q=' + data['author'].strip().replace(' ', '+') + '+' + \
+                extend_text = '[see results from GoogleSearch](https://www.google.com/search?q=' + data['author'].strip().replace(' ', '+') + '+' + \
                     song_title+'+lyrics)'
                 if len(lyrics) > 3500:
                     lyrics = lyrics[:3500]+'... '
