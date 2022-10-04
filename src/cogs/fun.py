@@ -143,6 +143,61 @@ class Fun(commands.Cog):
             return
     # ----------------------------------------------------------------------------------------------------------------------
 
+    async def get_crypto_rate(self, urlEnd):
+        # ids=bitcoin&vs_currencies=inr
+        API_URL = "https://api.coingecko.com/api/v3/simple/price?" + urlEnd
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as resp:
+                quote_json = await resp.json(content_type=None)
+                return (quote_json)
+
+    @commands.command(name="crypto", aliases=["cryptocurrency", "crypto-price", "coingecko"], help="shows the price of given cryptocurrency(s) in given currency(s)")
+    async def inspire_command(self, ctx, cryptocurrencies: str, currencies: Optional[str]):
+        if currencies is None:
+            currencies = "usd"
+        cryptocurrencies = cryptocurrencies.lower()
+        cryptocurrencies = cryptocurrencies.split(",")
+        for i in range(len(cryptocurrencies)):
+            cryptocurrencies[i] = cryptocurrencies[i].strip()
+        cryptocurrencies = ",".join(cryptocurrencies)
+        currencies = currencies.lower()
+        currencies = currencies.split(",")
+        for i in range(len(currencies)):
+            currencies[i] = currencies[i].strip()
+        currencies = ",".join(currencies)
+        urlEnd = "ids="+cryptocurrencies+"&vs_currencies="+currencies
+        rate = await self.get_crypto_rate(urlEnd)
+        if (len(rate) == 0) or (len(rate[list(rate.keys())[0]]) == 0):
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="",
+                    description="",
+                    color=0xff0000
+                )
+                embed.set_author(
+                    name="Unknown error occured")
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
+        for cryptocurrency in rate.keys():
+            async with ctx.typing():
+                embed = discord.Embed(
+                    title="",
+                    description="",
+                    color=0x00ff00
+                )
+                embed.set_author(
+                    name=cryptocurrency.title()+" Price")
+                for currency in rate[cryptocurrency].keys():
+                    embed.add_field(
+                        name=currency.upper(),
+                        value=rate[cryptocurrency][currency],
+                        inline=True
+                    )
+            await ctx.send(reference=ctx.message, embed=embed)
+        return
+
+    # ----------------------------------------------------------------------------------------------------------------------
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
