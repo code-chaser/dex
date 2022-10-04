@@ -84,6 +84,14 @@ class Music(commands.Cog):
         timestamp=datetime.utcnow()
     )
 
+    embed_error_empty_queue = discord.Embed(
+                    title="Queue",
+                    description=''.join(
+                        "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
+                    colour=0xff0000,
+                    timestamp=datetime.utcnow()
+                )
+
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -270,10 +278,11 @@ class Music(commands.Cog):
         self.properties[str(ctx.guild.id)]["inside_keep_playing"] = True
         bool_flag = len(self.music_queue[str(
             ctx.guild.id)]) - self.properties[str(ctx.guild.id)]["current"] > 1
-        bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"] is True)) and len(
+        bool_flag = (bool_flag or (self.properties[str(ctx.guild.id)]["loop_queue"])) and len(
             self.music_queue[str(ctx.guild.id)]) > 0
-        bool_flag = bool_flag and (
-            self.properties[str(ctx.guild.id)]["current"] >= 0)
+        if bool_flag:
+            if self.properties[str(ctx.guild.id)]["current"] == -1:
+                self.properties[str(ctx.guild.id)]["current"] = 0
         while bool_flag:
             if ((not ctx.voice_client.is_playing()) and (not ctx.voice_client.is_paused())):
                 self.properties[str(ctx.guild.id)]["is_playing"] = True
@@ -287,7 +296,7 @@ class Music(commands.Cog):
                 self.music_queue[str(ctx.guild.id)][self.properties[str(
                     ctx.guild.id)]["current"]][0] = player
                 await self.play_music_from_player(self.music_queue[str(ctx.guild.id)][self.properties[str(ctx.guild.id)]["current"]][1], player=player, data=data)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
         self.properties[str(ctx.guild.id)]["inside_keep_playing"] = False
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -762,6 +771,9 @@ class Music(commands.Cog):
                 )
             await ctx.send(reference=ctx.message, embed=embed)
             return
+        if (len(self.music_queue[str(ctx.guild.id)]) == 0):
+            await ctx.send(reference=ctx.message, embed=self.embed_error_empty_queue)
+            return
         if (1 > int(pos)) or (len(self.music_queue[str(ctx.guild.id)]) < int(pos)):
             async with ctx.typing():
                 embed = discord.Embed(
@@ -871,7 +883,7 @@ class Music(commands.Cog):
             await ctx.send(reference=ctx.message, embed=embed)
             return
         if ctx.voice_client.is_playing() or ctx.voice_client.is_paused():
-            if self.properties[str(ctx.guild.id)]["current"] < len(self.music_queue[str(ctx.guild.id)]) - 1 or self.properties[str(ctx.guild.id)]["loop_queue"]:
+            if (self.properties[str(ctx.guild.id)]["current"] < len(self.music_queue[str(ctx.guild.id)]) - 1) or self.properties[str(ctx.guild.id)]["loop_queue"]:
                 self.properties[str(ctx.guild.id)]["current"] += 0
                 self.properties[str(ctx.guild.id)]["repeat_song"] = False
                 ctx.voice_client.stop()
