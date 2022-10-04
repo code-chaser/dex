@@ -85,12 +85,12 @@ class Music(commands.Cog):
     )
 
     embed_error_empty_queue = discord.Embed(
-                    title="Queue",
-                    description=''.join(
-                        "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
-                    colour=0xff0000,
-                    timestamp=datetime.utcnow()
-                )
+        title="Queue",
+        description=''.join(
+            "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
+        colour=0xff0000,
+        timestamp=datetime.utcnow()
+    )
 
     MUSIC_ICON = "https://user-images.githubusercontent.com/63065397/156855077-ce6e0896-cc81-4d4d-98b8-3e7b70050afe.png"
     # ----------------------------------------------------------------------------------------------------------------------
@@ -163,7 +163,8 @@ class Music(commands.Cog):
         if before.channel is None:
             return
         if after.channel is None:
-            self.remove_guild(self.properties[str(before.channel.guild.id)]["last_ctx"])
+            self.remove_guild(
+                self.properties[str(before.channel.guild.id)]["last_ctx"])
             return
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -235,7 +236,7 @@ class Music(commands.Cog):
                 return True
     # ----------------------------------------------------------------------------------------------------------------------
 
-    @commands.command(name="leave", aliases=["disconnect, dc"], help="leaves if connected to any voice channel")
+    @commands.command(name="leave", aliases=["disconnect", "dc"], help="leaves if connected to any voice channel")
     async def leave_command(self, ctx):
         if ctx.voice_client is None:
             embed = self.embed_error_no_vc_dex
@@ -323,14 +324,7 @@ class Music(commands.Cog):
                     if not self.properties[str(ctx.guild.id)]["inside_keep_playing"]:
                         await self.keep_playing(ctx)
             else:
-                embed = discord.Embed(
-                    title="Error",
-                    description=''.join(
-                        "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
-                    colour=0xff0000,
-                    timestamp=datetime.utcnow()
-                )
-                await ctx.send(reference=ctx.message, embed=embed)
+                await ctx.send(reference=ctx.message, embed=self.embed_error_empty_queue)
             return
         elif url is None:
             async with ctx.typing():
@@ -651,15 +645,7 @@ class Music(commands.Cog):
             return
 
         if len(self.music_queue[str(ctx.guild.id)]) == 0:
-            async with ctx.typing():
-                embed = discord.Embed(
-                    title="Queue",
-                    description=''.join(
-                        "Queue is empty, nothing to play\nUse `<prefix> play <query/url>` to add to queue"),
-                    colour=0xff0000,
-                    timestamp=datetime.utcnow()
-                )
-            await ctx.send(reference=ctx.message, embed=embed)
+            await ctx.send(reference=ctx.message, embed=self.embed_error_empty_queue)
             return
         embed = discord.Embed(
             title="Queue",
@@ -713,6 +699,9 @@ class Music(commands.Cog):
                     timestamp=datetime.utcnow()
                 )
             await ctx.send(reference=ctx.message, embed=embed)
+            return
+        if (len(self.music_queue[str(ctx.guild.id)]) == 0):
+            await ctx.send(reference=ctx.message, embed=self.embed_error_empty_queue)
             return
         if (1 > int(pos)) or (len(self.music_queue[str(ctx.guild.id)]) < int(pos)):
             async with ctx.typing():
@@ -978,11 +967,11 @@ class Music(commands.Cog):
         else:
             async with ctx.typing():
                 lyrics = data['lyrics']
-                extend_text = '\n[see results from GoogleSearch](https://www.google.com/search?q=' + \
+                extend_text = '[read more](https://www.google.com/search?q=' + data['author'].strip().replace(' ', '+') + '+' + \
                     song_title+'+lyrics)'
                 if len(lyrics) > 3500:
                     lyrics = lyrics[:3500]+'... '
-                    extend_text = '[read more](https://www.google.com/search?q=' + \
+                    extend_text = '[read more](https://www.google.com/search?q=' + data['author'].strip().replace(' ', '+') + '+' + \
                         song_title+'+lyrics)'
 
                 embed = discord.Embed(
