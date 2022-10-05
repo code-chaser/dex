@@ -27,19 +27,20 @@
 | 21 | `$dex apod` | Sends astronomy pic of the day from NASA |
 | 22 | `$dex meme` | Sends a random meme |
 | 23 | `$dex reddit <subreddit-name>` | Shows top headlines of the given subreddit |
-| 24 | `$dex tags` | Toggles tagging messages feature |
-| 25 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string |
-| 26 | `$dex prefixspace` | Toggles the trailing space in the prefix |
-| 27 | `$dex goodbye!` | Leaves the server |
-| 28 | `$dex madeby?` | Show information about the creator of the bot |
-| 29 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle |
-| 30 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified |
-| 31 | `$dex serverinfo` | Shows info about the server |
-| 32 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided |
-| 33 | `$dex ping` | Shows the latency of the bot |
-| 34 | `$dex help` | Shows description of commands |
-| 35 | `$dex user-manual` | Shows paginated description of commands |
-| 36 | `$dex help <command>` | Shows description of the specific command |
+| 24 | `$dex crypto <cryptocurrencies-separated-by-comma> <currencies-separated-by-comma>` | Shows the latest price of all given cryptocurrencies in all given currencies |
+| 25 | `$dex tags` | Toggles tagging messages feature |
+| 26 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string |
+| 27 | `$dex prefixspace` | Toggles the trailing space in the prefix |
+| 28 | `$dex goodbye!` | Leaves the server |
+| 29 | `$dex madeby?` | Show information about the creator of the bot |
+| 30 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle |
+| 31 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified |
+| 32 | `$dex serverinfo` | Shows info about the server |
+| 33 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided |
+| 34 | `$dex ping` | Shows the latency of the bot |
+| 35 | `$dex help` | Shows description of commands |
+| 36 | `$dex user-manual` | Shows paginated description of commands |
+| 37 | `$dex help <command>` | Shows description of the specific command |
 
 <br>
 
