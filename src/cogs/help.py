@@ -34,6 +34,7 @@ class Help(commands.Cog):
             "apod": ["Sends astronomy pic of the day from NASA", ["napod", "astropic", "astropicotd"]],
             "meme": ["Sends a random meme", ["hehe"]],
             "reddit": ["Shows top headlines of the given subreddit", ["subreddit"]],
+            "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"]],
         },
         "Mod Settings": {
             "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"]],
