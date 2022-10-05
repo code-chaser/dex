@@ -28,19 +28,21 @@
 | 22 | `$dex meme` | Sends a random meme | `hehe` |
 | 23 | `$dex reddit <subreddit-name>` | Shows top headlines of the given subreddit | `subreddit` |
 | 24 | `$dex crypto <cryptocurrencies> <currencies>` | Shows the latest price of all given cryptocurrencies in all given currencies | `crypto-price`, `coingecko` |
-| 25 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
-| 26 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
-| 27 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
-| 28 | `$dex goodbye!` | Leaves the server | `leaveThisServer` |
-| 29 | `$dex madeby?` | Show information about the creator of the bot | NA |
-| 30 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle | `cf-user` |
-| 31 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified | `ui` |
-| 32 | `$dex serverinfo` | Shows info about the server | `si` |
-| 33 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided | NA |
-| 34 | `$dex ping` | Shows the latency of the bot | `latency` |
-| 35 | `$dex help` | Shows description of commands | NA |
-| 36 | `$dex user-manual` | Shows paginated description of commands | `paginated-help` |
-| 37 | `$dex help <command>` | Shows description of the specific command | NA |
+| 25 | `$dex tts <text-in-english>` | Sends a mp3 file with the speech of given text in English (US) | `text-to-speech` |
+| 26 | `$dex question` | Sends a random question with it's answer | `q/a`, `ask` |
+| 27 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
+| 28 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
+| 29 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
+| 30 | `$dex goodbye!` | Leaves the server | `leaveThisServer` |
+| 31 | `$dex madeby?` | Show information about the creator of the bot | NA |
+| 32 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle | `cf-user` |
+| 33 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified | `ui` |
+| 34 | `$dex serverinfo` | Shows info about the server | `si` |
+| 35 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided | NA |
+| 36 | `$dex ping` | Shows the latency of the bot | `latency` |
+| 37 | `$dex help` | Shows description of commands | NA |
+| 38 | `$dex user-manual` | Shows paginated description of commands | `paginated-help` |
+| 39 | `$dex help <command>` | Shows description of the specific command | NA |
 
 <br>
 

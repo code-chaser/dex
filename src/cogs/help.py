@@ -35,6 +35,8 @@ class Help(commands.Cog):
             "meme": ["Sends a random meme", ["hehe"]],
             "reddit": ["Shows top headlines of the given subreddit", ["subreddit"]],
             "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"]],
+            "tts": ["Converts given text into speech (english)", ["text-to-speech"]],
+            "question": ["Shows a random question with it's answer", ["q/a", "ask"]],
         },
         "Mod Settings": {
             "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"]],
