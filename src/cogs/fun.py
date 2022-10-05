@@ -191,7 +191,7 @@ class Fun(commands.Cog):
                 for currency in rate[cryptocurrency].keys():
                     embed.add_field(
                         name=currency.upper(),
-                        value=rate[cryptocurrency][currency],
+                        value=("{:,}".format(rate[cryptocurrency][currency])),
                         inline=True
                     )
             await ctx.send(reference=ctx.message, embed=embed)
