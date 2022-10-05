@@ -8,6 +8,57 @@ from gtts import gTTS
 
 
 class Fun(commands.Cog):
+    trivia_categories = [
+        {"id": 3, "title": "hunting", "clues_count": 0},
+        {"id": 89, "title": "fiction", "clues_count": 75},
+        {"id": 64, "title": "politics", "clues_count": 35},
+        {"id": 7, "title": "governors", "clues_count": 36},
+        {"id": 79, "title": "islands", "clues_count": 127},
+        {"id": 19, "title": "weather", "clues_count": 121},
+        {"id": 1, "title": "u.s. cities", "clues_count": 390},
+        {"id": 44, "title": "crime \u0026 punishment", "clues_count": 44},
+        {"id": 1970, "title": "california cities", "clues_count": 10},
+        {"id": 35, "title": "current events", "clues_count": 55},
+        {"id": 11, "title": "1960", "clues_count": 15},
+        {"id": 43, "title": "egypt", "clues_count": 19},
+        {"id": 61, "title": "mammals", "clues_count": 196},
+        {"id": 8, "title": "4-word phrases", "clues_count": 5},
+        {"id": 25, "title": "word play", "clues_count": 10},
+        {"id": 26, "title": "canada", "clues_count": 21},
+        {"id": 30, "title": "anatomy", "clues_count": 75},
+        {"id": 68, "title": "australia", "clues_count": 33},
+        {"id": 100, "title": "time", "clues_count": 70},
+        {"id": 86, "title": "1965", "clues_count": 8},
+        {"id": 15, "title": "india", "clues_count": 18},
+        {"id": 24, "title": "1933", "clues_count": 15},
+        {"id": 58, "title": "u.s. geography", "clues_count": 316},
+        {"id": 88, "title": "music", "clues_count": 132},
+        {"id": 40, "title": "easy math", "clues_count": 20},
+        {"id": 41, "title": "food facts", "clues_count": 100},
+        {"id": 110, "title": "cars", "clues_count": 46},
+        {"id": 54, "title": "zoology", "clues_count": 215},
+        {"id": 34, "title": "winter sports", "clues_count": 3},
+        {"id": 27, "title": "movie trivia", "clues_count": 103},
+        {"id": 5, "title": "automobiles", "clues_count": 52},
+        {"id": 104, "title": "american revolution", "clues_count": 21},
+        {"id": 93, "title": "gymnastics", "clues_count": 20},
+        {"id": 10265, "title": "1980s bestsellers", "clues_count": 5},
+        {"id": 70, "title": "scotland", "clues_count": 35},
+        {"id": 10266, "title": "name the war", "clues_count": 5},
+        {"id": 49, "title": "double meanings", "clues_count": 15},
+        {"id": 51, "title": "rituals", "clues_count": 18},
+        {"id": 38, "title": "asia", "clues_count": 34},
+        {"id": 9, "title": "the olympics", "clues_count": 87},
+        {"id": 91, "title": "number please", "clues_count": 25},
+        {"id": 10267, "title": "sound technology", "clues_count": 5},
+        {"id": 72, "title": "gangster movies", "clues_count": 5},
+        {"id": 65, "title": "baseball", "clues_count": 131},
+        {"id": 6701, "title": "coming to a clothes", "clues_count": 5},
+        {"id": 81, "title": "vegetables", "clues_count": 2},
+        {"id": 1972, "title": "june 1969", "clues_count": 5},
+        {"id": 1975, "title": "world geography", "clues_count": 5},
+    ]
+
     def __init__(self, bot):
         self.bot = bot
     # ----------------------------------------------------------------------------------------------------------------------
@@ -233,7 +284,7 @@ class Fun(commands.Cog):
                 quote_json = await resp.json(content_type=None)
                 return (quote_json)
 
-    @commands.command(name="question", aliases=["q/a", "ask"], help="shows a random question and it's answer")
+    @commands.command(name="trivia", aliases=["q/a", "ask", "question", "qna"], help="shows a random question and it's answer")
     async def question_command(self, ctx):
         random_qa = await self.get_qa()
         async with ctx.typing():
@@ -243,19 +294,19 @@ class Fun(commands.Cog):
                 color=0x00ff00
             )
             embed.add_field(
-                name="Answer",
-                value=random_qa[0]['answer'],
-                inline=False
-            )
-            embed.add_field(
                 name="Category",
-                value=random_qa[0]['category']['title'],
+                value="||" + str(random_qa[0]['category']['title']).title() + "||",
                 inline=True
             )
             embed.add_field(
                 name="Difficulty",
-                value=random_qa[0]['value'],
+                value="||" + str(random_qa[0]['value']) + "||",
                 inline=True
+            )
+            embed.add_field(
+                name="Answer",
+                value="||" + str(random_qa[0]['answer']) + "||",
+                inline=False
             )
         await ctx.send(reference=ctx.message, embed=embed)
         return
