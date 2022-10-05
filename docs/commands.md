@@ -2,45 +2,45 @@
 
 <br>
 
-| #  | Command | Description |
-|:--:|:-------:|:------------|
-| 1  | `$dex join` | Joins the voice channel of the author |
-| 2  | `$dex leave` | Leaves if connected to any voice channel |
-| 3  | `$dex play <song-name>` | Streams a song directly from youtube |
-| 4  | `$dex playm <song-names>` | Streams multiple songs (seperated by semicolons `;`) |
-| 5  | `$dex dplay <song-name>` | Downloads a song and then queues it to reduce any possible lags |
-| 6  | `$dex dplaym <song-names>` | 'dplays' multiple songs (seperated by semicolons `;`) |
-| 7  | `$dex queue` | Shows the current queue |
-| 8  | `$dex stop` | Stops the music and clears the queue |
-| 9  | `$dex pause` | Pauses the player |
-| 10 | `$dex resume` | Resumes the player |
-| 11 | `$dex volume <volume>` | Sets the volume of the player to given value |
-| 12 | `$dex next` | Plays the next song in the queue |
-| 13 | `$dex previous` | Plays the previous song in the queue |
-| 14 | `$dex loop` | Toggles looping of the queue |
-| 15 | `$dex repeat` | Toggles repeating of the currently playing song |
-| 16 | `$dex restart` | Restarts the currently playing song |
-| 17 | `$dex remove <song-position>` | Removes given song from the queue, takes song position as arguement |
-| 18 | `$dex jump <song-position>` | Jumps to given song in the queue, takes song position as arguement |
-| 19 | `$dex lyrics` | Shows the lyrics of the currently playing song |
-| 20 | `$dex inspire` | Sends a random inspirational quote |
-| 21 | `$dex apod` | Sends astronomy pic of the day from NASA |
-| 22 | `$dex meme` | Sends a random meme |
-| 23 | `$dex reddit <subreddit-name>` | Shows top headlines of the given subreddit |
-| 24 | `$dex crypto <cryptocurrencies-separated-by-comma> <currencies-separated-by-comma>` | Shows the latest price of all given cryptocurrencies in all given currencies |
-| 25 | `$dex tags` | Toggles tagging messages feature |
-| 26 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string |
-| 27 | `$dex prefixspace` | Toggles the trailing space in the prefix |
-| 28 | `$dex goodbye!` | Leaves the server |
-| 29 | `$dex madeby?` | Show information about the creator of the bot |
-| 30 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle |
-| 31 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified |
-| 32 | `$dex serverinfo` | Shows info about the server |
-| 33 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided |
-| 34 | `$dex ping` | Shows the latency of the bot |
-| 35 | `$dex help` | Shows description of commands |
-| 36 | `$dex user-manual` | Shows paginated description of commands |
-| 37 | `$dex help <command>` | Shows description of the specific command |
+| #  | Command | Description | Aliases |
+|:--:| :-----: | :---------- | :------ |
+| 1  | `$dex join` | Joins the voice channel of the author | `connect` |
+| 2  | `$dex leave` | Leaves if connected to any voice channel | `disconnect`, `dc` |
+| 3  | `$dex play <song-name>` | Streams a song directly from youtube | `p`, `stream`, `add` |
+| 4  | `$dex playm <song-names>` | Streams multiple songs (seperated by semicolons `;`) | `pm`, `streamm`, `addm` |
+| 5  | `$dex dplay <song-name>` | Downloads a song and then queues it to reduce any possible lags | NA |
+| 6  | `$dex dplaym <song-names>` | 'dplays' multiple songs (seperated by semicolons `;`) | NA |
+| 7  | `$dex queue` | Shows the current queue | `view` |
+| 8  | `$dex stop` | Stops the music and clears the queue | `shut` |
+| 9  | `$dex pause` | Pauses the player | NA |
+| 10 | `$dex resume` | Resumes the player | NA |
+| 11 | `$dex volume <volume>` | Sets the volume of the player to given value | `vol` |
+| 12 | `$dex next` | Plays the next song in the queue | `skip` |
+| 13 | `$dex previous` | Plays the previous song in the queue | `prev` |
+| 14 | `$dex loop` | Toggles looping of the queue | NA |
+| 15 | `$dex repeat` | Toggles repeating of the currently playing song | NA |
+| 16 | `$dex restart` | Restarts the currently playing song | NA |
+| 17 | `$dex remove <song-position>` | Removes given song from the queue, takes song position as arguement | NA |
+| 18 | `$dex jump <song-position>` | Jumps to given song in the queue, takes song position as arguement | `jumpto` |
+| 19 | `$dex lyrics` | Shows the lyrics of the currently playing song | NA |
+| 20 | `$dex inspire` | Sends a random inspirational quote | `iquote` |
+| 21 | `$dex apod` | Sends astronomy pic of the day from NASA | `astropicotd`, `napod` |
+| 22 | `$dex meme` | Sends a random meme | `hehe` |
+| 23 | `$dex reddit <subreddit-name>` | Shows top headlines of the given subreddit | `subreddit` |
+| 24 | `$dex crypto <cryptocurrencies> <currencies>` | Shows the latest price of all given cryptocurrencies in all given currencies | `crypto-price`, `coingecko` |
+| 25 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
+| 26 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
+| 27 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
+| 28 | `$dex goodbye!` | Leaves the server | `leaveThisServer` |
+| 29 | `$dex madeby?` | Show information about the creator of the bot | NA |
+| 30 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle | `cf-user` |
+| 31 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified | `ui` |
+| 32 | `$dex serverinfo` | Shows info about the server | `si` |
+| 33 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided | NA |
+| 34 | `$dex ping` | Shows the latency of the bot | `latency` |
+| 35 | `$dex help` | Shows description of commands | NA |
+| 36 | `$dex user-manual` | Shows paginated description of commands | `paginated-help` |
+| 37 | `$dex help <command>` | Shows description of the specific command | NA |
 
 <br>
 
