@@ -226,6 +226,41 @@ class Fun(commands.Cog):
         return
 
     # ----------------------------------------------------------------------------------------------------------------------
+    async def get_qa(self):
+        API_URL = "https://jservice.io/api/random"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as resp:
+                quote_json = await resp.json(content_type=None)
+                return (quote_json)
+
+    @commands.command(name="question", aliases=["q/a", "ask"], help="shows a random question and it's answer")
+    async def question_command(self, ctx):
+        random_qa = await self.get_qa()
+        async with ctx.typing():
+            embed = discord.Embed(
+                title="Question",
+                description=random_qa[0]['question'],
+                color=0x00ff00
+            )
+            embed.add_field(
+                name="Answer",
+                value=random_qa[0]['answer'],
+                inline=False
+            )
+            embed.add_field(
+                name="Category",
+                value=random_qa[0]['category']['title'],
+                inline=True
+            )
+            embed.add_field(
+                name="Difficulty",
+                value=random_qa[0]['value'],
+                inline=True
+            )
+        await ctx.send(reference=ctx.message, embed=embed)
+        return
+
+    # ----------------------------------------------------------------------------------------------------------------------
 
 
 def setup(bot):
