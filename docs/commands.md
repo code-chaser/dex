@@ -28,6 +28,8 @@
 | 22 | `$dex meme` | Sends a random meme | `hehe` |
 | 23 | `$dex reddit <subreddit-name>` | Shows top headlines of the given subreddit | `subreddit` |
 | 24 | `$dex crypto <cryptocurrencies> <currencies>` | Shows the latest price of all given cryptocurrencies in all given currencies | `crypto-price`, `coingecko` |
+| 25 | `$dex tts <text-in-english>` | Sends a mp3 file with the speech of given text in English (US) | `text-to-speech` |
+| 26 | `$dex question` | Sends a random question with it's answer | `q/a`, `ask` |
 | 25 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
 | 26 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
 | 27 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
