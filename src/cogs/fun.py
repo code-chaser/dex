@@ -4,6 +4,7 @@ import os
 from typing import Optional
 from datetime import datetime
 from discord.ext import commands
+from gtts import gTTS
 
 
 class Fun(commands.Cog):
@@ -194,6 +195,34 @@ class Fun(commands.Cog):
                         inline=True
                     )
             await ctx.send(reference=ctx.message, embed=embed)
+        return
+
+    # ----------------------------------------------------------------------------------------------------------------------
+    @commands.command(name="tts", aliases=["text-to-speech"], help="converts given text to speech (english)")
+    async def tts_command(self, ctx, *, text):
+        if len(text) > 200:
+            embed = discord.Embed(
+                title="Error",
+                description="Text too long",
+                colour=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+            embed.set_footer(text="given text: "+text)
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
+        if len(text) == 0:
+            embed = discord.Embed(
+                title="Error",
+                description="Nothing to read",
+                colour=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+            embed.set_footer(text="given text: "+text)
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
+        tts = gTTS(text=text, lang='en')
+        tts.save("tts.mp3")
+        await ctx.send(file=discord.File("tts.mp3"))
         return
 
     # ----------------------------------------------------------------------------------------------------------------------
