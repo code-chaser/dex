@@ -16,7 +16,7 @@ class Help(commands.Cog):
         },
         "Music - Player Controls": {
             "queue": ["Shows the current queue", ["view"]],
-            "stop": ["Stops the music and clears the queue", ["stfu", "shut"]],
+            "stop": ["Stops the music and clears the queue", ["shut"]],
             "pause": ["Pauses the player", []],
             "resume": ["Resumes the player", []],
             "volume": ["Sets the volume of the player to given value", ["vol"]],
