@@ -163,8 +163,10 @@ class Music(commands.Cog):
         if before.channel is None:
             return
         if after.channel is None:
-            self.remove_guild(
-                self.properties[str(before.channel.guild.id)]["last_ctx"])
+            if str(before.channel.guild.id) in self.properties.keys():
+                self.properties.pop(str(before.channel.guild.id))
+            if str(before.channel.guild.id) in self.music_queue.keys():
+                self.music_queue.pop(str(before.channel.guild.id))
             return
         return
     # ----------------------------------------------------------------------------------------------------------------------
@@ -192,9 +194,9 @@ class Music(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
 
     def remove_guild(self, ctx):
-        if str(ctx.guild.id) in self.properties:
+        if str(ctx.guild.id) in self.properties.keys():
             self.properties.pop(str(ctx.guild.id))
-        if str(ctx.guild.id) in self.music_queue:
+        if str(ctx.guild.id) in self.music_queue.keys():
             self.music_queue.pop(str(ctx.guild.id))
         return
     # ----------------------------------------------------------------------------------------------------------------------
