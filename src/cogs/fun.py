@@ -4,7 +4,7 @@ import os
 from typing import Optional
 from datetime import datetime
 from discord.ext import commands
-from gtts import gTTS
+from gtts import gTTS, lang
 from random import randint
 
 class Fun(commands.Cog):
@@ -249,8 +249,23 @@ class Fun(commands.Cog):
         return
 
     # ----------------------------------------------------------------------------------------------------------------------
-    @commands.command(name="tts", aliases=["text-to-speech"], help="converts given text to speech (english)")
-    async def tts_command(self, ctx, *, text):
+    @commands.command(name="tts", aliases=["text-to-speech"], help="converts given text to speech in given language")
+    async def tts_command(self, ctx, req_lang, *, text):
+        if req_lang not in lang.tts_langs().keys():
+            for k, v in lang.tts_langs().items():
+                if req_lang in v:
+                    req_lang = k
+                    break
+        if req_lang not in lang.tts_langs().keys():
+            with ctx.typing():
+                embed = discord.Embed(
+                    title="Error",
+                    description="Language not found",
+                    colour=0xff0000,
+                    timestamp=datetime.utcnow()
+                )
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
         if len(text) > 200:
             embed = discord.Embed(
                 title="Error",
@@ -271,7 +286,7 @@ class Fun(commands.Cog):
             embed.set_footer(text="given text: "+text)
             await ctx.send(reference=ctx.message, embed=embed)
             return
-        tts = gTTS(text=text, lang='en')
+        tts = gTTS(text=text, lang=req_lang)
         tts.save("tts.mp3")
         await ctx.send(file=discord.File("tts.mp3"))
         return
@@ -307,7 +322,7 @@ class Fun(commands.Cog):
                 quote_json = await resp.json(content_type=None)
                 return (quote_json)
 
-    @commands.command(name="trivia", aliases=["q/a", "ask", "question", "qna"], help="shows a random question and it's answer")
+    @commands.command(name="trivia", aliases=["q/a", "ask", "question", "qna"], help="shows a question of given category id and it's answer")
     async def question_command(self, ctx, category_id: Optional[int]):
         if category_id is None:
             category_id = randint(0, len(self.trivia_categories)-1)
