@@ -5,7 +5,7 @@ from typing import Optional
 from datetime import datetime
 from discord.ext import commands
 from gtts import gTTS
-
+from random import randint
 
 class Fun(commands.Cog):
     trivia_categories = [
@@ -277,35 +277,82 @@ class Fun(commands.Cog):
         return
 
     # ----------------------------------------------------------------------------------------------------------------------
-    async def get_qa(self):
-        API_URL = "https://jservice.io/api/random"
+    @commands.command(name="trivia-cat", aliases=["qna-cat", "qna-categories", "trivia-categories"], help="shows the categories with their IDs of trivia questions")
+    async def trivia_cat_command(self, ctx):
+        # send self.trivia_categories to ctx in two embeds (max 25 fields per embed)
+        for i in range(len(self.trivia_categories)//25 + (len(self.trivia_categories) % 25 != 0)):
+            embed = discord.Embed(
+                title="Trivia Categories",
+                description="",
+                colour=0x11ffaa,
+                timestamp=datetime.utcnow()
+            )
+            for j in range(25):
+                if i*25+j < len(self.trivia_categories):
+                    embed.add_field(
+                        name=self.trivia_categories[i*25+j]['title'].title(),
+                        value="ID: " + str(i*25+j) + "\nQuestion Count: " + str(self.trivia_categories[i*25+j]['clues_count']),
+                        inline=True
+                    )
+            embed.set_footer(text="Page "+str(i+1)+"/"+str(len(self.trivia_categories)//25 + (len(self.trivia_categories) % 25 != 0)))
+
+            await ctx.send(reference=ctx.message, embed=embed)
+        return
+
+    # ----------------------------------------------------------------------------------------------------------------------
+    async def get_qa(self, urlEnd):
+        API_URL = "https://jservice.io/api/clues?category=" + urlEnd
         async with aiohttp.ClientSession() as session:
             async with session.get(API_URL) as resp:
                 quote_json = await resp.json(content_type=None)
                 return (quote_json)
 
     @commands.command(name="trivia", aliases=["q/a", "ask", "question", "qna"], help="shows a random question and it's answer")
-    async def question_command(self, ctx):
-        random_qa = await self.get_qa()
+    async def question_command(self, ctx, category_id: Optional[int]):
+        if category_id is None:
+            category_id = randint(0, len(self.trivia_categories)-1)
+        if category_id < 0 or category_id >= len(self.trivia_categories):
+            embed = discord.Embed(
+                title="Error",
+                description="category ID out of range",
+                colour=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+            embed.set_footer(text="given category ID: "+str(category_id))
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
+        
+        question = await self.get_qa(str(self.trivia_categories[category_id]['id']))
+        if len(question) == 0:
+            embed = discord.Embed(
+                title="Error",
+                description="no question found",
+                colour=0xff0000,
+                timestamp=datetime.utcnow()
+            )
+            embed.set_footer(text="given category ID: "+str(category_id))
+            await ctx.send(reference=ctx.message, embed=embed)
+            return
+        ind = randint(0, len(question)-1)
         async with ctx.typing():
             embed = discord.Embed(
                 title="Question",
-                description=random_qa[0]['question'],
+                description=question[ind]['question'],
                 color=0x00ff00
             )
             embed.add_field(
                 name="Category",
-                value="||" + str(random_qa[0]['category']['title']).title() + "||",
+                value="||" + str(question[ind]['category']['title']).title() + "||",
                 inline=True
             )
             embed.add_field(
                 name="Difficulty",
-                value="||" + str(random_qa[0]['value']) + "||",
+                value="||" + str(question[ind]['value']) + "||",
                 inline=True
             )
             embed.add_field(
                 name="Answer",
-                value="||" + str(random_qa[0]['answer']) + "||",
+                value="||" + str(question[ind]['answer']) + "||",
                 inline=False
             )
         await ctx.send(reference=ctx.message, embed=embed)
