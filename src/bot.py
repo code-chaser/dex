@@ -141,7 +141,8 @@ class Bot(commands.Bot):
                 name="| WARNING"
             )
             message.channel.send(embed=embed, reference=message)
-            
+        if message.author.bot:
+            return
         tag_switch = self.DATABASE['guilds'][str(
             message.guild.id)]['tag_messages']
         target = message.author
@@ -150,6 +151,12 @@ class Bot(commands.Bot):
         print("\n\n-----------------------\n-----------------------\n\n" +
               str(message.content) + "\n-----------------------\n")
         if tag_switch == 'off':
+            return
+        if len(message.embeds) > 0:
+            for embed in message.embeds:
+                embed.set_footer(text=embed.footer.text +
+                                 " | Sent by: " + message.author.name)
+                await message.channel.send(embed=embed)
             return
         embed = discord.Embed(
             title='Message Tagged',

@@ -1,3 +1,4 @@
+import difflib
 import discord
 import aiohttp
 import os
@@ -251,16 +252,25 @@ class Fun(commands.Cog):
     # ----------------------------------------------------------------------------------------------------------------------
     @commands.command(name="tts", aliases=["text-to-speech"], help="converts given text to speech in given language")
     async def tts_command(self, ctx, req_lang, *, text):
-        if req_lang not in lang.tts_langs().keys():
+        req_lang = req_lang.lower()
+        if req_lang not in [key.lower() for key in lang.tts_langs().keys()]:
             for k, v in lang.tts_langs().items():
-                if req_lang in v:
+                if req_lang in v.lower():
+                    req_lang = k.lower()
+                    break
+                if req_lang == k.lower():
                     req_lang = k
                     break
-        if req_lang not in lang.tts_langs().keys():
+        if req_lang not in [key.lower() for key in lang.tts_langs().keys()]:
             with ctx.typing():
+                closest_match = difflib.get_close_matches(req_lang, [key.lower() for key in lang.tts_langs().keys()] + [val.lower() for val in lang.tts_langs().values()])
+                if len(closest_match) > 0:
+                    did_you_mean = "\nDid you mean: " + ", ".join(closest_match)
+                else:
+                    did_you_mean = ""
                 embed = discord.Embed(
                     title="Error",
-                    description="Language not found",
+                    description="Language not found" + did_you_mean,
                     colour=0xff0000,
                     timestamp=datetime.utcnow()
                 )
@@ -323,7 +333,7 @@ class Fun(commands.Cog):
                 return (quote_json)
 
     @commands.command(name="trivia", aliases=["q/a", "ask", "question", "qna"], help="shows a question of given category id and it's answer")
-    async def question_command(self, ctx, category_id: Optional[int]):
+    async def trivia_command(self, ctx, category_id: Optional[int]):
         if category_id is None:
             category_id = randint(0, len(self.trivia_categories)-1)
         if category_id < 0 or category_id >= len(self.trivia_categories):

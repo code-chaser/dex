@@ -35,8 +35,9 @@ class Help(commands.Cog):
             "meme": ["Sends a random meme", ["hehe"]],
             "reddit": ["Shows top headlines of the given subreddit", ["subreddit"]],
             "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"]],
-            "tts": ["Converts given text into speech (english)", ["text-to-speech"]],
-            "trivia": ["Shows a random question with it's answer", ["q/a", "ask", "question", "qna"]],
+            "tts": ["Converts given text into speech of given language", ["text-to-speech"]],
+            "trivia-cat": ["Sends the complete list of available trivia categories", ["qna-cat", "qna-categories", "trivia-categories"]],
+            "trivia": ["Shows a question of given category id with it's answer", ["q/a", "ask", "question", "qna"]],
         },
         "Mod Settings": {
             "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"]],
