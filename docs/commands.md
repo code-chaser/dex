@@ -30,20 +30,20 @@
 | 24 | `$dex crypto <cryptocurrencies> <currencies>` | Shows the latest price of all given cryptocurrencies in all given currencies | `crypto-price`, `coingecko` |
 | 25 | `$dex tts <lang> <text-in-lang>` | Sends a mp3 file with the speech of given text in given language | `text-to-speech` |
 | 26 | `$dex trivia-cat` | Sends the complete list of available trivia categories | `qna-cat`, `qna-categories`, `trivia-categories` |
-| 26 | `$dex trivia <cat-id>` | Sends a question from category of given id with it's answer | `q/a`, `ask`, `qna` |
-| 27 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
-| 28 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
-| 29 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
-| 30 | `$dex goodbye!` | Leaves the server | `leaveThisServer` |
-| 31 | `$dex madeby?` | Show information about the creator of the bot | NA |
-| 32 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle | `cf-user` |
-| 33 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified | `ui` |
-| 34 | `$dex serverinfo` | Shows info about the server | `si` |
-| 35 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided | NA |
-| 36 | `$dex ping` | Shows the latency of the bot | `latency` |
-| 37 | `$dex help` | Shows description of commands | NA |
-| 38 | `$dex user-manual` | Shows paginated description of commands | `paginated-help` |
-| 39 | `$dex help <command>` | Shows description of the specific command | NA |
+| 27 | `$dex trivia <cat-id>` | Sends a question from category of given id with it's answer | `q/a`, `ask`, `qna` |
+| 28 | `$dex tags` | Toggles tagging messages feature | `tagging`, `msgtags` |
+| 29 | `$dex prefix <prefix>` | Changes the prefix for the server to the appended string | `changepref`, `changeprefix` |
+| 30 | `$dex prefixspace` | Toggles the trailing space in the prefix | `prefspc`, `prefspace` |
+| 31 | `$dex goodbye!` | Leaves the server | `leaveThisServer` |
+| 32 | `$dex madeby?` | Show information about the creator of the bot | NA |
+| 33 | `$dex cf-handle <handle>` | Shows details of the requested codeforces handle | `cf-user` |
+| 34 | `$dex userinfo <user>` | Shows info about the requested user, or the author of the message if no or invalid user is specified | `ui` |
+| 35 | `$dex serverinfo` | Shows info about the server | `si` |
+| 36 | `$dex covid19 <nation>` | Shows the current covid19 stats of the given nation, or global if no nation provided | NA |
+| 37 | `$dex ping` | Shows the latency of the bot | `latency` |
+| 38 | `$dex help` | Shows description of commands | NA |
+| 39 | `$dex user-manual` | Shows paginated description of commands | `paginated-help` |
+| 40 | `$dex help <command>` | Shows description of the specific command | NA |
 
 <br>
 
