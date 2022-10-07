@@ -1,7 +1,7 @@
 import discord
 import os
 import asyncpg
-import asyncio
+import difflib
 from datetime import datetime
 from discord.ext import commands, tasks
 
@@ -191,7 +191,13 @@ class Bot(commands.Bot):
             v = 'Missing Permissions'
         elif isinstance(error, commands.CommandNotFound):
             n = 'Error'
+            server_prefix = self.DATABASE['guilds'][str(ctx.guild.id)]['prefix']
+            given_command = ctx.message.content[len(server_prefix):]
+            give_command = given_command.split(' ')[0]
+            did_you_mean = ', '.join(f'`{match}`' for match in (difflib.get_close_matches(given_command, [k.name for k in self.commands] + [alias for command in self.commands for alias in command.aliases])))
             v = 'Invalid Command'
+            if len(did_you_mean) > 0:
+                v += '\nDid you mean: ' + did_you_mean
         else:
             raise error
         embed.add_field(name=n, value=v, inline=False)

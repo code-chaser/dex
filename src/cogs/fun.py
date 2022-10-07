@@ -59,6 +59,7 @@ class Fun(commands.Cog):
         {"id": 1972, "title": "june 1969", "clues_count": 5},
         {"id": 1975, "title": "world geography", "clues_count": 5},
     ]
+    # ----------------------------------------------------------------------------------------------------------------------
 
     def __init__(self, bot):
         self.bot = bot
@@ -248,8 +249,8 @@ class Fun(commands.Cog):
                     )
             await ctx.send(reference=ctx.message, embed=embed)
         return
-
     # ----------------------------------------------------------------------------------------------------------------------
+
     @commands.command(name="tts", aliases=["text-to-speech"], help="converts given text to speech in given language")
     async def tts_command(self, ctx, req_lang, *, text):
         req_lang = req_lang.lower()
@@ -300,8 +301,8 @@ class Fun(commands.Cog):
         tts.save("tts.mp3")
         await ctx.send(file=discord.File("tts.mp3"))
         return
-
     # ----------------------------------------------------------------------------------------------------------------------
+
     @commands.command(name="trivia-cat", aliases=["qna-cat", "qna-categories", "trivia-categories"], help="shows the categories with their IDs of trivia questions")
     async def trivia_cat_command(self, ctx):
         # send self.trivia_categories to ctx in two embeds (max 25 fields per embed)
@@ -323,8 +324,8 @@ class Fun(commands.Cog):
 
             await ctx.send(reference=ctx.message, embed=embed)
         return
-
     # ----------------------------------------------------------------------------------------------------------------------
+
     async def get_qa(self, urlEnd):
         API_URL = "https://jservice.io/api/clues?category=" + urlEnd
         async with aiohttp.ClientSession() as session:
@@ -382,7 +383,6 @@ class Fun(commands.Cog):
             )
         await ctx.send(reference=ctx.message, embed=embed)
         return
-
     # ----------------------------------------------------------------------------------------------------------------------
 
 
