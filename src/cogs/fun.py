@@ -65,24 +65,6 @@ class Fun(commands.Cog):
         self.bot = bot
     # ----------------------------------------------------------------------------------------------------------------------
 
-    async def get_iquote(self):
-        API_URL = "https://zenquotes.io/api//random"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(API_URL) as resp:
-                quote_json = await resp.json()
-                return (quote_json)
-
-    @commands.command(name="inspire", aliases=["iquote"], help="sends a random inspirational quote")
-    async def inspire_command(self, ctx):
-        embed = discord.Embed(title="Inspirational Quote",
-                              colour=ctx.author.colour,
-                              timestamp=datetime.utcnow())
-        iquote = await self.get_iquote()
-        embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
-        embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
-        await ctx.send(reference=ctx.message, embed=embed)
-    # ----------------------------------------------------------------------------------------------------------------------
-
     async def get_nasa(self):
         API_URL = "https://api.nasa.gov/planetary/apod?api_key=" + \
             str(os.getenv('DEX_NASA_API_KEY'))
@@ -105,6 +87,24 @@ class Fun(commands.Cog):
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
         embed.add_field(name="Image Title",
                         value=nasa_api["title"], inline=False)
+        await ctx.send(reference=ctx.message, embed=embed)
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    async def get_iquote(self):
+        API_URL = "https://zenquotes.io/api//random"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as resp:
+                quote_json = await resp.json()
+                return (quote_json)
+
+    @commands.command(name="inspire", aliases=["iquote"], help="sends a random inspirational quote")
+    async def inspire_command(self, ctx):
+        embed = discord.Embed(title="Inspirational Quote",
+                              colour=ctx.author.colour,
+                              timestamp=datetime.utcnow())
+        iquote = await self.get_iquote()
+        embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
+        embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
         await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
@@ -206,7 +206,7 @@ class Fun(commands.Cog):
                 return (quote_json)
 
     @commands.command(name="crypto", aliases=["cryptocurrency", "crypto-price", "coingecko"], help="shows the price of given cryptocurrency(s) in given currency(s)")
-    async def inspire_command(self, ctx, cryptocurrencies: str, currencies: Optional[str]):
+    async def crypto_command(self, ctx, cryptocurrencies: str, currencies: Optional[str]):
         if currencies is None:
             currencies = "usd"
         cryptocurrencies = cryptocurrencies.lower()
