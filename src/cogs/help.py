@@ -1,4 +1,5 @@
 import discord
+import difflib
 from datetime import datetime
 from typing import Optional
 from discord.ext import commands, tasks
@@ -252,9 +253,15 @@ class Help(commands.Cog):
                     break
         if invalid:
             async with ctx.typing():
+                server_prefix = self.bot.DATABASE['guilds'][str(ctx.guild.id)]['prefix']
+                given_command = ctx.message.content[len(server_prefix):]
+                given_command = given_command.split(' ')[1]
+                did_you_mean = ', '.join(f'`{match}`' for match in (difflib.get_close_matches(given_command, [k.name for k in self.bot.commands] + [alias for command in self.bot.commands for alias in command.aliases])))
+                if did_you_mean is not None:
+                    did_you_mean = f'\nDid you mean: {did_you_mean}\n'
                 embed = discord.Embed(
                     title="Error",
-                    description="Invalid command\nUse `" + self.bot.DATABASE['guilds'][str(
+                    description="Invalid command" + did_you_mean + "\nUse `" + self.bot.DATABASE['guilds'][str(
                         ctx.guild.id)]['prefix'] + "help` to see the list of valid commands",
                     color=0xff0000,
                     timestamp=datetime.utcnow()
