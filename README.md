@@ -69,7 +69,7 @@ ___
 <td>
 
 ```bash
-pip install discord.py==1.7.3
+pip install discord.py>=1.7.3
 ```
 
 </td>
@@ -87,7 +87,7 @@ pip install discord.py==1.7.3
 <td>
 
 ```bash
-pip install youtube_dl==2021.12.17
+pip install youtube_dl>=2021.12.17
 ```
 
 </td>
@@ -106,7 +106,7 @@ pip install youtube_dl==2021.12.17
 <td>
 
 ```bash
-pip install aiohttp==3.7.4
+pip install aiohttp>=3.7.4
 ```
 
 </td>
@@ -125,7 +125,7 @@ pip install aiohttp==3.7.4
 <td>
 
 ```bash
-pip install async-timeout==3.0.1
+pip install async-timeout>=3.0.1
 ```
 
 </td>
@@ -143,14 +143,14 @@ pip install async-timeout==3.0.1
 <td>
 
 ```bash
-pip install typing==3.7.4.3
+pip install typing>=3.7.4.3
 ```
 
 </td>
 <td>
 
 - Required for type hinting in python;
-- Installation not required for python`>=3.5`;
+- Installation not required for python`==3.5`;
 
 </td>
 </tr>
@@ -162,7 +162,7 @@ pip install typing==3.7.4.3
 <td>
 
 ```bash
-pip install asyncio==3.4.3
+pip install asyncio>=3.4.3
 ```
 
 </td>
@@ -181,7 +181,7 @@ pip install asyncio==3.4.3
 <td>
 
 ```bash
-pip install asyncpg==0.25.0
+pip install asyncpg>=0.25.0
 ```
 
 </td>
@@ -201,7 +201,7 @@ pip install asyncpg==0.25.0
   - version = `1.7.3`
   - installation:
     ```bash
-    pip install discord.py==1.7.3
+    pip install discord.py>=1.7.3
     ```
   - import:
     ```python
@@ -211,7 +211,7 @@ pip install asyncpg==0.25.0
   - version = `2021.12.17`
   - installation:
     ```bash
-    pip install youtube_dl==2021.12.17
+    pip install youtube_dl>=2021.12.17
     ```
   - import:
     ```python
@@ -221,7 +221,7 @@ pip install asyncpg==0.25.0
   - version = `3.7.4`
   - installation:
     ```bash
-    pip install aiohttp==3.7.4
+    pip install aiohttp>=3.7.4
     ```
   - import:
     ```python
@@ -231,7 +231,7 @@ pip install asyncpg==0.25.0
   - version = `3.0.1`
   - installation:
     ```bash
-    pip install async-timeout==3.0.1
+    pip install async-timeout>=3.0.1
     ```
   - import:
     ```python
@@ -241,7 +241,7 @@ pip install asyncpg==0.25.0
   - version = `3.7.4.3`
   - installation:
     ```bash
-    pip install typing==3.7.4.3
+    pip install typing>=3.7.4.3
     ```
   - import:
     ```python
@@ -251,7 +251,7 @@ pip install asyncpg==0.25.0
   - version = `3.4.3`
   - installation:
     ```bash
-    pip install asyncio==3.4.3
+    pip install asyncio>=3.4.3
     ```
   - import:
     ```python
@@ -261,7 +261,7 @@ pip install asyncpg==0.25.0
   - version = `0.25.0`
   - installation:
     ```bash
-    pip install asyncpg==0.25.0
+    pip install asyncpg>=0.25.0
     ```
   - import:
     ```python
