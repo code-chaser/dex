@@ -128,6 +128,7 @@ class Fun(commands.Cog):
         embed.set_thumbnail(
             url="https://user-images.githubusercontent.com/63065397/156142184-0675cfee-2863-41d7-bef8-87f600a713b0.png")
         await ctx.send(reference=ctx.message, embed=embed)
+        return
     # ----------------------------------------------------------------------------------------------------------------------
 
     async def get_subreddit(self, subreddit):
