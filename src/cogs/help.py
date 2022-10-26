@@ -1,4 +1,3 @@
-from tkinter import N
 import discord
 import difflib
 from datetime import datetime
