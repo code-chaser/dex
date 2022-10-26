@@ -193,14 +193,15 @@ class Bot(commands.Bot):
             n = 'Error'
             server_prefix = self.DATABASE['guilds'][str(
                 ctx.guild.id)]['prefix']
-            given_command = ctx.message.content[len(server_prefix):]
-            given_command = given_command.split(' ')[0]
+            msg = ctx.message.content[len(server_prefix):]
+            query = ''.join(msg.split(' ')[1:])
+            given_command = msg.split(' ')[0]
             closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [
                                                       alias for command in self.commands for alias in command.aliases], 1, 0.75)
             if len(closest_match) > 0:
                 with ctx.typing():
                     embed = discord.Embed(
-                        colour=0x00ff00, description="Guessing you meant this: `" + server_prefix + closest_match[0] + "`")
+                        colour=0x00ff00, description="Guessing you meant this: `" + server_prefix + "`~~`" + given_command + "`~~` " + closest_match[0] + ' ' + query + "`")
                 await ctx.send(reference=ctx.message, embed=embed)
                 ctx.message.content = ctx.message.content.replace(
                     given_command, closest_match[0])
