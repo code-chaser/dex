@@ -35,7 +35,7 @@ class Help(commands.Cog):
             "apod": ["Sends astronomy pic of the day from NASA", ["napod", "astropic", "astropicotd"], None],
             "meme": ["Sends a random meme", ["hehe"], None],
             "reddit": ["Shows top headlines of the given subreddit", ["subreddit"], "**`<subreddit-name>`**"],
-            "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"], "**`<crypto-1>;<crypto-2>;...`**` ``<currency-1>;<currency-2>;...`"],
+            "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"], "**`<crypto-1>;<crypto-2>;...`** ` ` `<currency-1>;<currency-2>;...`"],
             "tts": ["Converts given text into speech of given language", ["text-to-speech"], "**`<language> <text>`**"],
             "trivia-cat": ["Sends the complete list of available trivia categories", ["qna-cat", "qna-categories", "trivia-categories"], None],
             "trivia": ["Shows a question of given category id with it's answer", ["q/a", "ask", "question", "qna"], "`<category-id>`"],
