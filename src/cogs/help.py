@@ -10,56 +10,56 @@ class Help(commands.Cog):
         "Music - Basic": {
             "join": ["Joins the voice channel of the author", ["connect"], None],
             "leave": ["Leaves if connected to any voice channel", ["disconnect", "dc"], None],
-            "play": ["Streams a song directly from youtube", ["stream", "p", "add"], "**<song-name>**"],
-            "playm": ["Streams multiple songs (seperated by semicolons ';')", ["streamm", "pm", "addm"], "**<song-name-1>;<song-name-2>;...**"],
-            "dplay": ["Downloads a song and then queues it to reduce any possible lags", [], "**<song-name>**"],
-            "dplaym": ["'dplays' multiple songs (seperated by semicolons ';')", [], "**<song-name-1>;<song-name-2>;...**"],
+            "play": ["Streams a song directly from youtube", ["stream", "p", "add"], "**`<song-name>`**"],
+            "playm": ["Streams multiple songs (seperated by semicolons ';')", ["streamm", "pm", "addm"], "**`<song-name-1>;<song-name-2>;...`**"],
+            "dplay": ["Downloads a song and then queues it to reduce any possible lags", [], "**`<song-name>`**"],
+            "dplaym": ["'dplays' multiple songs (seperated by semicolons ';')", [], "**`<song-name-1>;<song-name-2>;...`**"],
         },
         "Music - Player Controls": {
             "queue": ["Shows the current queue", ["view"], None],
             "stop": ["Stops the music and clears the queue", ["shut"], None],
             "pause": ["Pauses the player", [], None],
             "resume": ["Resumes the player", [], None],
-            "volume": ["Sets the volume of the player to given value", ["vol"], "**<volume>**"],
+            "volume": ["Sets the volume of the player to given value", ["vol"], "**`<volume>`**"],
             "next": ["Plays the next song in the queue", ["skip"], None],
             "previous": ["Plays the previous song in the queue", ["prev"], None],
             "loop": ["Toggles looping of the queue", [], None],
             "repeat": ["Toggles repeating of the currently playing song", [], None],
             "restart": ["Restarts the currently playing song", [], None],
-            "remove": ["Removes given song from the queue, takes song position as arguement", [], "**<song-position>**"],
-            "jump": ["Jumps to given song in the queue, takes song position as arguement", ["jumpto"], "**<song-position>**"],
-            "lyrics": ["Shows the lyrics of the currently playing song", [], "<song-name>"],
+            "remove": ["Removes given song from the queue, takes song position as arguement", [], "**`<song-position>`**"],
+            "jump": ["Jumps to given song in the queue, takes song position as arguement", ["jumpto"], "**`<song-position>`**"],
+            "lyrics": ["Shows the lyrics of the currently playing song", [], "`<song-name>`"],
         },
         "Fun": {
             "inspire": ["Sends a random inspirational quote", ["iquote"], None],
             "apod": ["Sends astronomy pic of the day from NASA", ["napod", "astropic", "astropicotd"], None],
             "meme": ["Sends a random meme", ["hehe"], None],
-            "reddit": ["Shows top headlines of the given subreddit", ["subreddit"], "**<subreddit-name>**"],
-            "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"], "**<crypto-1>;<crypto-2>;...** <currency-1>;<currency-2>;..."],
-            "tts": ["Converts given text into speech of given language", ["text-to-speech"], "**<language> <text>**"],
+            "reddit": ["Shows top headlines of the given subreddit", ["subreddit"], "**`<subreddit-name>`**"],
+            "crypto": ["Shows the price of given cryptocurrency(s) in given currency(s)", ["cryptocurrency", "crypto-price", "coingecko"], "**`<crypto-1>;<crypto-2>;...`**` <currency-1>;<currency-2>;...`"],
+            "tts": ["Converts given text into speech of given language", ["text-to-speech"], "**`<language> <text>`**"],
             "trivia-cat": ["Sends the complete list of available trivia categories", ["qna-cat", "qna-categories", "trivia-categories"], None],
-            "trivia": ["Shows a question of given category id with it's answer", ["q/a", "ask", "question", "qna"], "<category-id>"],
+            "trivia": ["Shows a question of given category id with it's answer", ["q/a", "ask", "question", "qna"], "`<category-id>`"],
         },
         "Mod Settings": {
-            "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"], "<on/off>"],
-            "prefix": ["Changes the prefix for the server to the appended string", ["changeprefix", "changepref"], "<new-prefix>"],
-            "prefixspace": ["Toggles the trailing space in the prefix", ["prefspace", "prefspc"], "<on/off>"],
+            "tags": ["Toggles tagging messages feature", ["tagging", "msgtags"], "`<on/off>`"],
+            "prefix": ["Changes the prefix for the server to the appended string", ["changeprefix", "changepref"], "`<new-prefix>`"],
+            "prefixspace": ["Toggles the trailing space in the prefix", ["prefspace", "prefspc"], "`<on/off>`"],
             "goodbye!": ["Leaves the server", ["leaveThisServer"], None],
             "madeby?": ["Show information about the creator of the bot", [], None],
         },
         "Codeforces": {
-            "cf-handle": ["Shows details of the requested codeforces handle", ["cf-user"], "<username>"]
+            "cf-handle": ["Shows details of the requested codeforces handle", ["cf-user"], "`<username>`"]
         },
         "Info": {
-            "userinfo": ["Shows info about the requested user, or the author of the message if no or invalid user is specified", ["ui", "memberinfo", "mi"], "<tagged-user>"],
+            "userinfo": ["Shows info about the requested user, or the author of the message if no or invalid user is specified", ["ui", "memberinfo", "mi"], "`<tagged-user>`"],
             "serverinfo": ["Shows info about the server", ["si", "guildinfo", "gi"], None]
         },
         "Other": {
-            "covid19": ["Shows the current covid19 stats of the given nation, or global if no nation provided", [], "<nation>"],
+            "covid19": ["Shows the current covid19 stats of the given nation, or global if no nation provided", [], "`<nation>`"],
             "ping": ["Shows the latency of the bot", ["latency"], None]
         },
         "Help": {
-            "help": ["Shows detailed description of the given command or briefs all commands if none specified", ["?"], "<command>"],
+            "help": ["Shows detailed description of the given command or briefs all commands if none specified", ["?"], "`<command>`"],
             "user-manual": ["Shows paginated description of commands", ["paginated-help", "help-pages"], None]
         }
     }
