@@ -65,6 +65,24 @@ class Fun(commands.Cog):
         self.bot = bot
     # ----------------------------------------------------------------------------------------------------------------------
 
+    async def get_iquote(self):
+        API_URL = "https://zenquotes.io/api//random"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as resp:
+                quote_json = await resp.json()
+                return (quote_json)
+
+    @commands.command(name="inspire", aliases=["iquote"], help="sends a random inspirational quote")
+    async def inspire_command(self, ctx):
+        embed = discord.Embed(title="Inspirational Quote",
+                              colour=ctx.author.colour,
+                              timestamp=datetime.utcnow())
+        iquote = await self.get_iquote()
+        embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
+        embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
+        await ctx.send(reference=ctx.message, embed=embed)
+    # ----------------------------------------------------------------------------------------------------------------------
+
     async def get_nasa(self):
         API_URL = "https://api.nasa.gov/planetary/apod?api_key=" + \
             str(os.getenv('DEX_NASA_API_KEY'))
@@ -83,28 +101,14 @@ class Fun(commands.Cog):
             url="https://user-images.githubusercontent.com/63065397/156291255-4af80382-836c-4801-8b4f-47da33ea36c5.png")
         embed.set_footer(text="updated daily at 05:00:00 UTC [00:00:00 ET]")
         nasa_api = await self.get_nasa()
+        if nasa_api["media_type"] == "image":
+            embed.set_image(url=nasa_api["url"])
+        else:
+            embed.add_field(name="Video Found", value=nasa_api["url"], inline=False)
         embed.set_image(url=nasa_api["url"])
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
         embed.add_field(name="Image Title",
                         value=nasa_api["title"], inline=False)
-        await ctx.send(reference=ctx.message, embed=embed)
-    # ----------------------------------------------------------------------------------------------------------------------
-
-    async def get_iquote(self):
-        API_URL = "https://zenquotes.io/api//random"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(API_URL) as resp:
-                quote_json = await resp.json()
-                return (quote_json)
-
-    @commands.command(name="inspire", aliases=["iquote"], help="sends a random inspirational quote")
-    async def inspire_command(self, ctx):
-        embed = discord.Embed(title="Inspirational Quote",
-                              colour=ctx.author.colour,
-                              timestamp=datetime.utcnow())
-        iquote = await self.get_iquote()
-        embed.add_field(name="Quote", value=iquote[0]['q'], inline=False)
-        embed.add_field(name="Author", value=iquote[0]['a'], inline=False)
         await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
