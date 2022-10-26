@@ -199,7 +199,7 @@ class Bot(commands.Bot):
             closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [
                                                       alias for command in self.commands for alias in command.aliases], 1, 0.75)
             if len(closest_match) > 0:
-                ctx.message.content = server_prefix + closest_match[0] + " " + query
+                ctx.message.content = (server_prefix + closest_match[0] + " " + query).strip()
                 with ctx.typing():
                     embed = discord.Embed(
                         colour=0x00ff00, description="Guessing you meant this: `" + ctx.message.content + "`")
