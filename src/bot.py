@@ -204,7 +204,8 @@ class Bot(commands.Bot):
                 await ctx.send(reference=ctx.message, embed=embed)
                 ctx.message.content = ctx.message.content.replace(
                     given_command, closest_match[0])
-                self.process_commands(ctx.message)
+                print(ctx.message.content)
+                await self.process_commands(ctx.message)
                 return
             did_you_mean = ', '.join(f'`{match}`' for match in (difflib.get_close_matches(given_command, [
                                      k.name for k in self.commands] + [alias for command in self.commands for alias in command.aliases])))
