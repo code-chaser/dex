@@ -199,12 +199,11 @@ class Bot(commands.Bot):
             closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [
                                                       alias for command in self.commands for alias in command.aliases], 1, 0.75)
             if len(closest_match) > 0:
+                ctx.message.content = server_prefix + closest_match[0] + " " + query
                 with ctx.typing():
                     embed = discord.Embed(
-                        colour=0x00ff00, description="Guessing you meant this: `" + server_prefix + "`~~`" + given_command + "`~~` " + closest_match[0] + ' ' + query + "`")
+                        colour=0x00ff00, description="Guessing you meant this: `" + ctx.message.content + "`")
                 await ctx.send(reference=ctx.message, embed=embed)
-                ctx.message.content = ctx.message.content.replace(
-                    given_command, closest_match[0])
                 print(ctx.message.content)
                 await self.process_commands(ctx.message)
                 return
