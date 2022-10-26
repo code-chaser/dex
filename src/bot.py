@@ -194,7 +194,7 @@ class Bot(commands.Bot):
             server_prefix = self.DATABASE['guilds'][str(ctx.guild.id)]['prefix']
             given_command = ctx.message.content[len(server_prefix):]
             given_command = given_command.split(' ')[0]
-            closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [alias for command in self.commands for alias in command.aliases], 1, 0.9)
+            closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [alias for command in self.commands for alias in command.aliases], 1, 0.8)
             if len(closest_match) > 0:
                 with ctx.typing():
                     embed = discord.Embed(colour=0x00ff00)
