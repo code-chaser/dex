@@ -195,7 +195,7 @@ class Bot(commands.Bot):
                 ctx.guild.id)]['prefix']
             msg = ctx.message.content[len(server_prefix):]
             query = ' '.join(msg.split(' ')[1:])
-            given_command = msg.split(' ')[0]
+            given_command = msg.split(' ')[0].lower()
             closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [
                                                       alias for command in self.commands for alias in command.aliases], 1, 0.75)
             if len(closest_match) > 0:
