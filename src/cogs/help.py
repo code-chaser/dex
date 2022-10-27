@@ -225,7 +225,7 @@ class Help(commands.Cog):
                 title="Help: All",
                 description="**Prefix: `" +
                 self.bot.DATABASE['guilds'][str(
-                    ctx.guild.id)]['prefix'] + "`**",
+                    ctx.guild.id)]['prefix'] + "`**\n[*See here*](https://github.com/code-chaser/dex/blob/main/docs/commands.md)",
                 color=self.bot.DEX_YELLOW,
                 timestamp=datetime.utcnow(),
             )

@@ -199,7 +199,8 @@ class Bot(commands.Bot):
             closest_match = difflib.get_close_matches(given_command, [k.name for k in self.commands] + [
                                                       alias for command in self.commands for alias in command.aliases], 1, 0.75)
             if len(closest_match) > 0:
-                ctx.message.content = (server_prefix + closest_match[0] + " " + query).strip()
+                ctx.message.content = (
+                    server_prefix + closest_match[0] + " " + query).strip()
                 with ctx.typing():
                     embed = discord.Embed(
                         colour=0x00ff00, description="Guessing you meant this: `" + ctx.message.content + "`")
@@ -212,6 +213,12 @@ class Bot(commands.Bot):
             v = 'Invalid Command'
             if len(did_you_mean) > 0:
                 v += '\nDid you mean: ' + did_you_mean
+            else:
+                with ctx.typing():
+                    embed = discord.Embed(color=0xff0000,
+                                          description="**Huh?**\nUse `" + server_prefix + "help` to [see all valid commands](https://github.com/code-chaser/dex/blob/main/docs/commands.md)!")
+                await ctx.send(reference=ctx.message, embed=embed)
+                return
         else:
             raise error
         embed.add_field(name=n, value=v, inline=False)
