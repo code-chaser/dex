@@ -8,6 +8,7 @@ from discord.ext import commands
 from gtts import gTTS, lang
 from random import randint
 
+
 class Fun(commands.Cog):
     trivia_categories = [
         {"id": 3, "title": "hunting", "clues_count": 0},
@@ -104,7 +105,8 @@ class Fun(commands.Cog):
         if nasa_api["media_type"] == "image":
             embed.set_image(url=nasa_api["url"])
         else:
-            embed.add_field(name="Video Found", value=nasa_api["url"], inline=False)
+            embed.add_field(name="Video Found",
+                            value=nasa_api["url"], inline=False)
         embed.set_image(url=nasa_api["url"])
         embed.add_field(name="Date", value=nasa_api["date"], inline=False)
         embed.add_field(name="Image Title",
@@ -207,17 +209,26 @@ class Fun(commands.Cog):
         API_URL = "https://api.coingecko.com/api/v3/simple/price?" + urlEnd
         async with aiohttp.ClientSession() as session:
             async with session.get(API_URL) as resp:
-                quote_json = await resp.json(content_type=None)
-                return (quote_json)
+                data_json = await resp.json(content_type=None)
+                return (data_json)
 
     @commands.command(name="crypto", aliases=["cryptocurrency", "crypto-price", "coingecko"], help="shows the price of given cryptocurrency(s) in given currency(s)")
-    async def crypto_command(self, ctx, cryptocurrencies: str, currencies: Optional[str]):
+    async def crypto_command(self, ctx, cryptocurrencies: str, *, currencies: Optional[str]):
         if currencies is None:
             currencies = "usd"
         cryptocurrencies = cryptocurrencies.lower()
         cryptocurrencies = cryptocurrencies.split(",")
         for i in range(len(cryptocurrencies)):
             cryptocurrencies[i] = cryptocurrencies[i].strip()
+        cryptocurrencies = ",".join(cryptocurrencies)
+        API_URL = "https://api.coingecko.com/api/v3/coins/list"
+        async with aiohttp.ClientSession as session:
+            async with session.get(API_URL) as resp:
+                data_json = await resp.json(content_type=None)
+
+        cryptocurrencies = cryptocurrencies.split(",")
+        for i in range(len(cryptocurrencies)):
+            cryptocurrencies[i] = difflib.get_close_matches(cryptocurrencies[i], [element["name"] for element in data_json] + [element["symbol"] for element in data_json], 1, 0.8)[0]
         cryptocurrencies = ",".join(cryptocurrencies)
         currencies = currencies.lower()
         currencies = currencies.split(",")
@@ -230,7 +241,7 @@ class Fun(commands.Cog):
             async with ctx.typing():
                 embed = discord.Embed(
                     title="",
-                    description="",
+                    description="NOTE: Please strictly follow the command format: \n`<prefix>crypto <crypto-1,crypto-2,...> <currency-1,currency-2,...>`",
                     color=0xff0000
                 )
                 embed.set_author(
@@ -268,10 +279,12 @@ class Fun(commands.Cog):
                     req_lang = k
                     break
         if req_lang not in [key.lower() for key in lang.tts_langs().keys()]:
-            with ctx.typing():
-                closest_match = difflib.get_close_matches(req_lang, [key.lower() for key in lang.tts_langs().keys()] + [val.lower() for val in lang.tts_langs().values()])
+            async with ctx.typing():
+                closest_match = difflib.get_close_matches(req_lang, [key.lower(
+                ) for key in lang.tts_langs().keys()] + [val.lower() for val in lang.tts_langs().values()])
                 if len(closest_match) > 0:
-                    did_you_mean = "\nDid you mean: " + ", ".join(closest_match)
+                    did_you_mean = "\nDid you mean: " + \
+                        ", ".join(closest_match)
                 else:
                     did_you_mean = ""
                 embed = discord.Embed(
@@ -322,10 +335,12 @@ class Fun(commands.Cog):
                 if i*25+j < len(self.trivia_categories):
                     embed.add_field(
                         name=self.trivia_categories[i*25+j]['title'].title(),
-                        value="ID: " + str(i*25+j) + "\nQuestion Count: " + str(self.trivia_categories[i*25+j]['clues_count']),
+                        value="ID: " + str(i*25+j) + "\nQuestion Count: " +
+                        str(self.trivia_categories[i*25+j]['clues_count']),
                         inline=True
                     )
-            embed.set_footer(text="Page "+str(i+1)+"/"+str(len(self.trivia_categories)//25 + (len(self.trivia_categories) % 25 != 0)))
+            embed.set_footer(text="Page "+str(i+1)+"/"+str(
+                len(self.trivia_categories)//25 + (len(self.trivia_categories) % 25 != 0)))
 
             await ctx.send(reference=ctx.message, embed=embed)
         return
@@ -352,7 +367,7 @@ class Fun(commands.Cog):
             embed.set_footer(text="given category ID: "+str(category_id))
             await ctx.send(reference=ctx.message, embed=embed)
             return
-        
+
         question = await self.get_qa(str(self.trivia_categories[category_id]['id']))
         if len(question) == 0:
             embed = discord.Embed(
@@ -373,7 +388,8 @@ class Fun(commands.Cog):
             )
             embed.add_field(
                 name="Category",
-                value="||" + str(question[ind]['category']['title']).title() + "||",
+                value="||" + str(question[ind]['category']
+                                 ['title']).title() + "||",
                 inline=True
             )
             embed.add_field(
