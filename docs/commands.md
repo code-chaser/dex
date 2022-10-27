@@ -47,7 +47,7 @@
 
 <br>
 
-**NOTE:** `$dex ` is the default prefix, your server admins may have changed it. You will have to use the new prefix instead of `$dex ` in the above commands.
+**NOTE:** `$dex `&nbsp;is the default prefix, your server admins may have changed it. You will have to use the new prefix instead of `$dex `&nbsp;in the above commands.
 
 <br>
 
