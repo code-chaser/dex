@@ -1,6 +1,6 @@
 import discord
 import aiohttp
-
+from typing import Optional
 from geopy.adapters import AioHTTPAdapter
 from geopy.geocoders import Nominatim
 from pytz import timezone
@@ -139,19 +139,37 @@ class Other(commands.Cog):
         await ctx.send(reference=ctx.message, embed=embed)
     # ----------------------------------------------------------------------------------------------------------------------
 
-    async def get_suntime(self, lat, lng):
+    async def get_suntime(self, lat, lng, date):
+        # parse date
+        date = date.split("-")
+        date = date[2] + "-" + date[1] + "-" + date[0]
         API_URL = "https://api.sunrise-sunset.org/json?lat=" + \
-            str(lat) + "&lng=" + str(lng)
+            str(lat) + "&lng=" + str(lng) + "&date=" + date
         async with aiohttp.ClientSession() as session:
             async with session.get(API_URL) as resp:
                 data_json = await resp.json()
                 return (data_json)
 
     @commands.command(name="suntime", help="shows the sunrise and sunset time of the given location")
-    async def suntime_command(self, ctx, lat, lng):
-        # using the geopy library to get the latitude and longitude of the given location
+    async def suntime_command(self, ctx, *args):
+        lat = 0.0
+        lng = 0.0
+        date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
+
+        if len(args) == 0 or len(args) == 1:
+            lat = 12.992855
+            lng = 77.718837
+        else:
+            lat = args[0]
+            lng = args[1]
+
+        if len(args) == 1:
+            date = args[0]
+        elif len(args) == 3:
+            date = args[2]
+
         async with ctx.typing():
-            suntime = await self.get_suntime(lat, lng)
+            suntime = await self.get_suntime(lat, lng, date)
             if suntime["status"] == "OK":
                 sunrise = suntime["results"]["sunrise"]
                 sunset = suntime["results"]["sunset"]
@@ -175,6 +193,8 @@ class Other(commands.Cog):
     async def chaughadiya_command(self, ctx, *args):
         lat = 0.0
         lng = 0.0
+        date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
+
         if len(args) == 0 or len(args) == 1:
             lat = 12.992855
             lng = 77.718837
@@ -182,10 +202,13 @@ class Other(commands.Cog):
             lat = args[0]
             lng = args[1]
 
-        # make 8 segments from sunrise to sunset and then divide the day into 8 parts
-        # use self.day_chaughadiya array for the corresponding day (sunday, monday, tuesday, ...) and self.night_chaughadiya array for the corresponding night
+        if len(args) == 1:
+            date = args[0]
+        elif len(args) == 3:
+            date = args[2]
+
         async with ctx.typing():
-            suntime = await self.get_suntime(lat, lng)
+            suntime = await self.get_suntime(lat, lng, date)
             if suntime["status"] == "OK":
                 sunrise = suntime["results"]["sunrise"]
                 sunset = suntime["results"]["sunset"]
