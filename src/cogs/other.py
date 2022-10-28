@@ -11,6 +11,10 @@ from discord.ext import commands
 
 
 class Other(commands.Cog):
+
+    default_lat = 12.992855
+    default_lng = 77.718837
+
     day_chaughadiya = [
         ["Udveg", "Char", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg"],
         ["Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Char", "Labh", "Amrit"],
@@ -152,20 +156,15 @@ class Other(commands.Cog):
 
     @commands.command(name="suntime", help="shows the sunrise and sunset time of the given location")
     async def suntime_command(self, ctx, *args):
-        lat = 0.0
-        lng = 0.0
+        lat = self.default_lat
+        lng = self.default_lng
         date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
-
-        if len(args) == 0 or len(args) == 1:
-            lat = 12.992855
-            lng = 77.718837
-        else:
-            lat = args[0]
-            lng = args[1]
 
         if len(args) == 1:
             date = args[0]
         elif len(args) == 3:
+            lat = args[0]
+            lng = args[1]
             date = args[2]
 
         async with ctx.typing():
@@ -191,20 +190,15 @@ class Other(commands.Cog):
 
     @commands.command(name="chaughadiya", help="shows the chaughadiya of the given location")
     async def chaughadiya_command(self, ctx, *args):
-        lat = 0.0
-        lng = 0.0
+        lat = self.default_lat
+        lng = self.default_lng
         date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
-
-        if len(args) == 0 or len(args) == 1:
-            lat = 12.992855
-            lng = 77.718837
-        else:
-            lat = args[0]
-            lng = args[1]
 
         if len(args) == 1:
             date = args[0]
         elif len(args) == 3:
+            lat = args[0]
+            lng = args[1]
             date = args[2]
 
         async with ctx.typing():
