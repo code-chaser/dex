@@ -172,7 +172,16 @@ class Other(commands.Cog):
         return
 
     @commands.command(name="chaughadiya", help="shows the chaughadiya of the given location")
-    async def chaughadiya_command(self, ctx, lat, lng):
+    async def chaughadiya_command(self, ctx, *args):
+        lat = 0.0
+        lng = 0.0
+        if len(args) == 0 or len(args) == 1:
+            lat = 12.992855
+            lng = 77.718837
+        else:
+            lat = args[0]
+            lng = args[1]
+
         # make 8 segments from sunrise to sunset and then divide the day into 8 parts
         # use self.day_chaughadiya array for the corresponding day (sunday, monday, tuesday, ...) and self.night_chaughadiya array for the corresponding night
         async with ctx.typing():
