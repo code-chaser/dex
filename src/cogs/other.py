@@ -159,15 +159,18 @@ class Other(commands.Cog):
         lat = self.default_lat
         lng = self.default_lng
 
-        if len(args) == 1:
-            date = args[0]
-        elif len(args) == 3:
+        if len(args) == 2 or len(args) == 3:
             lat = args[0]
             lng = args[1]
+
+        tf = TimezoneFinder()
+        timezone = tf.timezone_at(lng=lng, lat=lat)
+        date = datetime.now(TZ(timezone)).strftime("%d-%m-%Y")
+
+        if len(args) == 3:
             date = args[2]
-        elif len(args) == 2:
-            lat = args[0]
-            lng = args[1]
+        elif len(args) == 1:
+            date = args[0]
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
@@ -203,19 +206,18 @@ class Other(commands.Cog):
         lat = self.default_lat
         lng = self.default_lng
 
-        if len(args) == 1:
-            date = args[0]
-        elif len(args) == 3:
-            lat = args[0]
-            lng = args[1]
-            date = args[2]
-        elif len(args) == 2:
+        if len(args) == 2 or len(args) == 3:
             lat = args[0]
             lng = args[1]
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
         date = datetime.now(TZ(timezone)).strftime("%d-%m-%Y")
+
+        if len(args) == 3:
+            date = args[2]
+        elif len(args) == 1:
+            date = args[0]
 
         async with ctx.typing():
             suntime = await self.get_suntime(lat, lng, date)
