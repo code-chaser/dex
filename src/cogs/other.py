@@ -158,7 +158,6 @@ class Other(commands.Cog):
     async def suntime_command(self, ctx, *args):
         lat = self.default_lat
         lng = self.default_lng
-        date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
 
         if len(args) == 1:
             date = args[0]
@@ -166,6 +165,13 @@ class Other(commands.Cog):
             lat = args[0]
             lng = args[1]
             date = args[2]
+        elif len(args) == 2:
+            lat = args[0]
+            lng = args[1]
+
+        tf = TimezoneFinder()
+        timezone = tf.timezone_at(lng=lng, lat=lat)
+        date = datetime.now(timezone).strftime("%d-%m-%Y")
 
         async with ctx.typing():
             suntime = await self.get_suntime(lat, lng, date)
@@ -179,7 +185,7 @@ class Other(commands.Cog):
                     description="**Sunrise Time**: " + sunrise + "\n**Sunset Time**: " + sunset,
                     timestamp=datetime.utcnow()
                 )
-                embed.set_footer(text="Timezone: UTC")
+                embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
             else:
                 embed = discord.Embed(
                     color=0xff0000,
@@ -192,7 +198,6 @@ class Other(commands.Cog):
     async def chaughadiya_command(self, ctx, *args):
         lat = self.default_lat
         lng = self.default_lng
-        date = datetime.now(timezone('Asia/Kolkata')).strftime("%d-%m-%Y")
 
         if len(args) == 1:
             date = args[0]
@@ -200,6 +205,13 @@ class Other(commands.Cog):
             lat = args[0]
             lng = args[1]
             date = args[2]
+        elif len(args) == 2:
+            lat = args[0]
+            lng = args[1]
+
+        tf = TimezoneFinder()
+        timezone = tf.timezone_at(lng=lng, lat=lat)
+        date = datetime.now(timezone).strftime("%d-%m-%Y")
 
         async with ctx.typing():
             suntime = await self.get_suntime(lat, lng, date)
@@ -241,11 +253,13 @@ class Other(commands.Cog):
                     description="**Sunrise Time**: " + sunrise.strftime(
                         "%I:%M:%S %p") + "\n**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n```\n" + day_chaughadiya_string + "```",
                 )
+                day_embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
                 night_embed = discord.Embed(
                     color=0x0000ff,
                     description="**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n**Sunrise Time**: " + sunrise.strftime(
                         "%I:%M:%S %p") + "\n```\n" + night_chaughadiya_string + "```",
                 )
+                night_embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
                 embed_list = [day_embed, night_embed]
             else:
                 embed = discord.Embed(
