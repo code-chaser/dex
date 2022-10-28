@@ -225,23 +225,23 @@ class Other(commands.Cog):
                 diff = sunset - sunrise
                 diff = diff / 8
                 # get the today's day of the week for IST
-                today = datetime.now(timezone('Asia/Kolkata'))
-                today = today.strftime("%A")
+                target_date = datetime.strptime(date, "%d-%m-%Y")
+                target_date = target_date.strftime("%A")
                 # get the chaughadiya for the day
-                day_chaughadiya = self.day_chaughadiya[self.week_days_number[today]]
+                day_chaughadiya = self.day_chaughadiya[self.week_days_number[target_date]]
                 # get the chaughadiya for the night
-                night_chaughadiya = self.night_chaughadiya[self.week_days_number[today]]
-                # create a attractive embed with day and night chaughadiya
+                night_chaughadiya = self.night_chaughadiya[self.week_days_number[target_date]]
+
                 day_chaughadiya_string = ""
                 for i in range(8):
                     day_chaughadiya_string += (sunrise + diff*i).strftime("%H:%M:%S") + " to " + \
                         (sunrise + diff*(i+1)).strftime("%H:%M:%S") + \
-                        " - **" + day_chaughadiya[i] + "**\n"
+                        " - " + day_chaughadiya[i] + "\n"
                 night_chaughadiya_string = ""
                 for i in range(8):
                     night_chaughadiya_string += (sunset + diff*i).strftime("%H:%M:%S") + " to " + \
                         (sunset + diff*(i+1)).strftime("%H:%M:%S") + \
-                        " - **" + night_chaughadiya[i] + "**\n"
+                        " - " + night_chaughadiya[i] + "\n"
                 day_embed = discord.Embed(
                     color=0xffd700,
                     description="**Sunrise Time**: " + sunrise.strftime(
