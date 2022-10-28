@@ -3,7 +3,7 @@ import aiohttp
 from typing import Optional
 from geopy.adapters import AioHTTPAdapter
 from geopy.geocoders import Nominatim
-from pytz import timezone
+from pytz import timezone as TZ
 from timezonefinder import TimezoneFinder
 from datetime import datetime
 from datetime import timedelta
@@ -171,21 +171,25 @@ class Other(commands.Cog):
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
-        date = datetime.now(timezone).strftime("%d-%m-%Y")
+        date = datetime.now(TZ(timezone)).strftime("%d-%m-%Y")
 
         async with ctx.typing():
             suntime = await self.get_suntime(lat, lng, date)
             if suntime["status"] == "OK":
                 sunrise = suntime["results"]["sunrise"]
                 sunset = suntime["results"]["sunset"]
-                tf = TimezoneFinder()
-                timezone = tf.timezone_at(lng=lng, lat=lat)
+                sunrise = datetime.strptime(sunrise, "%I:%M:%S %p")
+                sunrise = sunrise + timedelta(hours=5, minutes=30)
+                sunrise = sunrise.strftime("%H:%M:%S")
+                sunset = datetime.strptime(sunset, "%I:%M:%S %p")
+                sunset = sunset + timedelta(hours=5, minutes=30)
+                sunset = sunset.strftime("%H:%M:%S")
                 embed = discord.Embed(
                     color=0xffd700,
                     description="**Sunrise Time**: " + sunrise + "\n**Sunset Time**: " + sunset,
                     timestamp=datetime.utcnow()
                 )
-                embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
+                embed.set_footer(text="Date: " + date + " & Timezone: IST (GMT + 05:30)")
             else:
                 embed = discord.Embed(
                     color=0xff0000,
@@ -211,7 +215,7 @@ class Other(commands.Cog):
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
-        date = datetime.now(timezone).strftime("%d-%m-%Y")
+        date = datetime.now(TZ(timezone)).strftime("%d-%m-%Y")
 
         async with ctx.typing():
             suntime = await self.get_suntime(lat, lng, date)
@@ -253,13 +257,13 @@ class Other(commands.Cog):
                     description="**Sunrise Time**: " + sunrise.strftime(
                         "%I:%M:%S %p") + "\n**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n```\n" + day_chaughadiya_string + "```",
                 )
-                day_embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
+                day_embed.set_footer(text="Date: " + date + " & Timezone: IST (GMT + 05:30)")
                 night_embed = discord.Embed(
                     color=0x0000ff,
                     description="**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n**Sunrise Time**: " + sunrise.strftime(
                         "%I:%M:%S %p") + "\n```\n" + night_chaughadiya_string + "```",
                 )
-                night_embed.set_footer(text="Date: " + date + " & Timezone: " + timezone)
+                night_embed.set_footer(text="Date: " + date + " & Timezone: IST (GMT + 05:30)")
                 embed_list = [day_embed, night_embed]
             else:
                 embed = discord.Embed(
