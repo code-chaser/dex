@@ -9,3 +9,6 @@ typing==3.7.4.3
 async-timeout==3.0.1
 asyncpg==0.25.0
 gtts==2.2.4
+geopy==2.2.0
+pytz==2022.5
+timezonefinder==6.1.5

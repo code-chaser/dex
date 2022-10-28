@@ -1,10 +1,43 @@
 import discord
 import aiohttp
+
+from geopy.adapters import AioHTTPAdapter
+from geopy.geocoders import Nominatim
+from pytz import timezone
+from timezonefinder import TimezoneFinder
 from datetime import datetime
+from datetime import timedelta
 from discord.ext import commands
 
 
 class Other(commands.Cog):
+    day_chaughadiya = [
+        ["Udveg", "Char", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg"],
+        ["Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Char", "Labh", "Amrit"],
+        ["Rog", "Udveg", "Char", "Labh", "Amrit", "Kaal", "Shubh", "Rog"],
+        ["Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Char", "Labh"],
+        ["Shubh", "Rog", "Udveg", "Char", "Labh", "Amrit", "Kaal", "Shubh"],
+        ["Char", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Char"],
+        ["Kaal", "Shubh", "Rog", "Udveg", "Char", "Labh", "Amrit", "Kaal"]
+    ]
+
+    night_chaughadiya = [
+        ["Shubh", "Amrit", "Char", "Rog", "Kaal", "Labh", "Udveg", "Shubh"],
+        ["Char", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Char"],
+        ["Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Char", "Rog", "Kaal"],
+        ["Udveg", "Shubh", "Amrit", "Char", "Rog", "Kaal", "Labh", "Udveg"],
+        ["Amrit", "Char", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit"],
+        ["Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Char", "Rog"],
+        ["Labh", "Udveg", "Shubh", "Amrit", "Char", "Rog", "Kaal", "Labh"]
+    ]
+
+    time_dict = {"Udveg": -1, "Char": 0, "Labh": 1,
+                 "Amrit": 1, "Kaal": -1, "Shubh": 1, "Rog": -1}
+
+    week_days_number = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2,
+                        'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}
+    # ----------------------------------------------------------------------------------------------------------------------
+
     def __init__(self, bot):
         self.bot = bot
     # ----------------------------------------------------------------------------------------------------------------------
@@ -104,6 +137,100 @@ class Other(commands.Cog):
                 timestamp=datetime.utcnow()
             )
         await ctx.send(reference=ctx.message, embed=embed)
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    async def get_suntime(self, lat, lng):
+        API_URL = "https://api.sunrise-sunset.org/json?lat=" + \
+            str(lat) + "&lng=" + str(lng)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as resp:
+                data_json = await resp.json()
+                return (data_json)
+
+    @commands.command(name="suntime", help="shows the sunrise and sunset time of the given location")
+    async def suntime_command(self, ctx, lat, lng):
+        # using the geopy library to get the latitude and longitude of the given location
+        async with ctx.typing():
+            suntime = await self.get_suntime(lat, lng)
+            if suntime["status"] == "OK":
+                sunrise = suntime["results"]["sunrise"]
+                sunset = suntime["results"]["sunset"]
+                tf = TimezoneFinder()
+                timezone = tf.timezone_at(lng=lng, lat=lat)
+                embed = discord.Embed(
+                    color=0xffd700,
+                    description="**Sunrise Time**: " + sunrise + "\n**Sunset Time**: " + sunset,
+                    timestamp=datetime.utcnow()
+                )
+                embed.set_footer(text="Timezone: UTC")
+            else:
+                embed = discord.Embed(
+                    color=0xff0000,
+                )
+                embed.set_author(name="Unknown Error Occured!")
+        await ctx.send(reference=ctx.message, embed=embed)
+        return
+
+    @commands.command(name="chaughadiya", help="shows the chaughadiya of the given location")
+    async def chaughadiya_command(self, ctx, lat, lng):
+        # make 8 segments from sunrise to sunset and then divide the day into 8 parts
+        # use self.day_chaughadiya array for the corresponding day (sunday, monday, tuesday, ...) and self.night_chaughadiya array for the corresponding night
+        async with ctx.typing():
+            suntime = await self.get_suntime(lat, lng)
+            if suntime["status"] == "OK":
+                sunrise = suntime["results"]["sunrise"]
+                sunset = suntime["results"]["sunset"]
+                # convert to GMT + 5:30
+                sunrise = datetime.strptime(sunrise, "%I:%M:%S %p")
+                sunrise = sunrise + timedelta(hours=5, minutes=30)
+                sunrise = sunrise.strftime("%H:%M:%S")
+                sunset = datetime.strptime(sunset, "%I:%M:%S %p")
+                sunset = sunset + timedelta(hours=5, minutes=30)
+                sunset = sunset.strftime("%H:%M:%S")
+                # get the difference and divide it into 8 parts
+                sunrise = datetime.strptime(sunrise, "%H:%M:%S")
+                sunset = datetime.strptime(sunset, "%H:%M:%S")
+                diff = sunset - sunrise
+                diff = diff / 8
+                # get the today's day of the week for IST
+                today = datetime.now(timezone('Asia/Kolkata'))
+                today = today.strftime("%A")
+                # get the chaughadiya for the day
+                day_chaughadiya = self.day_chaughadiya[self.week_days_number[today]]
+                # get the chaughadiya for the night
+                night_chaughadiya = self.night_chaughadiya[self.week_days_number[today]]
+                # create a attractive embed with day and night chaughadiya
+                day_chaughadiya_string = ""
+                for i in range(8):
+                    day_chaughadiya_string += (sunrise + diff*i).strftime("%H:%M:%S") + " to " + \
+                        (sunrise + diff*(i+1)).strftime("%H:%M:%S") + \
+                        " - **" + day_chaughadiya[i] + "**\n"
+                night_chaughadiya_string = ""
+                for i in range(8):
+                    night_chaughadiya_string += (sunset + diff*i).strftime("%H:%M:%S") + " to " + \
+                        (sunset + diff*(i+1)).strftime("%H:%M:%S") + \
+                        " - **" + night_chaughadiya[i] + "**\n"
+                day_embed = discord.Embed(
+                    color=0xffd700,
+                    description="**Sunrise Time**: " + sunrise.strftime(
+                        "%I:%M:%S %p") + "\n**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n```\n" + day_chaughadiya_string + "```",
+                )
+                night_embed = discord.Embed(
+                    color=0x0000ff,
+                    description="**Sunset Time**: " + sunset.strftime("%I:%M:%S %p") + "\n**Sunrise Time**: " + sunrise.strftime(
+                        "%I:%M:%S %p") + "\n```\n" + night_chaughadiya_string + "```",
+                )
+                embed_list = [day_embed, night_embed]
+            else:
+                embed = discord.Embed(
+                    color=0xff0000,
+                )
+                embed.set_author(name="Unknown Error Occured!")
+                embed_list = [embed]
+        for embed in embed_list:
+            await ctx.send(reference=ctx.message, embed=embed)
+        return
+
     # ----------------------------------------------------------------------------------------------------------------------
 
 
