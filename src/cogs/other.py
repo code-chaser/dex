@@ -154,7 +154,7 @@ class Other(commands.Cog):
                 data_json = await resp.json()
                 return (data_json)
 
-    @commands.command(name="suntime", help="shows the sunrise and sunset time of the given location")
+    @commands.command(name="suntime", aliases=["sunrise", "sunset"], help="shows the sunrise and sunset time of the given location")
     async def suntime_command(self, ctx, *args):
         lat = self.default_lat
         lng = self.default_lng

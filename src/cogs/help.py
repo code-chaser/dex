@@ -56,7 +56,9 @@ class Help(commands.Cog):
         },
         "Other": {
             "covid19": ["Shows the current covid19 stats of the given nation, or global if no nation provided", [], "`<nation>`"],
-            "ping": ["Shows the latency of the bot", ["latency"], None]
+            "ping": ["Shows the latency of the bot", ["latency"], None],
+            "suntime": ["Shows the sunrise and sunset times of the given location (default: Bangalore, India) for the given date (default: today)", ["sunrise", "sunset"], "**`<latitude> <longitude>`**` <date>`"],
+            "chaughadiya": ["Shows the chaughadiya of the given location (default: Bangalore, India) for the given date (default: today)", [], "**`<latitude> <longitude>`**` <date>`"]
         },
         "Help": {
             "help": ["Shows detailed description of the given command or briefs all commands if none specified", ["?"], "`<command>`"],
