@@ -160,8 +160,8 @@ class Other(commands.Cog):
         lng = self.default_lng
 
         if len(args) == 2 or len(args) == 3:
-            lat = args[0]
-            lng = args[1]
+            lat = float(args[0])
+            lng = float(args[1])
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
@@ -207,8 +207,8 @@ class Other(commands.Cog):
         lng = self.default_lng
 
         if len(args) == 2 or len(args) == 3:
-            lat = args[0]
-            lng = args[1]
+            lat = float(args[0])
+            lng = float(args[1])
 
         tf = TimezoneFinder()
         timezone = tf.timezone_at(lng=lng, lat=lat)
