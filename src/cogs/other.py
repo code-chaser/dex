@@ -234,8 +234,10 @@ class Other(commands.Cog):
                 # get the difference and divide it into 8 parts
                 sunrise = datetime.strptime(sunrise, "%H:%M:%S")
                 sunset = datetime.strptime(sunset, "%H:%M:%S")
-                diff = sunset - sunrise
-                diff = diff / 8
+                diff1 = sunset - sunrise
+                diff1 = diff1 / 8
+                diff2 = sunrise - sunset
+                diff2 = diff2 / 8
                 # get the today's day of the week for IST
                 target_date = datetime.strptime(date, "%d-%m-%Y")
                 target_date = target_date.strftime("%A")
@@ -246,13 +248,13 @@ class Other(commands.Cog):
 
                 day_chaughadiya_string = ""
                 for i in range(8):
-                    day_chaughadiya_string += (sunrise + diff*i).strftime("%H:%M:%S") + " to " + \
-                        (sunrise + diff*(i+1)).strftime("%H:%M:%S") + \
+                    day_chaughadiya_string += (sunrise + diff1*i).strftime("%H:%M:%S") + " to " + \
+                        (sunrise + diff1*(i+1)).strftime("%H:%M:%S") + \
                         " - " + day_chaughadiya[i] + "\n"
                 night_chaughadiya_string = ""
                 for i in range(8):
-                    night_chaughadiya_string += (sunset + diff*i).strftime("%H:%M:%S") + " to " + \
-                        (sunset + diff*(i+1)).strftime("%H:%M:%S") + \
+                    night_chaughadiya_string += (sunset + diff2*i).strftime("%H:%M:%S") + " to " + \
+                        (sunset + diff2*(i+1)).strftime("%H:%M:%S") + \
                         " - " + night_chaughadiya[i] + "\n"
                 day_embed = discord.Embed(
                     color=0xffd700,
