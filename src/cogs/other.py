@@ -235,8 +235,8 @@ class Other(commands.Cog):
                 sunrise = datetime.strptime(sunrise, "%H:%M:%S")
                 sunset = datetime.strptime(sunset, "%H:%M:%S")
                 diff1 = sunset - sunrise
+                diff2 = timedelta(hours=24) - diff1;
                 diff1 = diff1 / 8
-                diff2 = sunrise - sunset
                 diff2 = diff2 / 8
                 # get the today's day of the week for IST
                 target_date = datetime.strptime(date, "%d-%m-%Y")
